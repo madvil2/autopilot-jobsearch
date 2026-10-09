@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="{{lang}}">
+<head>
+<meta charset="utf-8">
+<title>{{name}}</title>
+<style>
+  /* Design of the CV. Edit freely; scripts/render.mjs only fills the {{placeholders}}.
+     Layout mirrors the classic single-column German-market CV: Roboto, name 20pt,
+     13pt section headings, a date column on the left, photo top right, no tables. */
+
+  @font-face { font-family: "Roboto"; src: url("{{fontsDir}}/Roboto-Regular.ttf"); font-weight: 400; }
+  @font-face { font-family: "Roboto"; src: url("{{fontsDir}}/Roboto-Bold.ttf"); font-weight: 700; }
+  @font-face { font-family: "Roboto"; src: url("{{fontsDir}}/Roboto-Italic.ttf"); font-style: italic; }
+
+  @page {
+    size: A4;
+    margin: 20mm 20mm 15mm 20mm;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Roboto", Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.25;
+    color: #000;
+  }
+  a { color: #1155cc; text-decoration: none; }
+  strong { font-weight: 700; }
+  p { margin: 0; }
+  .sep { color: #000; }
+
+  /* Header */
+  .header { position: relative; min-height: 35mm; padding-right: 42mm; }
+  .header.no-photo { padding-right: 0; min-height: 0; }
+  .photo {
+    position: absolute; top: 0; right: 0;
+    width: 35mm; height: 35mm;
+    object-fit: cover;
+  }
+  h1 { font-size: 20pt; font-weight: 700; margin: 0 0 1mm 0; line-height: 1.1; }
+  .title { font-size: 13pt; margin: 0 0 2.5mm 0; }
+  .header-line { margin: 0; }
+
+  /* Sections */
+  .section { margin-top: 5mm; }
+  h2 {
+    font-size: 13pt; font-weight: 700; text-transform: uppercase;
+    margin: 0 0 2mm 0; padding-bottom: 1mm;
+    border-bottom: 0.4pt solid #000;
+  }
+  .text { margin: 0 0 1mm 0; text-align: justify; }
+
+  /* Entries: date column left, body right (4.5 cm column like the original tab stop) */
+  .entry { display: flex; gap: 0; margin: 0 0 3mm 0; }
+  .role, .org, .project { break-after: avoid; }
+  h2 { break-after: avoid; }
+  .dates { flex: 0 0 45mm; font-weight: 700; }
+  .entry-body { flex: 1 1 auto; text-align: justify; }
+  .role { font-weight: 700; }
+  .org { margin: 0; }
+  .project { margin: 0.5mm 0 0 0; }
+  ul { margin: 0.5mm 0 0 0; padding-left: 5mm; }
+  li { margin: 0 0 0.5mm 0; }
+  .tech { margin: 0.5mm 0 0 0; }
+
+  /* Section tweaks */
+  .section-technical-skills .text { text-align: left; }
+  .section-education .entry { margin-bottom: 1.5mm; break-inside: avoid; }
+</style>
+</head>
+<body>
+  <header class="header {{photoClass}}">
+    <h1>{{name}}</h1>
+    <p class="title">{{title}}</p>
+    {{header}}
+  </header>
+  {{sections}}
+</body>
+<script>
+  // Drop the photo element when no photo was given.
+  (function () {
+    var src = "{{photo}}";
+    if (!src) return;
+    var img = document.createElement("img");
+    img.className = "photo";
+    img.src = src;
+    document.querySelector(".header").appendChild(img);
+  })();
+</script>
+</html>

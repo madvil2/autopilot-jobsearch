@@ -1,0 +1,18 @@
+# Personal workspace files. Created by /init from templates/.
+# Remove these lines in a private fork if you want to version your own data.
+/profile.md
+/rules.md
+/sources.md
+/cv/
+/cover-letters/
+/prep/
+/photos/
+/transcripts/
+/reports/
+/recordings/
+
+# Tooling
+node_modules/
+.playwright-mcp/
+.scratch/
+.DS_Store

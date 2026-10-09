@@ -1,0 +1,20 @@
+{
+  "name": "autopilot-jobsearch",
+  "version": "0.1.0",
+  "description": "My job search on autopilot with Claude Code: twice-daily sweeps, applications, JobCubby tracking, CV and cover letter rendering, interview prep and debriefs.",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "render": "node scripts/render.mjs",
+    "test": "node scripts/test.mjs",
+    "lint": "node scripts/lint-skills.mjs",
+    "postinstall": "playwright install chromium"
+  },
+  "dependencies": {
+    "playwright": "^1.50.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

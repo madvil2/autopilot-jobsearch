@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="{{lang}}">
+<head>
+<meta charset="utf-8">
+<title>{{subject}}</title>
+<style>
+  /* Cover letter design. Same type and margins as the CV so both read as one set. */
+
+  @font-face { font-family: "Roboto"; src: url("{{fontsDir}}/Roboto-Regular.ttf"); font-weight: 400; }
+  @font-face { font-family: "Roboto"; src: url("{{fontsDir}}/Roboto-Bold.ttf"); font-weight: 700; }
+  @font-face { font-family: "Roboto"; src: url("{{fontsDir}}/Roboto-Italic.ttf"); font-style: italic; }
+
+  @page { size: A4; margin: 20mm 20mm 15mm 20mm; }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: "Roboto", Arial, sans-serif; font-size: 11pt; line-height: 1.35; color: #000; }
+  a { color: #1155cc; text-decoration: none; }
+  p { margin: 0; }
+
+  .sender { margin-bottom: 10mm; }
+  .sender .name { font-size: 14pt; font-weight: 700; }
+  .sender .contact { margin-top: 1mm; }
+
+  .recipient { margin-bottom: 8mm; }
+  .recipient .company { font-weight: 700; }
+
+  .date { text-align: right; margin-bottom: 8mm; }
+  .subject { font-weight: 700; margin-bottom: 5mm; }
+  .greeting { margin-bottom: 3mm; }
+  .body p { margin-bottom: 3.5mm; text-align: justify; }
+  .signoff { margin-top: 5mm; }
+  .signature { margin-top: 10mm; }
+</style>
+</head>
+<body>
+  <div class="sender">
+    <p class="name">{{name}}</p>
+    <p class="contact">{{contact}}</p>
+  </div>
+
+  <div class="recipient">
+    <p class="company">{{company}}</p>
+    {{address}}
+  </div>
+
+  <p class="date">{{dateLine}}</p>
+
+  <p class="subject">{{subject}}</p>
+  <p class="greeting">{{greeting}}</p>
+
+  <div class="body">
+    {{paragraphs}}
+  </div>
+
+  <p class="signoff">{{signoff}}</p>
+  <p class="signature">{{name}}</p>
+</body>
+</html>

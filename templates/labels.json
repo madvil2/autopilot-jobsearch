@@ -1,0 +1,32 @@
+{
+  "en": {
+    "summary": "SUMMARY",
+    "technical skills": "TECHNICAL SKILLS",
+    "work experience": "WORK EXPERIENCE",
+    "education": "EDUCATION",
+    "achievements": "ACHIEVEMENTS",
+    "certifications": "CERTIFICATIONS",
+    "language skills": "LANGUAGE SKILLS",
+    "hobbies": "HOBBIES",
+    "project": "Project",
+    "technologies used": "Technologies used",
+    "cv file suffix": "CV",
+    "page": "Page",
+    "of": "of"
+  },
+  "de": {
+    "summary": "PROFIL",
+    "technical skills": "TECHNISCHE KENNTNISSE",
+    "work experience": "BERUFSERFAHRUNG",
+    "education": "AUSBILDUNG",
+    "achievements": "ERFOLGE",
+    "certifications": "ZERTIFIKATE",
+    "language skills": "SPRACHKENNTNISSE",
+    "hobbies": "INTERESSEN",
+    "project": "Projekt",
+    "technologies used": "Technologien",
+    "cv file suffix": "Lebenslauf",
+    "page": "Seite",
+    "of": "von"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "jobcubby": {
+      "type": "http",
+      "url": "https://jobcubby.com/mcp"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
+    }
+  }
+}

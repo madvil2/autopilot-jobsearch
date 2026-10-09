@@ -1,0 +1,1 @@
+Change into /absolute/path/to/autopilot-jobsearch and run the /sweep skill from that folder exactly as written in .claude/skills/sweep/SKILL.md. Read profile.md, rules.md, sources.md and docs/platform-notes.md first. Cover every source in sources.md in this run, log everything to JobCubby and the calendar, save the report to reports/ and print it at the end.
