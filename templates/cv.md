@@ -5,6 +5,7 @@ language: en                  # en | de (section labels and file name), add more
 title: Role Title (Main Stack / Second Stack)
 photo: photos/headshot.png    # delete this line to render without a photo
 # photo_focus: 50% 20%          # where the face is; the crop is a circle, the default keeps the upper part of a tall photo
+# photo_zoom: 1.4               # enlarge around that point when the face is small in the frame (1 = no zoom)
 show_birth_date: true         # false drops any header line containing "Born"
 # sign_place: City              # with signature: adds "City, <today>" and the signature image at the end (German convention)
 # signature: photos/signature.png

@@ -207,6 +207,8 @@ function cvView(cv, meta, labels) {
     // Where the face is in the source: a tall portrait keeps it in the upper part, so the square crop
     // defaults to "50% 20%". Override with `photo_focus: 50% 35%` in the frontmatter.
     photoFocus: meta.photo_focus || "50% 20%",
+    // Zoom into the face: 1 shows the square crop as is, 1.5 enlarges it around the focus point.
+    photoZoom: meta.photo_zoom || 1,
     photoClass: showPhoto ? "" : "no-photo",
     header,
     sections: sections + signature,
