@@ -41,7 +41,9 @@ case "${1:-}" in
   save)
     [ -d "$GIT_DIR" ] || { echo "no data git yet, run: scripts/data init"; exit 1; }
     # -f: the method repo's .gitignore applies to the shared work tree and lists these paths on purpose
-    existing_paths | xargs dgit add -f --
+    local_paths=()
+    while IFS= read -r p; do local_paths+=("$p"); done < <(existing_paths)
+    dgit add -f -- "${local_paths[@]}"
     if dgit diff --cached --quiet; then
       echo "nothing to save"
     else
