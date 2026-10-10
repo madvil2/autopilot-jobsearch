@@ -15,7 +15,14 @@ Modes:
 
 ## Building from scratch
 
-Read `profile.md` first; do not ask again for anything that is there. Then interview section by section, in the person's language, and write the markdown as you go:
+Read `profile.md` first; do not ask again for anything that is there. Then interview section by section, in the person's language, and write the markdown as you go. Choices go in the format from `CLAUDE.md`; defaults to propose:
+
+- Language of the base CV: English (recommended: most postings and all ATS parsers read it); the market's language.
+- Variants: base plus one per market language they apply in (recommended); base only.
+- Photo: on, casual outdoor headshot (recommended for Germany and most of Europe); off for markets that do not expect one.
+- Birth date: on where the market expects it (recommended for Germany); off.
+- Bullets per job: by tenure as below (recommended); the person's own count.
+- Hobbies: two or three real ones (recommended: they make the person memorable); none.
 
 1. **Header.** Name, title line (role plus main stack in brackets, no level unless `profile.md` says so), city, birth date, phone, email, links, work authorization line, availability line, languages in brackets if the market expects it.
 2. **Technical Skills.** One bold group label per line, technologies separated by ` | `, in the order from `profile.md`. Years in brackets on the first line. Exact ATS spellings: `TypeScript` not `TS`, `Node.js` not `NodeJS`, `CI/CD` with the slash, `React` (add `React.js` only if the person wants both).

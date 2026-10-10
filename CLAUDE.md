@@ -9,6 +9,8 @@ Before any task that applies, writes, replies or prepares on the person's behalf
 3. Before using the JobCubby tracker in a session, read `https://jobcubby.com/SKILL.md`.
 4. When the person corrects you, append the correction as a dated rule to `profile.md` (personal) or `rules.md` (general), then fix the output.
 
+Asking the person: every question that is a choice comes as a short numbered list, the recommended option first and marked "(recommended)" with one line of why, the alternatives after it, and the closing line "say default to take the recommended one". Questions about plain facts (a phone number, a date) are asked plainly, grouped, a few at a time, with a sensible default proposed when one exists ("report language: the language you write to me in?"). Never a bare open question where a recommendation is possible, never more than one choice per question.
+
 Skills: `/init`, `/profile`, `/cv`, `/profiles`, `/cover-letter`, `/sweep`, `/stack-radar`, `/outreach`, `/interview-prep`, `/coach`, `/debrief`, `/offer`. Vocabulary: `GLOSSARY.md`. Market conventions: `docs/markets/`.
 
 No em-dashes in anything written on the person's behalf. Do not add "Co-Authored-By" lines to git commits.

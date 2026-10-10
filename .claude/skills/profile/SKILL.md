@@ -14,7 +14,19 @@ Modes:
 
 ## Interview order
 
-Ask in blocks. Confirm each block back in two lines before moving on.
+Ask in blocks. Confirm each block back in two lines before moving on. Facts are asked plainly; every choice is offered in the format from `CLAUDE.md`, recommended option first. Defaults to propose:
+
+- Report language: the language the person writes to the agent in (recommended); English.
+- Email everywhere: one address, firstname.lastname style (recommended); whatever they use now.
+- Title level claimed in free text: none, the title line carries role and stack (recommended: keeps mid and senior roles both open); the level they hold now.
+- Stack order: the technology they use daily and want to be hired for first, everything else after (recommended); alphabetical or by years.
+- Years per technology: real years, never rounded up (recommended); none shown.
+- Levels applied to: the current level and one above (recommended); the current level only.
+- Work modes: remote plus hybrid in the home city (recommended); remote only; onsite included.
+- Location per market: the real city everywhere (recommended); a local city on regional platforms where a foreign city gets applications dropped before a human sees them (then phone and "about" text must agree).
+- Salary figure: one number per market in the upper half of the local range for the role (recommended); the person's own number.
+- Hard skip filters: the template's defaults (consulting with client-site work, stacks they will not work in, internships, lead and staff titles, freelance only) (recommended); a shorter list.
+- Growth targets: adjacent roles in the same stack one level down (recommended); none.
 
 1. **Identity.** Name, date of birth, the one email address to use everywhere, phone, address, LinkedIn, GitHub, citizenships, work authorization per country with the exact wording for forms, visa sponsorship, availability, highest degree, languages with CEFR levels. On languages: push gently against underselling; the level they claim in forms is the one they can defend on a call.
 2. **Target.** Roles, levels, work modes, markets and platforms, hard skip filters, growth targets, differentiators. Ask what they would never want to be applied to. Ask which adjacent roles they would take on purpose.

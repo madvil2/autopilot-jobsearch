@@ -12,7 +12,7 @@ Output: `prep/<company>.md` from `templates/prep.md`. Read `profile.md`, `rules.
 - From JobCubby: `get_application` for the company (description is the running fact sheet: names, numbers said, stages), the posting text, `list_interviews` for the slot, `list_contacts` for the interviewer.
 - From the web: what they build and for whom, how they make money, size, funding and founders, where the team sits, stack (job postings, engineering blog, GitHub), the interviewer's role and background from their public profile.
 - Their **core idea in one line**. This is the domain trap: a clarifying question or a proposal that goes against what the company is built on costs the interview. Write it down so it cannot happen.
-- Ask the person to open the product the day before and tell you **one concrete detail** they noticed. Put it in the file verbatim as the opening of the why-company answer.
+- Ask the person to open the product the day before and tell you **one concrete detail** they noticed. Put it in the file verbatim as the opening of the why-company answer. If they have no time: propose two details you found yourself, the stronger one first marked recommended, and let them pick or say default.
 
 ## 2. Write the file
 

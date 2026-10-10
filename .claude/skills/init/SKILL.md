@@ -29,7 +29,13 @@ All of them are gitignored: `git pull` never touches them.
 
 ## 1b. Data history (one question)
 
-Ask: "Do you want a private history of your data (CVs, prep files, reports) on GitHub? I can set it up now." On yes, run:
+Ask, in the format from `CLAUDE.md`:
+
+1. Private history of my data on GitHub, set up now through `gh` (recommended: CV versions, prep files and reports get a history, nothing to run by hand afterwards)
+2. Private history on another remote I name
+3. No history, plain files only
+
+On 1, run:
 
 ```bash
 scripts/data init --github
@@ -48,11 +54,21 @@ Check each one by calling it, and report what works:
 - **Mail**: look for a tool that searches the inbox (the claude.ai Gmail connector, or any mail MCP). If none, tell the person which to enable; the sweep runs without mail but cannot answer recruiters.
 - **Calendar**: look for a tool that creates calendar events (the claude.ai Google Calendar connector or any calendar MCP). Optional; without it interviews are logged only in JobCubby.
 
+## 2b. Sources (one question)
+
+1. Fill `sources.md` together now from the template, market by market (recommended: the sweep is only as good as its source list)
+2. Later, before the first `/sweep`
+
 ## 3. Log in to the boards
 
 For every source in `sources.md` with `login: yes`, open its login page in the Playwright browser and ask the person to log in there themselves. Wait for them to say they are done, then verify by loading a page that needs a session (the messaging page on LinkedIn, the profile page elsewhere). Playwright keeps its own browser profile, so this is a one-time step.
 
 Never type credentials or one-time codes. Never try to get past a bot check; ask the person to do it in the same window.
+
+## 3b. Order of the next steps (one question)
+
+1. `/profile` now, then `/cv`, then the first `/sweep` by hand (recommended: each one feeds the next)
+2. `/sweep` first with an existing CV PDF dropped into `cv/`, profile and CV later
 
 ## 4. Next steps
 

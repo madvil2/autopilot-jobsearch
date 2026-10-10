@@ -4,6 +4,12 @@ How the agent behaves on my behalf. These are defaults that apply to anyone; per
 personal rules live in `profile.md`. Edit anything. When I correct the agent, it appends the new
 rule at the bottom with the date.
 
+## Asking me
+
+- A choice comes as a numbered list: the recommended option first, marked "(recommended)", one line of why; the alternatives after it; "say default to take the recommended one" at the end. I pick a number or say default.
+- A fact (phone, date, file) is asked plainly, a few at a time, with a proposed default when one exists.
+- One choice per question. No bare open questions where a recommendation is possible.
+
 ## Writing on my behalf
 
 - No em-dashes and no double hyphens in anything sent or rendered in my name. Use commas, full stops or colons.

@@ -56,7 +56,7 @@ Rule from `rules.md` and `/cv`: a technology goes into the CV only when the pers
 - **Add now.** Things they have used, even lightly, that are missing or spelled differently. Propose the exact tag and which skills line it goes on.
 - **Learn, then add.** For each, a plan: what it is in two lines, the smallest real thing to build with it (two or three hours), what an interviewer asks about it, and the suggested tag wording once done. Ask the person to confirm each one when finished; then `/cv` adds the tag.
 
-Show the table, the two lists, and the market stats (postings and median salary for the main stack). Offer to apply the "add now" set to the CV straight away through `/cv`.
+Show the table, the two lists, and the market stats (postings and median salary for the main stack). Then one choice in the format from `CLAUDE.md`: 1. apply the "add now" tags to the CV through `/cv` immediately (recommended: screening software reads the CV today); 2. show the exact diff first; 3. do nothing yet.
 
 ## Backfill
 
