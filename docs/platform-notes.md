@@ -28,6 +28,7 @@ Field names that the tools reject silently or with a one-line error; each wrong 
 - `update_application_status`: `id` (not `application_id`), `status`, and `rejection_reason` for `rejected`.
 - `add_event`: `application_id`, `note` (not `content` or `text`), optional `occurred_at` as a full ISO timestamp.
 - `create_application` and `update_application`: `applied_at` and `follow_up_at` are full ISO 8601 timestamps with an offset (`2026-10-17T09:00:00+02:00`); a bare date is "invalid". `resume_id` comes from `list_resumes`, once per run.
+- Account limits (free plan included): 10,000 applications including the archive, 200 new applications a day, 30 a minute. A sweep never gets near them; a bulk import might, so pace imports to under 30 creates a minute.
 - `list_applications` with no filters exceeds the tool-output limit and lands in a file; `grep` it, never `Read` it (the file is over the Read size limit too).
 
 ## Context and tool hygiene (the cost driver)
@@ -51,6 +52,7 @@ Measured over 93 runs: a run reads 170 to 480 million cached tokens and costs 15
 - Results lazy-load: scroll the results pane and read titles from `li[data-occludable-job-id]`. Page with `&start=25`, `&start=50`.
 - If the first navigation lands on `/authwall`, open the feed once and retry; the session is fine, the first request lost its cookie.
 - Easy Apply radio buttons: click `label[for=<input id>]`, not the input.
+- 2026-10-10: the Easy Apply modal is no longer `[role=dialog]` in the light DOM on first load; find it with `document.querySelector('dialog[open], [role="dialog"], .jobs-easy-apply-modal')` (also check `#interop-outlet` shadowRoot). Read fields via `input.labels`, not a snapshot (the phone-code select alone is huge).
 - Premium "Top applicant" collection (`/jobs/collections/top-applicant/`) lists jobs where LinkedIn ranks the person near the top; cards are occluded until scrolled into view. "Mark as top choice" is limited per month; spend it only on roles that match the profile exactly.
 - Aggregator reposts (generic "Software Engineer" titles from staffing brands) often hide a different stack; open and read before applying.
 
@@ -62,9 +64,14 @@ Measured over 93 runs: a run reads 170 to 480 million cached tokens and costs 15
 ## StepStone
 
 - The full page snapshot is too large; read `#jobDescriptionText` through `browser_evaluate`.
+- 2026-10-10: smart-apply only offers the CV stored in the profile; swapping it means deleting the stored file, which the agent does not do. Keep the current Lebenslauf as the only profile CV.
 - Keep one CV in the StepStone profile; duplicates break their matching ("could not read your CV").
 
 ## ATS boards (Ashby, Greenhouse, Lever, Teamtailor, Personio)
+
+- 2026-10-10: SAP SuccessFactors portals (`/talentcommunity/apply/<id>`, e.g. FUNKE, Bundesdruckerei) redirect to the portal home on direct navigation; clicking "Jetzt bewerben" leads to a sign-in, so they need a candidate account. Schwarz Digits' SAP "rocketapply" dialog works without account: set UI5 controls through `sap.ui.getCore().byId(id)`; it shows no confirmation, check the `api/application/$batch` response (204 + ApplicationSet id).
+- 2026-10-10: Dayforce (MoneyGram) offers "Apply without an Account"; its resume import mangles employers and countries, fix the work-history fields before Next.
+- 2026-10-10: Lever forms can end in an hCaptcha on submit; that is a stop, report the link.
 
 - Always confirm location and work-authorization questions in the actual form before filling; listings mislabel "remote" often.
 - Honest answers in structured fields only; free-text fields get nothing volunteered.
@@ -82,6 +89,7 @@ Measured over 93 runs: a run reads 170 to 480 million cached tokens and costs 15
 - **Habr Career**: applying is one click, then a text area for a cover note appears; always add the note.
 - **Djinni**: some postings refuse with an invalid-LinkedIn-URL error even when the profile is fine; it is their bug, record and move on.
 - **getmatch**: the specialization filter is the repeated `sp` URL parameter; the UI checkboxes do not survive a reload. Navigate to the filtered URL directly.
+- **HireHi** (2026-10-10): the vacancy page's SSR JSON has `apply_url`; `null` means Telegram-only (PRO quota), a URL (often LinkedIn) means apply there. Check it with `fetch` instead of opening each page.
 - **HireHi**: the server-rendered page shows a login button until the client hydrates, so a snapshot on load always looks logged out. Check the session with `fetch('/api/auth/me')` from `browser_evaluate` instead. Contacting an employer through Telegram there is a paid feature with a quota; when the quota reads 0, skip those postings instead of filling forms that cannot be sent. Measured cost: about 18 minutes per run for a handful of applications.
 - **Himalayas**: the HTML is behind a challenge page; the JSON search API works with a browser user agent. Since October 2026 applying requires a Himalayas account, so the direct ATS links are gone; either keep an account logged in or drop the source.
 - **Djinni**: the profile's country field decides whether Ukraine-only postings accept the application; set it per the profile's location-by-market table, otherwise those applications are refused silently.

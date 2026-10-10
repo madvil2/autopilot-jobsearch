@@ -12,7 +12,7 @@ Arguments: `/stack-radar` (last 90 days, target role from `profile.md`), `/stack
 ## 1. Collect
 
 - `list_applications` with `range` = the window, statuses `applied`, `screening`, `interview`, `rejected`. Keep those whose role matches the profile's target roles (loose title match).
-- For each, `get_application` and take its `requirements` list and, if present, the description. JobCubby allows 60 calls a minute; pace the loop, and tell the person how many applications are being read.
+- For each, `get_application` and take its `requirements` list and, if present, the description. JobCubby rate-limits per minute; pace the loop, and tell the person how many applications are being read.
 - Also read `get_job_stats` for each of the profile's main technologies for market-wide counts and median salary.
 
 ## 2. Normalize
