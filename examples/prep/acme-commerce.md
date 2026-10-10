@@ -73,7 +73,9 @@ Say before the end: I want this job, and I want to grow here.
 ## 7. Checklist
 
 Day before: core idea read, product opened, one detail found, salary figure set, intro rehearsed aloud.
-Ten minutes before: clean background, nobody behind me, notes closed, AI assistant closed, water, call link tested.
+Camera and room, checked the day before and again ten minutes before: laptop on a table, camera at eye level, face lit from the front (a window or a lamp in front of me, never behind). The background is my real room, tidy and plain: no blur, no virtual background, no wallpaper; a clean wall or a tidy shelf reads as calm and honest, a blurred edge or a fake office reads as something to hide. Nothing on the desk behind the laptop, no clutter, nobody walking through, door closed, headset in.
+Recording: OBS open, scene tested with a ten-second recording that has both voices, recording started before I join the call. Every call is recorded: it is the only way to see my own silences and missed questions, it is what `/debrief` grades, and it is how the tracker gets the facts and numbers that make the statistics real. A call without a recording is a call I learn nothing from.
+Ten minutes before: notes closed, AI assistant closed, water, call link tested, five minutes early in the room.
 During: ask before answering, think out loud, structure first, never end on "I don't know", only the call language, questions at the end, long fade-out.
 
 ## 8. Debrief (filled by `/debrief` after the call)

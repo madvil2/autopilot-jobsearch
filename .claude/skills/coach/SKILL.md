@@ -142,7 +142,7 @@ One system-design question, timer on, aloud, in the interview language, no notes
 
 **Day before**: read what their product is built on (the domain trap), open the product and find one detail, prepare two concrete reasons and two questions not answered on their site, re-read A1, A2 and B1, set the salary figure for this market, check the time zone and the link, add the interviewers on LinkedIn if this is a final round.
 
-**Ten minutes before**: laptop on a table at eye level, camera straight, quiet room, headset, clean real background (no blur), nobody walking behind me, notes closed, AI assistant closed, water, five minutes early in the room. If nobody has joined fifteen minutes in: one polite mail asking whether I had the right link.
+**Ten minutes before**: laptop on a table at eye level, camera straight, face lit from the front, quiet room, headset. The background is the real room, tidy and plain: no blur, no virtual background; those read as something to hide, a clean wall reads as calm. Nobody walking behind me, notes closed, AI assistant closed, water. OBS recording started before I join (the recording is what `/debrief` works from and where the statistics come from; an unrecorded call teaches nothing). Five minutes early in the room. If nobody has joined fifteen minutes in: one polite mail asking whether I had the right link.
 
 **During**: ask before answering, think out loud, stages then details, never end on "I don't know", face alive, only the interview language.
 
