@@ -325,6 +325,22 @@ async function renderPdf(html, out) {
     const page = await browser.newPage();
     await page.setContent(html, { waitUntil: "networkidle" });
     await page.evaluate(() => document.fonts.ready);
+    // Photos come in at camera size; the PDF only needs ~600px. Downscale in the page so the
+    // file stays small enough to mail and to upload to trackers (a 2000px JPEG alone is 150 KB).
+    await page.evaluate(async () => {
+      for (const img of document.querySelectorAll("img.photo, img.signature-img")) {
+        await img.decode().catch(() => {});
+        const max = img.classList.contains("photo") ? 600 : 800;
+        if (img.naturalWidth <= max && img.naturalHeight <= max) continue;
+        const k = max / Math.max(img.naturalWidth, img.naturalHeight);
+        const c = document.createElement("canvas");
+        c.width = Math.round(img.naturalWidth * k);
+        c.height = Math.round(img.naturalHeight * k);
+        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+        img.src = c.toDataURL("image/jpeg", 0.86);
+        await img.decode().catch(() => {});
+      }
+    });
     await page.pdf({ path: out, format: "A4", printBackground: true, preferCSSPageSize: true });
   } finally {
     await browser.close();

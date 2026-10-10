@@ -65,7 +65,7 @@ The output is `cv/<Firstname_Lastname>_CV.pdf` (suffix from `version:` for varia
 
 ## After rendering
 
-- Upload the PDF to JobCubby as a labelled resume version (`upload_resume` with the file as base64, label = version and date). Set it as default when it replaces the master (`set_default_resume`). Keep the plain-text content current too (`update_resume` with the markdown text) so JobCubby's matches read it.
+- Upload the PDF to JobCubby as a labelled resume version (`upload_resume`, label = version and date, for example `Lebenslauf 2026-10-10`). The file goes in as base64: `base64 -i cv/<file>.pdf | tr -d '\n' > /tmp/cv.b64`, check its size, then `cat` it once and pass it as `data`. The renderer keeps a two-page CV with a photo near 130 KB (base64 about 170 KB), which fits; a file over about 190 KB does not fit the tool-output limit, so re-render it rather than retrying. Every version a sweep may send (per market and language) must exist there, otherwise `resume_id` in the tracker points at the wrong file. Set it as default when it replaces the master (`set_default_resume`). Keep the plain-text content current too (`update_resume` with the markdown text) so JobCubby's matches read it.
 - If `.data.git/` exists, run `scripts/data save "cv <name>"`.
 - Update "Files" in `profile.md` if a new version should be used for a market.
 
