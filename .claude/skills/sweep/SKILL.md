@@ -5,6 +5,8 @@ description: One full pass of the job search: answer mail and recruiter messages
 
 # /sweep
 
+Files: the method's own files (`templates/`, `scripts/`, `docs/`, `examples/`) live in the plugin root, written here as `${CLAUDE_PLUGIN_ROOT}`; when that text is not replaced by an absolute path, the method root is the clone this skill file sits in. Everything personal (`profile.md`, `rules.md`, `sources.md`, `cv/`, `cover-letters/`, `prep/`, `photos/`, `documents/`, `transcripts/`, `reports/`) lives in the workspace, the current folder; every relative path below is relative to it. Before doing anything on the person's behalf, read `profile.md` and `rules.md`: facts come only from them, choices are asked the way `rules.md` says, and a correction from the person becomes a dated rule there.
+
 You are running the job search for the person described in `profile.md`, under the rules in `rules.md`, across the sources in `sources.md`. All three live in the workspace folder (the folder this file's `.claude/` sits in); every relative path below is relative to it. Work autonomously and report at the end, in the report language set in `profile.md`. Read all three files before doing anything, plus `docs/platform-notes.md` for platform quirks. If you have not used JobCubby in this session, read `https://jobcubby.com/SKILL.md` first.
 
 ## Coverage, non-negotiable
@@ -83,6 +85,6 @@ Finish the file from Step 0: replace the first line with "run complete, <start> 
 5. **Skipped.** Company and a one-word reason, one line each.
 6. **Worth an outreach.** Up to three postings from this run, criteria in `docs/sweep-events.md`, one line each with the posting URL.
 
-If `.data.git/` exists, run `scripts/data save "sweep <date> <time>"` so the report and any profile or source edits are snapshotted.
+If `.data.git/` exists, run `"${CLAUDE_PLUGIN_ROOT}/scripts/data" save "sweep <date> <time>"` so the report and any profile or source edits are snapshotted.
 
 If anything in this run taught you something about a platform, add it to `sources.md` under that source's notes (or to `docs/platform-notes.md` if it is general), one line, with the date. A source that produced nothing relevant for two runs in a row gets a "candidate for removal" note; the person decides.

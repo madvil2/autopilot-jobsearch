@@ -5,6 +5,8 @@ description: Build, tailor and render the CV. Interviews section by section into
 
 # /cv
 
+Files: the method's own files (`templates/`, `scripts/`, `docs/`, `examples/`) live in the plugin root, written here as `${CLAUDE_PLUGIN_ROOT}`; when that text is not replaced by an absolute path, the method root is the clone this skill file sits in. Everything personal (`profile.md`, `rules.md`, `sources.md`, `cv/`, `cover-letters/`, `prep/`, `photos/`, `documents/`, `transcripts/`, `reports/`) lives in the workspace, the current folder; every relative path below is relative to it. Before doing anything on the person's behalf, read `profile.md` and `rules.md`: facts come only from them, choices are asked the way `rules.md` says, and a correction from the person becomes a dated rule there.
+
 The CV is markdown in `cv/`, rendered to PDF by `scripts/render.mjs`. `cv/base.md` is the master; variants are separate files (`cv/de.md`, `cv/backend.md`, `cv/acme.md`). The markdown contract is `templates/cv.md`: one `# Name`, header lines, then only these sections: Summary, Technical Skills, Work Experience, Education, Achievements, Certifications, Language Skills, Hobbies. Entries under Work Experience and Education are `### dates | role`. The renderer rejects anything else and skips empty sections.
 
 Modes:
@@ -58,7 +60,7 @@ Run through `rules.md` and `profile.md`:
 ## Rendering
 
 ```bash
-node scripts/render.mjs cv/base.md
+node "${CLAUDE_PLUGIN_ROOT}/scripts/render.mjs" cv/base.md
 ```
 
 The output is `cv/<Firstname_Lastname>_CV.pdf` (suffix from `version:` for variants, `Lebenslauf` for German) plus one PNG per page. Open the PNGs and look: two pages at most, no orphan headings, header lines not wrapping, photo present if expected. Fix the markdown (not the template) for content problems; fix `templates/cv.html` only when the design itself is wrong.
@@ -66,7 +68,7 @@ The output is `cv/<Firstname_Lastname>_CV.pdf` (suffix from `version:` for varia
 ## After rendering
 
 - Upload the PDF to JobCubby as a labelled resume version (`upload_resume`, label = version and date, for example `Lebenslauf 2026-10-10`). The file goes in as base64: `base64 -i cv/<file>.pdf | tr -d '\n' > /tmp/cv.b64`, check its size, then `cat` it once and pass it as `data`. The renderer keeps a two-page CV with a photo near 130 KB (base64 about 170 KB), which fits; a file over about 190 KB does not fit the tool-output limit, so re-render it rather than retrying. Every version a sweep may send (per market and language) must exist there, otherwise `resume_id` in the tracker points at the wrong file. Set it as default when it replaces the master (`set_default_resume`). Keep the plain-text content current too (`update_resume` with the markdown text) so JobCubby's matches read it.
-- If `.data.git/` exists, run `scripts/data save "cv <name>"`.
+- If `.data.git/` exists, run `"${CLAUDE_PLUGIN_ROOT}/scripts/data" save "cv <name>"`.
 - Update "Files" in `profile.md` if a new version should be used for a market.
 
 ## Tailoring a variant

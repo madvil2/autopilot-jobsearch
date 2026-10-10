@@ -5,6 +5,8 @@ description: My interview method: the intro structure, the three why-company fra
 
 # /coach
 
+Files: the method's own files (`templates/`, `scripts/`, `docs/`, `examples/`) live in the plugin root, written here as `${CLAUDE_PLUGIN_ROOT}`; when that text is not replaced by an absolute path, the method root is the clone this skill file sits in. Everything personal (`profile.md`, `rules.md`, `sources.md`, `cv/`, `cover-letters/`, `prep/`, `photos/`, `documents/`, `transcripts/`, `reports/`) lives in the workspace, the current folder; every relative path below is relative to it. Before doing anything on the person's behalf, read `profile.md` and `rules.md`: facts come only from them, choices are asked the way `rules.md` says, and a correction from the person becomes a dated rule there.
+
 This is how I run interviews. It is written from my own calls, mock interviews and the notes I took after them. `/interview-prep` applies it to one company; `/debrief` grades a recording against it.
 
 Modes: `/coach` prints the method. `/coach mock <HR | system design | <topic>>` runs a mock in chat: you play the interviewer, ask one question at a time, and after each answer grade it against the rules below in three lines (what worked, what to fix, the better line). Text cannot hear silence, so in mocks ask the person to type the clarifying questions they would ask out loud before answering.

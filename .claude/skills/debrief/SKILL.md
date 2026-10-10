@@ -5,6 +5,8 @@ description: After an interview: transcribe the OBS recording with stable-ts, gr
 
 # /debrief <company> [recording file]
 
+Files: the method's own files (`templates/`, `scripts/`, `docs/`, `examples/`) live in the plugin root, written here as `${CLAUDE_PLUGIN_ROOT}`; when that text is not replaced by an absolute path, the method root is the clone this skill file sits in. Everything personal (`profile.md`, `rules.md`, `sources.md`, `cv/`, `cover-letters/`, `prep/`, `photos/`, `documents/`, `transcripts/`, `reports/`) lives in the workspace, the current folder; every relative path below is relative to it. Before doing anything on the person's behalf, read `profile.md` and `rules.md`: facts come only from them, choices are asked the way `rules.md` says, and a correction from the person becomes a dated rule there.
+
 Recordings live in `recordings/`, transcripts in `transcripts/`. Setup and commands are in `docs/recording-and-transcription.md`; read it when the person has not recorded before.
 
 ## 1. Before the call (when asked)
@@ -37,5 +39,5 @@ Then three lines: what went well, the one thing to fix first, how to practice it
 
 - `complete_interview` with a short outcome ("done, waiting for feedback" or what they said).
 - If a next round was named: `schedule_interview` if a time exists, otherwise a timeline event with the expected date, and a calendar event when the slot is known.
-- If `.data.git/` exists, run `scripts/data save "debrief <name>"`.
+- If `.data.git/` exists, run `"${CLAUDE_PLUGIN_ROOT}/scripts/data" save "debrief <name>"`.
 - If a rule emerged from the mistake ("never do X again"), append it to `profile.md` personal rules with the date, through the same mechanism `/profile` uses.

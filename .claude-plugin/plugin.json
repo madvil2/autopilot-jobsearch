@@ -1,0 +1,12 @@
+{
+  "name": "autopilot-jobsearch",
+  "displayName": "Autopilot Job Search",
+  "version": "0.1.0",
+  "description": "Job search on autopilot: twice-daily sweeps that apply and reply, a CV that renders to PDF, cover letters, interview prep, debriefs and offers, tracked in JobCubby.",
+  "author": { "name": "Kostiantyn Kaimov", "url": "https://github.com/madvil2" },
+  "homepage": "https://github.com/madvil2/autopilot-jobsearch",
+  "repository": "https://github.com/madvil2/autopilot-jobsearch",
+  "license": "MIT",
+  "keywords": ["job-search", "cv", "resume", "cover-letter", "interview", "jobcubby", "playwright"],
+  "skills": ["./.claude/skills/"]
+}

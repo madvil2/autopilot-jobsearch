@@ -20,14 +20,29 @@ Hack around with it. Change the rules to yours. The method is mine; the search i
 
 ## Installation (two minutes)
 
+It is a Claude Code plugin. In any Claude Code session:
+
+```
+/plugin install autopilot-jobsearch --marketplace madvil2/autopilot-jobsearch
+```
+
+Then make a folder for your search and start there:
+
+```bash
+mkdir my-job-search && cd my-job-search
+claude               # then: /autopilot-jobsearch:init
+```
+
+`/autopilot-jobsearch:init` creates your workspace files, sets up the tool servers for that folder, checks them, and opens each job board once so you can log in. Then drop the CV you already have into `cv/old/`, run `/autopilot-jobsearch:profile` and `/autopilot-jobsearch:cv` (they read that file and ask only for what it does not say), fill `sources.md` with your boards, run `/autopilot-jobsearch:sweep` once by hand, and schedule it twice a day (`docs/scheduling.md`). Everything the skills write stays in that folder; the plugin updates with `claude plugin update autopilot-jobsearch`.
+
+To change the method itself, clone instead: the clone is both the plugin source and a workspace, and the skills load as `/init`, `/sweep` and so on when you run `claude` inside it.
+
 ```bash
 git clone https://github.com/madvil2/autopilot-jobsearch.git
 cd autopilot-jobsearch
-npm install          # Playwright's Chromium for the PDF renderer
+npm install          # the PDF renderer's dependency
 claude               # then: /init
 ```
-
-`/init` creates your workspace files, checks the tools, and opens each job board once so you can log in. Then drop the CV you already have into `cv/old/`, run `/profile` and `/cv` (they read that file and ask only for what it does not say), fill `sources.md` with your boards, run `/sweep` once by hand, and schedule it twice a day (`docs/scheduling.md`).
 
 Requirements: Node 20+, Claude Code, a JobCubby account, Gmail and Google Calendar connectors (or equivalents). Optional: poppler for PDF previews (`brew install poppler`), OBS and `stable-ts` for recording and transcribing interviews (`docs/recording-and-transcription.md`).
 
@@ -58,10 +73,10 @@ Example output in `examples/`: a fictional engineer's profile, CV ([markdown](ex
 
 ## How it works
 
-- **The clone is the workspace.** Claude Code picks up the skills from `.claude/skills/` when you run it here. Your files (`profile.md`, `rules.md`, `sources.md`, `cv/`, `cover-letters/`, `prep/`, `photos/`, `documents/`, `recordings/`, `transcripts/`, `reports/`) are gitignored. `git pull` updates the method, never your data, and you can change the method and push it without touching your data.
+- **A folder is the workspace.** The skills come from the plugin; your files (`profile.md`, `rules.md`, `sources.md`, `cv/`, `cover-letters/`, `prep/`, `photos/`, `documents/`, `recordings/`, `transcripts/`, `reports/`) live in whatever folder you run Claude Code in. In a clone the same files are gitignored, so `git pull` updates the method and never your data.
 - **Your data gets a history, privately (optional).** `/init` asks one question and runs `scripts/data init --github`: a second git (`.data.git/`, ignored by the method repo) tracks only your personal paths in place, a private GitHub repo is created for it through `gh`, and from then on every skill that writes a CV, a prep file or a report saves a snapshot. You never run git for your data; `scripts/data log` and `scripts/data diff` are there when you want to look back. Any other private remote works with `scripts/data remote <url>`.
-- **Tracker: JobCubby.** I use [JobCubby](https://jobcubby.com/r/kostiantyn-53zr), a friend's platform: a pipeline with statuses and timelines, interviews, contacts, résumé versions, a job index with AI matches against your profile, and an MCP endpoint with OAuth, so the agent reads and writes it directly. `.mcp.json` already points at it. The free plan carries a real search: 10,000 applications per account including the archive, 200 new a day, 30 a minute. That link is my referral. For a different tracker, fork and replace the JobCubby calls; the contract is small (create and update applications, statuses, events, interviews, résumés).
-- **Browser: Playwright MCP.** Also in `.mcp.json`. It keeps its own browser profile, so you log in to each board once and the sweep runs on your sessions after that. The agent never types a password.
+- **Tracker: JobCubby.** I use [JobCubby](https://jobcubby.com/r/kostiantyn-53zr), a friend's platform: a pipeline with statuses and timelines, interviews, contacts, résumé versions, a job index with AI matches against your profile, and an MCP endpoint with OAuth, so the agent reads and writes it directly. `/init` writes a `.mcp.json` into your workspace that points at it (and at the Playwright MCP), so both servers run only in that folder. The free plan carries a real search: 10,000 applications per account including the archive, 200 new a day, 30 a minute. That link is my referral. For a different tracker, fork and replace the JobCubby calls; the contract is small (create and update applications, statuses, events, interviews, résumés).
+- **Browser: Playwright MCP.** In the same `.mcp.json`. It keeps its own browser profile, so you log in to each board once and the sweep runs on your sessions after that. The agent never types a password.
 - **Mail and calendar.** The claude.ai Gmail and Google Calendar connectors, or any mail and calendar MCP. The skills address them by what they do, not by tool name.
 - **PDFs.** `scripts/render.mjs` turns `cv/*.md` and `cover-letters/*.md` into A4 PDFs through Chromium, with the layout in `templates/cv.html` and `templates/cover-letter.html`: Roboto, single column, date column on the left, photo top right, no tables, so parsers and humans both read it. Edit the HTML to change the design; the markdown contract stays.
 
@@ -83,8 +98,9 @@ Example output in `examples/`: a fictional engineer's profile, CV ([markdown](ex
 ## Layout
 
 ```
-.claude/skills/      the twelve skills
-templates/           blank workspace files with guidance, CV and letter HTML, section labels per language
+.claude-plugin/      plugin manifest and the marketplace entry (the repo installs as a plugin)
+.claude/skills/      the twelve skills (loaded by the plugin, and as project skills inside a clone)
+templates/           blank workspace files with guidance, mcp.json, CV and letter HTML, section labels per language
 scripts/             render.mjs (md to PDF), test.mjs, lint-skills.mjs, data (private history)
 routines/sweep.md    the scheduled-task prompt (one paragraph: cd into the clone, run /sweep)
 docs/                platform notes, scheduling, recording and transcription, market notes (Germany first)

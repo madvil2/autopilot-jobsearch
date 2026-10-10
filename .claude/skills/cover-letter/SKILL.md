@@ -5,6 +5,8 @@ description: Write a cover letter for one posting in the three-paragraph structu
 
 # /cover-letter
 
+Files: the method's own files (`templates/`, `scripts/`, `docs/`, `examples/`) live in the plugin root, written here as `${CLAUDE_PLUGIN_ROOT}`; when that text is not replaced by an absolute path, the method root is the clone this skill file sits in. Everything personal (`profile.md`, `rules.md`, `sources.md`, `cv/`, `cover-letters/`, `prep/`, `photos/`, `documents/`, `transcripts/`, `reports/`) lives in the workspace, the current folder; every relative path below is relative to it. Before doing anything on the person's behalf, read `profile.md` and `rules.md`: facts come only from them, choices are asked the way `rules.md` says, and a correction from the person becomes a dated rule there.
+
 Input: a posting URL or pasted posting text, plus optionally the CV version to base it on. Output: `cover-letters/<company>-<role>.md` and its PDF, rendered by `scripts/render.mjs`. The markdown contract is `templates/cover-letter.md`: frontmatter with sender, recipient, place, date, subject, greeting and signoff, then plain paragraphs.
 
 ## Gather
@@ -36,7 +38,7 @@ Rules that apply here from `rules.md`: no em-dashes, no copied sentences except 
 ## Render and record
 
 ```bash
-node scripts/render.mjs cover-letters/<company>-<role>.md
+node "${CLAUDE_PLUGIN_ROOT}/scripts/render.mjs" cover-letters/<company>-<role>.md
 ```
 
-Check the PNG: one page, header matches the CV header. If `.data.git/` exists, run `scripts/data save "cover letter <name>"`. Then in JobCubby add a timeline event on the application ("Cover letter sent, file cover-letters/<name>.pdf") and, if the application is new, create it with the letter path in the description.
+Check the PNG: one page, header matches the CV header. If `.data.git/` exists, run `"${CLAUDE_PLUGIN_ROOT}/scripts/data" save "cover letter <name>"`. Then in JobCubby add a timeline event on the application ("Cover letter sent, file cover-letters/<name>.pdf") and, if the application is new, create it with the letter path in the description.

@@ -5,6 +5,8 @@ description: Skip the line on a posting that matters: find the hiring manager an
 
 # /outreach <company> [posting URL]
 
+Files: the method's own files (`templates/`, `scripts/`, `docs/`, `examples/`) live in the plugin root, written here as `${CLAUDE_PLUGIN_ROOT}`; when that text is not replaced by an absolute path, the method root is the clone this skill file sits in. Everything personal (`profile.md`, `rules.md`, `sources.md`, `cv/`, `cover-letters/`, `prep/`, `photos/`, `documents/`, `transcripts/`, `reports/`) lives in the workspace, the current folder; every relative path below is relative to it. Before doing anything on the person's behalf, read `profile.md` and `rules.md`: facts come only from them, choices are asked the way `rules.md` says, and a correction from the person becomes a dated rule there.
+
 An application through a form lands on an HR screener's desk among hundreds. The person who decides is the head of the department with the vacancy, and they have a problem to solve: a deadline, a product that does not ship, a customer who complains. Talking to that person, or to someone who can introduce me, turns an application into a conversation. This skill prepares that; the person makes the call and sends the messages.
 
 The sweep flags candidates for outreach in its report (strong match, a company that is not hiding behind a big ATS, a role that is clearly inside one team). Run this skill for those, not for every quickie.
@@ -36,7 +38,7 @@ Formal register everywhere: "Dear <First Last>", paragraphs, "thank you" not "th
 - **Referral ask to a connection** (under 90 words): how I know them or that we are connected, that I am looking for <role> work in <market>, the specific opening at their company by title, "is there any chance you could refer me to the hiring manager or HR?", offer to send the CV and anything else needed, thank you, first name.
 - **To someone in the department when the manager is unreachable**: who I am, which role, what I bring in two lines, "who would be the right person to talk to about this?", CV attached.
 
-Save the drafts to `prep/<company>-outreach.md` and show them. If `.data.git/` exists, run `scripts/data save "outreach <name>"`. After the person sends or calls, log the event on the JobCubby application (`add_event`) and set a follow-up date five workdays out.
+Save the drafts to `prep/<company>-outreach.md` and show them. If `.data.git/` exists, run `"${CLAUDE_PLUGIN_ROOT}/scripts/data" save "outreach <name>"`. After the person sends or calls, log the event on the JobCubby application (`add_event`) and set a follow-up date five workdays out.
 
 ## 4. After the call
 

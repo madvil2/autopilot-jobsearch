@@ -10,11 +10,14 @@
 #   scripts/data save ["message"]     snapshot every personal path and push if a remote is set
 #   scripts/data <any git command>    status, log, diff, checkout ... against the data git
 #
-# Optional. Nothing in the skills requires it; the sweep calls `save` after each run when it exists.
+# Run it from the workspace folder. Optional. Nothing in the skills requires it; the sweep calls `save` after each run when it exists.
 
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# The workspace is the folder the command runs in (where profile.md lives), not where this script lives:
+# as a plugin the script sits in the plugin cache, as a clone both are the same folder.
+ROOT="$(pwd)"
+[ -f "$ROOT/profile.md" ] || [ -d "$ROOT/.data.git" ] || { echo "run this from your workspace folder (the one with profile.md); current: $ROOT"; exit 1; }
 GIT_DIR="$ROOT/.data.git"
 PATHS=(profile.md rules.md sources.md cv cover-letters prep photos documents transcripts reports notes)
 

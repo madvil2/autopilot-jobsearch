@@ -17,6 +17,8 @@ import { chromium } from "playwright";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const TEMPLATES = join(ROOT, "templates");
+// Set in main(): the folder the input file's parent sits in, which is the workspace for cv/x.md.
+let INPUT_DIR = process.cwd();
 const FONTS = join(ROOT, "fonts");
 
 // ---------- CLI ----------
@@ -29,6 +31,7 @@ async function main() {
     process.exit(args.length === 0 ? 1 : 0);
   }
   const input = resolve(args[0]);
+  INPUT_DIR = dirname(input);
   const outArg = args.includes("--out") ? resolve(args[args.indexOf("--out") + 1]) : null;
   const wantPreview = !args.includes("--no-preview");
   const dumpHtml = args.includes("--html");
@@ -178,14 +181,14 @@ function parseCv(body, labels) {
 
 function cvView(cv, meta, labels) {
   const showPhoto = meta.photo && meta.photo !== "none";
-  const photo = showPhoto ? dataUri(resolve(ROOT, meta.photo)) : "";
+  const photo = showPhoto ? dataUri(assetPath(meta.photo)) : "";
   const header = cv.header
     .filter((l) => meta.show_birth_date !== false || !/\b(born|geboren|geb\.)\b/i.test(l))
     .map((l) => `<p class="header-line">${inline(l)}</p>`)
     .join("\n");
 
   const signature = meta.sign_place
-    ? `<div class="signature"><p>${escapeHtml(meta.sign_place)}, ${todayFor(meta.language || "en")}</p>${meta.signature ? `<img class="signature-img" src="${dataUri(resolve(ROOT, meta.signature))}" alt="">` : ""}<p class="signature-name">${escapeHtml(cv.name)}</p></div>`
+    ? `<div class="signature"><p>${escapeHtml(meta.sign_place)}, ${todayFor(meta.language || "en")}</p>${meta.signature ? `<img class="signature-img" src="${dataUri(assetPath(meta.signature))}" alt="">` : ""}<p class="signature-name">${escapeHtml(cv.name)}</p></div>`
     : "";
   const sections = cv.sections
     .map((s) => {
@@ -310,6 +313,16 @@ function titleCase(s) {
   return s.replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
+// A photo or signature path in the frontmatter is relative to the workspace (`photos/x.jpeg`). Try the
+// current folder, then the input file's parent folder, then the method root (for the examples).
+function assetPath(p) {
+  for (const base of [process.cwd(), resolve(INPUT_DIR, ".."), ROOT]) {
+    const f = resolve(base, p);
+    if (existsSync(f)) return f;
+  }
+  return resolve(process.cwd(), p);
+}
+
 function dataUri(path) {
   if (!existsSync(path)) fail(`photo not found: ${path}`);
   const ext = extname(path).slice(1).toLowerCase();
@@ -323,9 +336,23 @@ function fileUrl(path) {
 
 // ---------- PDF ----------
 
+async function launchChromium() {
+  try {
+    return await chromium.launch();
+  } catch (e) {
+    if (!/Executable doesn't exist|browserType.launch/.test(String(e))) throw e;
+    // Installed as a plugin, the playwright package arrives without its postinstall step, so the
+    // browser is missing on first use. Fetch it once (about 150 MB) and retry.
+    console.error("Chromium for Playwright is not installed yet, downloading it once...");
+    const { execFileSync } = await import("node:child_process");
+    execFileSync(process.execPath, [join(ROOT, "node_modules", "playwright", "cli.js"), "install", "chromium"], { stdio: "inherit" });
+    return await chromium.launch();
+  }
+}
+
 async function renderPdf(html, out) {
   mkdirSync(dirname(out), { recursive: true });
-  const browser = await chromium.launch();
+  const browser = await launchChromium();
   try {
     const page = await browser.newPage();
     await page.setContent(html, { waitUntil: "networkidle" });

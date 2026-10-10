@@ -5,6 +5,8 @@ description: Interview the person and write profile.md, the single source of fac
 
 # /profile
 
+Files: the method's own files (`templates/`, `scripts/`, `docs/`, `examples/`) live in the plugin root, written here as `${CLAUDE_PLUGIN_ROOT}`; when that text is not replaced by an absolute path, the method root is the clone this skill file sits in. Everything personal (`profile.md`, `rules.md`, `sources.md`, `cv/`, `cover-letters/`, `prep/`, `photos/`, `documents/`, `transcripts/`, `reports/`) lives in the workspace, the current folder; every relative path below is relative to it. Before doing anything on the person's behalf, read `profile.md` and `rules.md`: facts come only from them, choices are asked the way `rules.md` says, and a correction from the person becomes a dated rule there.
+
 `profile.md` is the only place facts about the person live. Every other skill reads it. This skill fills it by asking questions, in the person's language, a few at a time. Never guess a fact; if they do not know, leave the field empty and say which skill will need it.
 
 Modes:
@@ -62,7 +64,7 @@ Ask in blocks, only the fields still empty after step 0. Confirm each block back
 
 - Re-read `profile.md` and check it against `rules.md`: no invented facts, no title level outside what they chose, no gaps written into free-text fields.
 - Push the profile to JobCubby so its matches use current data: `update_profile` (headline, summary, skills in the chosen order, work history, education) and `update_preferences` (target role, seniority, work modes, locations, salary, job types, industries). Read the existing profile first and send only what changed.
-- If `.data.git/` exists, run `scripts/data save "profile <name>"`.
+- If `.data.git/` exists, run `"${CLAUDE_PLUGIN_ROOT}/scripts/data" save "profile <name>"`.
 - Tell the person what is still empty and which skill will ask for it.
 
 ## Recording corrections

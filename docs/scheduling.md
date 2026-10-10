@@ -1,11 +1,11 @@
 # Running the sweep twice a day
 
-The sweep is the `/sweep` skill. The routine prompt in `routines/sweep.md` only changes into the clone and runs it, so there is one source of truth. Morning and evening work well: the morning run catches overnight mail and fresh postings, the evening run catches replies and the day's postings.
+The sweep is the `/autopilot-jobsearch:sweep` skill (`/sweep` inside a clone). The routine prompt in `routines/sweep.md` only changes into the workspace and runs it, so there is one source of truth. Morning and evening work well: the morning run catches overnight mail and fresh postings, the evening run catches replies and the day's postings.
 
 ## Claude Code desktop app: scheduled task
 
-1. Open the clone in the desktop app.
-2. Create a scheduled task with the contents of `routines/sweep.md` as the prompt, with the absolute path of your clone filled in. The prompt reads the skill file by path on purpose: a scheduled task does not start inside the clone, so it cannot rely on project skills being loaded.
+1. Open the workspace folder in the desktop app (the folder with `profile.md`; the plugin's MCP servers come from its `.mcp.json`, so the task must run in that folder).
+2. Create a scheduled task with the first paragraph of `routines/sweep.md` as the prompt, with the absolute path of your workspace filled in. Without the plugin, use the second paragraph, which reads the skill file from the clone by path.
 3. Schedule: `12 9,19 * * *` (09:12 and 19:12 local time) or whatever suits you.
 4. The task runs in its own session; the first run asks for tool permissions once. Approve the Playwright, JobCubby, mail and calendar tools for the task.
 
@@ -15,7 +15,7 @@ Reports land in `reports/`, so a run you did not watch is still readable.
 
 ```bash
 # crontab -e
-12 9,19 * * * cd /absolute/path/to/autopilot-jobsearch && claude -p "$(cat routines/sweep.md)" --permission-mode acceptEdits >> reports/cron.log 2>&1
+12 9,19 * * * cd /absolute/path/to/workspace && claude -p "run /autopilot-jobsearch:sweep here" --permission-mode acceptEdits >> reports/cron.log 2>&1
 ```
 
 Headless runs cannot answer permission prompts; pre-approve the tools the sweep needs in `.claude/settings.local.json` or run once interactively and accept them. The machine must be awake at run time (on a laptop, use the OS's wake schedule or run the task only while you work).

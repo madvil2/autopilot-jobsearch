@@ -5,6 +5,8 @@ description: Prepare one interview: research the company, write prep/<company>.m
 
 # /interview-prep <company> [round] [date time]
 
+Files: the method's own files (`templates/`, `scripts/`, `docs/`, `examples/`) live in the plugin root, written here as `${CLAUDE_PLUGIN_ROOT}`; when that text is not replaced by an absolute path, the method root is the clone this skill file sits in. Everything personal (`profile.md`, `rules.md`, `sources.md`, `cv/`, `cover-letters/`, `prep/`, `photos/`, `documents/`, `transcripts/`, `reports/`) lives in the workspace, the current folder; every relative path below is relative to it. Before doing anything on the person's behalf, read `profile.md` and `rules.md`: facts come only from them, choices are asked the way `rules.md` says, and a correction from the person becomes a dated rule there.
+
 Output: `prep/<company>.md` from `templates/prep.md`. Read `profile.md`, `rules.md` and `.claude/skills/coach/SKILL.md` first; the prep applies the coach method to one company.
 
 ## 1. Facts
@@ -33,5 +35,5 @@ Keep the file under two screens. It is read the day before and closed before the
 
 - If the interview is not in JobCubby yet: `schedule_interview` with date, time, round, type, meeting link, interviewer. Move the application to `interview`.
 - Calendar: create the event with the link and a reminder, unless an event for that company and time already exists. Add a timeline event "Prep written: prep/<company>.md".
-- If `.data.git/` exists, run `scripts/data save "prep <name>"`.
+- If `.data.git/` exists, run `"${CLAUDE_PLUGIN_ROOT}/scripts/data" save "prep <name>"`.
 - Tell the person the three things to do before the call: read the core idea, open the product and find the detail, rehearse the intro aloud once. For a final round, add: connect with the interviewers on LinkedIn today.

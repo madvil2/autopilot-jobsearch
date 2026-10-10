@@ -1,0 +1,14 @@
+{
+  "name": "autopilot-jobsearch",
+  "description": "The autopilot-jobsearch plugin: a job search run by Claude Code.",
+  "owner": { "name": "Kostiantyn Kaimov", "url": "https://github.com/madvil2" },
+  "plugins": [
+    {
+      "name": "autopilot-jobsearch",
+      "source": ".",
+      "description": "Twice-daily job-search sweeps, CV and cover-letter rendering, interview prep, debriefs and offers, tracked in JobCubby.",
+      "category": "productivity",
+      "tags": ["job-search", "cv", "interview"]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # autopilot-jobsearch
 
-This clone is a job-search workspace. The skills in `.claude/skills/` do the work; the person's data lives in gitignored files at the root.
+This clone is a job-search workspace and the source of the `autopilot-jobsearch` plugin. The skills in `.claude/skills/` do the work (here as `/sweep`, installed as a plugin as `/autopilot-jobsearch:sweep`); the person's data lives in gitignored files at the root. The method's files are in this folder, so wherever a skill says `${CLAUDE_PLUGIN_ROOT}`, that is this folder.
 
 Before any task that applies, writes, replies or prepares on the person's behalf:
 

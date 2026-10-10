@@ -5,7 +5,13 @@ description: First run in a fresh clone. Creates the personal workspace files fr
 
 # /init
 
-Run this once after cloning. It sets up the workspace and the tools. It never asks for passwords.
+Files: the method's own files (`templates/`, `scripts/`, `docs/`, `examples/`) live in the plugin root, written here as `${CLAUDE_PLUGIN_ROOT}`; when that text is not replaced by an absolute path, the method root is the clone this skill file sits in. Everything personal (`profile.md`, `rules.md`, `sources.md`, `cv/`, `cover-letters/`, `prep/`, `photos/`, `documents/`, `transcripts/`, `reports/`) lives in the workspace, the current folder; every relative path below is relative to it. Before doing anything on the person's behalf, read `profile.md` and `rules.md`: facts come only from them, choices are asked the way `rules.md` says, and a correction from the person becomes a dated rule there.
+
+Run this once, in the folder that will hold the job search (an empty folder, or the clone itself). It sets up the workspace and the tools. It never asks for passwords.
+
+## 0. Tool servers
+
+If the workspace has no `.mcp.json`, copy `templates/mcp.json` to `.mcp.json` here. It declares the JobCubby MCP (HTTP, OAuth) and the Playwright MCP (started through `npx`), scoped to this folder so they do not run in the person's other projects. Claude Code reads it at start: tell the person to leave the session and run `claude` again in this folder, approve the two servers when asked, then run this skill again; it continues from step 1.
 
 ## 1. Workspace files
 
@@ -26,7 +32,7 @@ Create these from `templates/` if they do not exist yet (never overwrite an exis
 | `recordings/` | empty folder |
 | `reports/` | empty folder |
 
-All of them are gitignored: `git pull` never touches them.
+In a clone they are gitignored, so `git pull` never touches them; as a plugin user the folder is simply yours.
 
 ## 1b. Data history (one question)
 
@@ -39,18 +45,18 @@ Ask, in the format from `CLAUDE.md`:
 On 1, run:
 
 ```bash
-scripts/data init --github
+"${CLAUDE_PLUGIN_ROOT}/scripts/data" init --github
 ```
 
-It creates `.data.git/` (a second git that tracks only the personal paths, in place; the folder looks the same), creates a private GitHub repo `autopilot-jobsearch-data` through `gh`, and pushes the first snapshot. If `gh` is missing or not logged in, the script says what to do; offer `scripts/data init` alone plus `scripts/data remote <url>` for any other private remote. From then on every skill that writes a personal file saves a snapshot, and the person never runs git for their data. On no, skip; it can be done later with the same command.
+It creates `.data.git/` (a second git that tracks only the personal paths, in place; the folder looks the same), creates a private GitHub repo `autopilot-jobsearch-data` through `gh`, and pushes the first snapshot. If `gh` is missing or not logged in, the script says what to do; offer `"${CLAUDE_PLUGIN_ROOT}/scripts/data" init` alone plus `"${CLAUDE_PLUGIN_ROOT}/scripts/data" remote <url>` for any other private remote. From then on every skill that writes a personal file saves a snapshot, and the person never runs git for their data. On no, skip; it can be done later with the same command.
 
-Run `npm install` if `node_modules/` is missing (it installs Playwright's Chromium for the PDF renderer).
+The PDF renderer needs the `playwright` package next to `scripts/render.mjs`: as a plugin it is installed by Claude Code at install time, in a clone run `npm install` once. Chromium itself downloads on the first render (about 150 MB), or now with `node "${CLAUDE_PLUGIN_ROOT}/node_modules/playwright/cli.js" install chromium`.
 
 ## 2. Tools
 
 Check each one by calling it, and report what works:
 
-- **JobCubby MCP**: call `get_profile`. If it fails, the person needs to approve the OAuth prompt for the `jobcubby` server from `.mcp.json` (Claude Code shows it on first use, or they run `/mcp`). Then read `https://jobcubby.com/SKILL.md` once so you know its tools and rules. Point them to the referral link in `README.md` if they have no account yet.
+- **JobCubby MCP**: call `get_profile`. If it fails, the person needs to approve the OAuth prompt for the `jobcubby` server from the workspace `.mcp.json` (Claude Code shows it on first use, or they run `/mcp`). Then read `https://jobcubby.com/SKILL.md` once so you know its tools and rules. Point them to the referral link in `README.md` if they have no account yet.
 - **Playwright MCP**: call `browser_navigate` to `https://example.com`. If the server is missing, the `.mcp.json` entry starts it through `npx`; the first start downloads a browser.
 - **Mail**: look for a tool that searches the inbox (the claude.ai Gmail connector, or any mail MCP). If none, tell the person which to enable; the sweep runs without mail but cannot answer recruiters.
 - **Calendar**: look for a tool that creates calendar events (the claude.ai Google Calendar connector or any calendar MCP). Optional; without it interviews are logged only in JobCubby.
