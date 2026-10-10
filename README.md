@@ -35,7 +35,7 @@ claude               # then: /autopilot-jobsearch:init
 
 `/autopilot-jobsearch:init` creates your workspace files, sets up the tool servers for that folder, checks them, and opens each job board once so you can log in. Then drop the CV you already have into `cv/old/`, run `/autopilot-jobsearch:profile` and `/autopilot-jobsearch:cv` (they read that file and ask only for what it does not say), fill `sources.md` with your boards, run `/autopilot-jobsearch:sweep` once by hand, and schedule it twice a day (`docs/scheduling.md`). Everything the skills write stays in that folder; the plugin updates with `claude plugin update autopilot-jobsearch`.
 
-To change the method itself, clone instead: the clone is both the plugin source and a workspace, and the skills load as `/init`, `/sweep` and so on when you run `claude` inside it.
+To change the method itself, clone instead: the clone is both the plugin source and a workspace, and the skills load as `/init`, `/sweep` and so on when you run `claude` inside it. To try your edits as the plugin, start Claude Code with `claude --plugin-dir /path/to/your/clone`; that copy replaces the installed one for the session. Do not register the clone itself as a local marketplace: the plugin would then also load the clone's workspace `.mcp.json` into every session.
 
 ```bash
 git clone https://github.com/madvil2/autopilot-jobsearch.git
