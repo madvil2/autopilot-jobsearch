@@ -30,6 +30,10 @@ Format: video, 30 min | Language: English
 - Growth: the checkout rebuild on Next.js with a conversion focus is exactly the product-is-the-frontend work I want more of; a page where a person has a few seconds to act has to be fast, obvious and correct.
 - (Money, only if asked: 72,000 EUR, depending on the whole package.)
 
+Two concrete reasons I want *this* company:
+1. The checkout on your demo storefront carried my delivery address to my phone without an account, through a signed link in the confirmation mail. That is the level of detail I want to work at.
+2. Your engineering blog post on feature flags in the checkout funnel describes exactly the experimentation setup I built by hand at Northwind and wished we had had from day one.
+
 ## 3. Why I fit
 
 - I owned a consumer frontend end to end at Northwind: architecture, subscription and referral flows, releases, 60,000+ monthly active users. At Brightpath I took a platform from spec to production and cut load time from 4.2s to 1.6s. Next.js and TypeScript are my daily stack, with Playwright end-to-end tests.
@@ -46,6 +50,11 @@ Format: video, 30 min | Language: English
 | Salary (one number for this market) | 72,000 EUR per year, depending on the whole package; my main focus is the team and the product, so I am open to discussion. |
 | Availability, authorization, languages | Immediately, no notice period. EU citizen, full authorization. English C1, German B2, Spanish native. |
 
+Stories in STAR shape, said aloud before the call:
+- Open banking in two weeks: partner launch date fixed (S), I owned the integration (T), prototypes first, consent expiry and duplicate-transaction handling, shipped in 13 days (A), the feature 60,000 users came for (R).
+- Load time at Brightpath: 4.2s first paint and users dropping (S), I owned performance (T), code-splitting, lazy routes, bundle analysis (A), 1.6s and Lighthouse 61 to 94 (R).
+- Typed API contracts: backend changes breaking staging weekly (S), I proposed the fix (T), OpenAPI spec plus generated client (A), contract breaks failed CI instead of production, zero such incidents in the following year (R).
+
 ## 5. Technical (for technical rounds)
 
 Not this round. For the next one: Next.js rendering modes and caching, GraphQL client caching and pagination, feature flags and experimentation, Playwright test strategy for checkout, Core Web Vitals on a storefront. Practice aloud: "design the checkout funnel so a brand can A/B test steps without a deploy."
@@ -58,6 +67,8 @@ Not this round. For the next one: Next.js rendering modes and caching, GraphQL c
 4. Who would I be working with day to day?
 5. How separate is the checkout codebase from the storefront runtime, technically?
 6. Always last: What is the next step? I would love to proceed. When will you be able to give me feedback?
+
+Say before the end: I want this job, and I want to grow here.
 
 ## 7. Checklist
 

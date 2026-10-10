@@ -24,8 +24,9 @@ Read `profile.md`, `cv/base.md` and the latest `/stack-radar` output if one exis
 6. **Skills**: the technologies from the CV, plus the top tags from `/stack-radar`, spelled exactly as postings spell them. Ask for endorsements on the five that matter most.
 7. **Certifications, languages, awards**: everything the CV lists, nothing it does not.
 8. **Contact**: the profile email, the GitHub link.
-9. **Open to work** settings: titles from the profile targets, locations per the location-by-market table, work modes from the profile.
-10. **Résumé for Easy Apply**: upload the current CV PDF in the job application settings so Easy Apply attaches the right file.
+9. **Location**: LinkedIn is one global profile, so it shows the default city and phone from the location-by-market table, never a regional variant.
+10. **Open to work** settings: titles from the profile targets, locations per the location-by-market table, work modes from the profile.
+11. **Résumé for Easy Apply**: upload the current CV PDF in the job application settings so Easy Apply attaches the right file.
 
 Then a short consistency report: what changed, what still differs from the CV, what the person has to do by hand (endorsement requests, a background image, anything behind a confirmation dialog).
 

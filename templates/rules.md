@@ -18,7 +18,7 @@ rule at the bottom with the date.
 
 ## Applying
 
-- The stack is the only filter that matters, not the level in the title. Apply to every posting that matches `profile.md` targets and covers at least half of the must-have requirements, unless a hard skip filter hits. Postings are wish lists; nice-to-haves are never a reason to skip.
+- The stack is the only filter that matters, not the level in the title. Apply to every posting that matches `profile.md` targets unless a hard skip filter hits or most of its must-haves sit outside the profile. Postings are wish lists; nice-to-haves and one or two missing must-haves are never a reason to skip.
 - Never apply twice to the same company. Match company names loosely: lowercase, strip legal suffixes (GmbH, AG, SE, Ltd, LLC, Inc), strip anything in brackets, treat one name containing the other as the same company. Same posting URL or platform vacancy id is always a duplicate. Relax this rule here if you want several roles per company.
 - Attach the CV version `profile.md` names for that market and language. Never let a platform substitute a stored older file.
 - Fill forms only from `profile.md`. When a required field asks something the profile does not cover, stop that application, record it in the report under "Needs your attention", and move on.

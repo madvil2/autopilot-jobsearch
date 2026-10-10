@@ -11,7 +11,7 @@ The sweep flags candidates for outreach in its report (strong match, a company t
 
 ## 1. Find the people
 
-Research with Playwright and the web, log every person with `create_contact` (company, name, title, LinkedIn URL in notes):
+Research with Playwright and the web, a few profile views per company and no automated connection requests (LinkedIn throttles accounts for that), log every person with `create_contact` (company, name, title, LinkedIn URL in notes):
 
 - **The hiring manager.** Not HR, not the recruiter, not "talent acquisition": the head of the department the role sits in. Small companies (under about 50 people): often a founder or the CTO. Growing companies: the head of engineering, head of product, team lead named in the posting. Big companies: the department head above the team. Confirm the role from LinkedIn titles and the company's team page; the contact named in the posting is almost always HR and only handles the screening.
 - **A bridge.** Someone in the same department (an engineer, a product person) or in my own network who works there and can introduce me or forward my CV. Search my LinkedIn connections filtered by the company.
@@ -40,4 +40,4 @@ Save the drafts to `prep/<company>-outreach.md` and show them. After the person 
 
 ## 4. After the call
 
-Everything the hiring manager said goes into the application's description in JobCubby and into the cover letter: `/cover-letter` has a problem-first variant that quotes their words back. If they gave an address, the application goes there, not through the form.
+Ask the person to paste their notes from the call (or dictate them) right after it, while the words are fresh; `/outreach <company> notes` takes that text. Everything the hiring manager said goes into the application's description in JobCubby and into the cover letter: `/cover-letter` has a problem-first variant that quotes their words back. If they gave an address, the application goes there, not through the form.

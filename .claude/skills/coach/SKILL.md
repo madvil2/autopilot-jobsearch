@@ -114,7 +114,7 @@ System-design questions are about data flow and stages, not about which framewor
 
 These are conversations, not tests. Study the product and the posting again, pick the feature they are visibly building or improving, and prepare questions about it; develop follow-ups from their own introduction during the call. Be ready to draw the parallel between their problem and something I have built, and to say what I would do with a user story in their stack. Have a view on the current trends in their domain, with a reason for it. A CTO is also checking whether the conversation is enjoyable: small talk, questions back, a visible good time.
 
-### B3. Ten rules
+### B3. The rules
 
 1. Silence kills. Sitting quietly reads as "no idea", whatever is in my head.
 2. Ask before answering.

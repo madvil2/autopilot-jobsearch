@@ -44,7 +44,7 @@ The words the skills, docs and templates use. One meaning each.
 
 **Quickie**: an Application that takes a few clicks and the CV, with only mandatory fields filled. The unit of the numbers game.
 
-**Match**: a quick judgement whether a Posting is worth an Application: the stack fits the Profile and at least half of the must-have requirements are covered. Nice-to-haves never block.
+**Match**: a quick judgement whether a Posting is worth an Application: the stack fits the Profile and most of the must-haves are within reach. Nice-to-haves never block.
 
 **ABCD bullet**: the shape of a CV bullet: active verb, what was done, how or why, result with a number.
 

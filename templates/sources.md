@@ -74,7 +74,7 @@ Fields:
 - url: a search engine query of the form `<role> inurl:<ats domain> intext:<country>`, one line per ATS: personio, join.com, lever.co, workable.com, greenhouse.io, ashbyhq.com, teamtailor.com, recruitee.com
 - login: no
 - apply: company-form
-- notes: finds postings that never reach the big boards; results overlap with the boards above, the duplicate check handles it
+- notes: finds postings that never reach the big boards; results overlap with the boards above, the duplicate check handles it. Run the query on a search engine that tolerates automation (DuckDuckGo or Bing HTML results); Google answers scripted queries with a challenge page.
 
 ### <Regional board>
 - type: board
