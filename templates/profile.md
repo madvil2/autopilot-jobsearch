@@ -82,6 +82,10 @@ Keep city, free-text "about" and phone consistent inside one market.
 - Default CV version: `cv/base.md`
 - CV version per market or language: (for example: de -> `cv/de.md`, backend -> `cv/backend.md`)
 - Photo: `photos/headshot.png`
+- Documents in `documents/` (forms ask for these; one line each: file, what it is, when to attach):
+  - `documents/<degree>.pdf`: degree certificate, attach when a form asks for Zeugnisse / diplomas
+  - `documents/<language-certificate>.pdf`: language certificate, attach when asked for language proof
+  - `documents/<reference-letter>.pdf`: reference letter from <employer>, attach when asked for references
 
 ## Personal rules
 

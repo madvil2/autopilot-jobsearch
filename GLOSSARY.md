@@ -4,6 +4,8 @@ The words the skills, docs and templates use. One meaning each.
 
 **Workspace**: a clone of this repository with the personal files created by `/init`. The folder Claude Code runs in.
 
+**Document**: a file in `documents/` that forms ask for besides the CV: degree certificate, transcript, language certificate, reference letter. Each is listed under Files in the Profile with when to attach it.
+
 **Profile**: `profile.md`. The facts about the person and their personal rules. The only source of facts for forms, messages, CVs and prep.
 
 **Rules**: `rules.md`. How the agent behaves on anyone's behalf: writing, applying, replying, scheduling, tracking. Impersonal; personal rules live in the Profile.

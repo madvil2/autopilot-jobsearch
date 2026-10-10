@@ -20,6 +20,7 @@ Create these from `templates/` if they do not exist yet (never overwrite an exis
 | `cover-letters/` | empty folder |
 | `prep/` | empty folder |
 | `photos/` | empty folder |
+| `documents/` | empty folder (degrees, language certificates, reference letters; listed under Files in `profile.md`) |
 | `transcripts/` | empty folder |
 | `recordings/` | empty folder |
 | `reports/` | empty folder |
