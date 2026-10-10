@@ -30,7 +30,7 @@ Say plainly whether the package is at, above or below my figure. No recommendati
 
 ## 3. Contract checklist
 
-Go through the draft line by line and mark each item as present, missing or odd:
+Say this once, at the top of the checklist output, to the person: this is a reading aid, not legal advice; the agent can miss a clause or misread one, and for a contract in a jurisdiction or language that is new to the person, a lawyer or a trusted local friend should read it before signing. Then go through the draft line by line and mark each item as present, missing or odd:
 
 - Legal employer name and address match the company I interviewed with.
 - Job title and a description of duties, and who I report to.

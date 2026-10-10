@@ -11,7 +11,7 @@ Run it after every change to `cv/base.md` or `profile.md`. Arguments: `/profiles
 
 ## LinkedIn
 
-Read `profile.md`, `cv/base.md` and the latest `/stack-radar` output if one exists. Produce the texts, show them, apply them in the Playwright browser only after the person says go.
+Read `profile.md`, `cv/base.md` and the latest `/stack-radar` output if one exists. Produce the texts, show them, and apply them in the Playwright browser: open each section's edit dialog, replace the text, save, verify on the public profile view. The agent does the editing on every platform; the person is told only what sits behind a confirmation code or a challenge page.
 
 1. **Photo**: the same photo as the CV. Not a selfie, not a passport photo, not an old one.
 2. **Name**: exactly as in the CV.
@@ -21,18 +21,18 @@ Read `profile.md`, `cv/base.md` and the latest `/stack-radar` output if one exis
    - Stack: "I work with ..." followed by the technologies from the CV skills line, in the profile's order, separated by commas or bars, no years.
    - Industries and settings: the kinds of companies and products I have worked for (startups, scale-ups, fintech, consumer apps), where, in what kind of environment.
 5. **Experience**: roles, companies and dates copied 1:1 from the CV. One line per role, no bullet lists; the CV carries the detail. Any difference between LinkedIn and the CV reads as an inconsistency, so none are allowed.
-6. **Skills**: the technologies from the CV, plus the top tags from `/stack-radar`, spelled exactly as postings spell them. Ask for endorsements on the five that matter most.
+6. **Skills**: the technologies from the CV, plus the top tags from `/stack-radar`, spelled exactly as postings spell them, added and ordered by the agent. Endorsements come from other people: tell the person which five skills are worth asking for.
 7. **Certifications, languages, awards**: everything the CV lists, nothing it does not.
 8. **Contact**: the profile email, the GitHub link.
 9. **Location**: LinkedIn is one global profile, so it shows the default city and phone from the location-by-market table, never a regional variant.
 10. **Open to work** settings: titles from the profile targets, locations per the location-by-market table, work modes from the profile.
 11. **Résumé for Easy Apply**: upload the current CV PDF in the job application settings so Easy Apply attaches the right file.
 
-Then a short consistency report: what changed, what still differs from the CV, what the person has to do by hand (endorsement requests, a background image, anything behind a confirmation dialog).
+Then a short consistency report: what changed on each platform, what still differs from the CV, and the few things only a human can do (endorsement requests, a verification code).
 
 ## Other platforms
 
-For every `login: yes` source in `sources.md` that has a profile (XING, Djinni, hh.ru, Wellfound, Instaffo, getmatch and similar), open the profile page and check against this list, fixing what can be fixed and reporting the rest:
+For every `login: yes` source in `sources.md` that has a profile (XING, Djinni, hh.ru, Wellfound, Instaffo, getmatch and similar), open the profile's edit pages and bring each item below in line with the CV, in the platform's language, then verify on the public view and report what changed:
 
 - Title identical to the CV title (translated for the platform's language).
 - Photo identical to the CV photo.
