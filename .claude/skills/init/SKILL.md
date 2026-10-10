@@ -25,7 +25,7 @@ Create these from `templates/` if they do not exist yet (never overwrite an exis
 | `recordings/` | empty folder |
 | `reports/` | empty folder |
 
-All of them are gitignored: they stay on this machine, `git pull` never touches them, and nothing about them needs git.
+All of them are gitignored: `git pull` never touches them. Offer to version them: `scripts/data init` creates a second git in `.data.git/` that tracks only these paths in place, `scripts/data remote <url>` adds a private remote the person names, and from then on `scripts/data save` (which the sweep runs after every pass) snapshots CVs, prep files and reports. Optional; the layout is identical either way.
 
 Run `npm install` if `node_modules/` is missing (it installs Playwright's Chromium for the PDF renderer).
 

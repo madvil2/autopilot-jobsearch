@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+# Versions the personal workspace files (profile, CVs, prep, reports, ...) in their own git,
+# separate from the method repo, without moving anything. The git directory is .data.git/
+# inside the clone (ignored by the method repo); the work tree is the clone itself, and only
+# the personal paths are ever added.
+#
+#   scripts/data init                 create .data.git and make the first snapshot
+#   scripts/data remote <git url>     set a private remote (GitHub private repo, a server, a drive)
+#   scripts/data save ["message"]     snapshot every personal path and push if a remote is set
+#   scripts/data <any git command>    status, log, diff, checkout ... against the data git
+#
+# Optional. Nothing in the skills requires it; the sweep calls `save` after each run when it exists.
+
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+GIT_DIR="$ROOT/.data.git"
+PATHS=(profile.md rules.md sources.md cv cover-letters prep photos documents transcripts reports notes)
+
+dgit() { git --git-dir="$GIT_DIR" --work-tree="$ROOT" "$@"; }
+
+existing_paths() {
+  local p
+  for p in "${PATHS[@]}"; do [ -e "$ROOT/$p" ] && printf '%s\n' "$p"; done
+}
+
+case "${1:-}" in
+  init)
+    if [ -d "$GIT_DIR" ]; then echo "data git already exists at $GIT_DIR"; exit 0; fi
+    git init -q --bare "$GIT_DIR"
+    dgit config status.showUntrackedFiles no
+    printf '*.wav\n*.mov\n*.m4a\n*.mp3\n*-[0-9].png\n*-[0-9][0-9].png\n.DS_Store\nrecordings/\n' > "$GIT_DIR/info/exclude"
+    "$0" save "initial snapshot"
+    echo "data git created at .data.git (ignored by the method repo). Set a private remote with: scripts/data remote <url>"
+    ;;
+  remote)
+    [ -n "${2:-}" ] || { echo "usage: scripts/data remote <git url>"; exit 1; }
+    if dgit remote get-url origin >/dev/null 2>&1; then dgit remote set-url origin "$2"; else dgit remote add origin "$2"; fi
+    echo "remote set: $2"
+    ;;
+  save)
+    [ -d "$GIT_DIR" ] || { echo "no data git yet, run: scripts/data init"; exit 1; }
+    # -f: the method repo's .gitignore applies to the shared work tree and lists these paths on purpose
+    existing_paths | xargs dgit add -f --
+    if dgit diff --cached --quiet; then
+      echo "nothing to save"
+    else
+      dgit commit -q -m "${2:-snapshot $(date '+%Y-%m-%d %H:%M')}"
+      echo "saved: $(dgit log --oneline -1)"
+    fi
+    if dgit remote get-url origin >/dev/null 2>&1; then
+      dgit push -q -u origin HEAD:main && echo "pushed"
+    fi
+    ;;
+  "")
+    sed -n '2,12p' "$0"
+    ;;
+  *)
+    [ -d "$GIT_DIR" ] || { echo "no data git yet, run: scripts/data init"; exit 1; }
+    dgit "$@"
+    ;;
+esac

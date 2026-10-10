@@ -36,7 +36,7 @@ for (const name of readdirSync(SKILLS)) {
   if (fmName && fmName !== name) fail(`${name}: frontmatter name "${fmName}" differs from folder name`);
 
   // Paths like `templates/foo.md`, `docs/foo.md`, `scripts/foo.mjs`, `routines/foo.md` must exist.
-  for (const m of text.matchAll(/`((?:templates|docs|scripts|routines|examples)\/[\w./-]+)`/g)) {
+  for (const m of text.matchAll(/`((?:templates|docs|scripts|routines|examples)\/[\w./-]+)(?:\s[^`]*)?`/g)) {
     if (!existsSync(join(ROOT, m[1]))) fail(`${name}: references missing file ${m[1]}`);
   }
   // Workspace paths must be ones /init creates.

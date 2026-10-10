@@ -19,3 +19,4 @@ node_modules/
 .scratch/
 .DS_Store
 /notes
+/.data.git/

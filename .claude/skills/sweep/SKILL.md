@@ -81,4 +81,6 @@ Write `reports/<YYYY-MM-DD>-<HHMM>.md` first, then print it as the last message.
 5. **Skipped.** Company and a one-word reason, one line each.
 6. **Worth an outreach.** Up to three postings from this run, criteria in `docs/sweep-events.md`, one line each with the posting URL.
 
+If `.data.git/` exists, run `scripts/data save "sweep <date> <time>"` so the report and any profile or source edits are snapshotted.
+
 If anything in this run taught you something about a platform, add it to `sources.md` under that source's notes (or to `docs/platform-notes.md` if it is general), one line, with the date. A source that produced nothing relevant for two runs in a row gets a "candidate for removal" note; the person decides.
