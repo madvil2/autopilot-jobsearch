@@ -4,6 +4,7 @@ version: base                 # file name suffix for variants; "base" adds none
 language: en                  # en | de (section labels and file name), add more in templates/labels.json
 title: Role Title (Main Stack / Second Stack)
 photo: photos/headshot.png    # delete this line to render without a photo
+# photo_focus: 50% 20%          # where the face is; the crop is a circle, the default keeps the upper part of a tall photo
 show_birth_date: true         # false drops any header line containing "Born"
 # sign_place: City              # with signature: adds "City, <today>" and the signature image at the end (German convention)
 # signature: photos/signature.png
