@@ -19,9 +19,10 @@ Output: `prep/<company>.md` from `templates/prep.md`. Read `profile.md`, `rules.
 Follow `templates/prep.md` section by section:
 
 - **Intro**: paste the self-introduction from `profile.md` unchanged. Add a 60-second cut for short screens. Never rewrite the intro per company.
-- **Why this company**: four points in this order, stability, team, growth, money last (money only if asked). Each point is one fact about them plus one sentence of what it means for me. No essay about their industry.
+- **Why this company**: four points in this order, stability, team, growth, money last (money only if asked). Each point is one fact about them plus one sentence of what it means for me. No essay about their industry. Then the two concrete reasons from `/coach` A2b, written out.
 - **Why I fit**: map two or three CV results to the posting's top asks. Add the bridge for any stack gap, with the story of the last time I learned a new stack fast.
-- **Likely questions**: fill the table from `profile.md` interview facts: why the last job ended, what since, hardest problem, strength and weakness, salary (the one figure for this market), availability, authorization, languages. Two or three sentences each, then silence.
+- **Likely questions**: fill the table from `profile.md` interview facts: why the last job ended, what since, hardest problem, strength and weakness, salary (the one figure for this market), availability, authorization, languages. Two or three sentences each, then silence. Example answers in STAR shape (situation, task, action, result with a number), action and result carrying most of the words.
+- **Culture-fit or final round**: add the names of everyone met so far in the process, two personal specifics I can share when asked about myself (where, with whom, when), and the reminder to say out loud that I want the job and intend to stay. The day before, connect with the interviewers on LinkedIn with a one-line note.
 - **Technical** (technical rounds): a cheat-sheet of the five things most likely to come up in their stack, one line each; the three-step method and five clarifying-question categories from `/coach`; one system-design question in their domain to practice aloud.
 - **My questions**: the four universal ones from the template plus two specific to them (early startup: who writes the code today, biggest technical challenge, runway; big company: team size and split, how separate this product is, office expectation). The last one is always the next-steps question.
 - **Checklist**: keep as in the template.
@@ -32,4 +33,4 @@ Keep the file under two screens. It is read the day before and closed before the
 
 - If the interview is not in JobCubby yet: `schedule_interview` with date, time, round, type, meeting link, interviewer. Move the application to `interview`.
 - Calendar: create the event with the link and a reminder, unless an event for that company and time already exists. Add a timeline event "Prep written: prep/<company>.md".
-- Tell the person the three things to do before the call: read the core idea, open the product and find the detail, rehearse the intro aloud once.
+- Tell the person the three things to do before the call: read the core idea, open the product and find the detail, rehearse the intro aloud once. For a final round, add: connect with the interviewers on LinkedIn today.

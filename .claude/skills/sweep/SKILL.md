@@ -27,10 +27,12 @@ Call `list_applications` once, with no filters. The result is large and lands in
 
 ## Step 1. Mail
 
-Search the inbox for the last day. Open anything that looks like a status change (rejection, invite, screening request, assessment link) or a question. Ignore alerts, newsletters and marketing.
+Search the inbox for the last day, and the spam folder too (offers have landed there). Open anything that looks like a status change (rejection, invite, screening request, assessment link, offer) or a question. Ignore alerts, newsletters and marketing.
 
 - Status changes: find the application (in the duplicate list from Step 0, loose company matching per `rules.md`) and update it: `update_application_status` with the right status and, for rejections, one of the five reasons. Add a timeline event with the real time. Set a status only from the message or the application's own page, never from a list view: platform inbox lists put statuses next to the wrong card when read as one block of text.
 - Questions and invites: answer per "How to reply" below, in the same run.
+- Rejections after a screening call, a technical round or an interview (not form-stage auto-rejections): reply with a short, warm request for feedback on what would have made the difference, in the thread's language, and log the event. About a third of companies answer, and those answers are the fastest way to get better.
+- Offers: reply per "How to reply", move the application to `offer` with the terms in `offer_details`, create a calendar event for any decision deadline, and put it first in the report. `/offer` takes it from there.
 
 ## Step 2. Messages on platforms
 
@@ -38,7 +40,7 @@ Every source of type `inbox` in `sources.md`: LinkedIn messaging and any platfor
 
 ## Step 3. Due follow-ups
 
-`list_applications` with status `applied` or `screening`; for each whose follow-up date has passed and that has a human thread or a named contact (not an ATS-only submission), send one short nudge in the thread's language, log the event, and set the next follow-up date two weeks out. Skip ATS-only applications silently.
+`list_applications` with status `applied`, `screening` or `interview`; for each whose follow-up date has passed and that has a human thread or a named contact (not an ATS-only submission), send one short nudge in the thread's language, log the event, and set the next follow-up date. Timing rule: when they named a date by which they would come back, the follow-up goes out the morning after that date; with no date, after five workdays of silence. Skip ATS-only applications silently.
 
 ## Step 4. JobCubby index
 
@@ -46,13 +48,13 @@ Run each saved search (`list_saved_searches`, `run_saved_search`) and read `list
 
 ## Step 5. Boards
 
-For every source of type `board`, in order (duplicate checks go through the Step 0 file):
+For every source of type `board` or `search`, in order (duplicate checks go through the Step 0 file). A `search` source is a web search query that returns postings on ATS boards directly; run it, open each result from the last three days, and treat it like a board posting:
 
 1. Open the URL with its filters. Read the list (scroll lazy lists; read titles from the item elements, not from the page summary).
 2. For each posting from the last three days: open it, read the full description, decide.
-3. **Apply if the stack matches** the profile targets. The level in the title is not a filter unless the profile's hard skip filters name it. Location is whatever the profile allows for this market.
+3. **Apply if the stack matches** the profile targets and at least half of the posting's must-have requirements are covered by the profile (nice-to-haves do not count against; postings are wish lists). Decide in twenty seconds, not with a scorecard. The level in the title is not a filter unless the profile's hard skip filters name it. Location is whatever the profile allows for this market. When two postings compete for time, the fresher one with fewer applicants comes first.
 4. **Skip** on a hard skip filter from `profile.md`, on a duplicate company, on a logged-out state, or on a posting that is a disguised agency repost with a generic title (open it, check the real stack).
-5. Apply through the fastest path the source offers (easy apply, platform button, company form). Fill forms only from `profile.md`: facts, location and phone for this market, honest answers in structured fields, nothing volunteered in free text. Attach the CV version for this market and language; on platforms that pre-fill a stored file, remove it and upload the current one. When a form asks for certificates, diplomas, transcripts, language proof or reference letters, attach the matching files from `documents/` as listed under Files in `profile.md`; never skip an application for asking. Always add a cover note where a text box exists, in the posting's language, three or four sentences.
+5. Apply through the fastest path the source offers (easy apply, platform button, company form). Postings that accept applications only by email get the email variant from `/cover-letter` with the CV attached, sent from the profile's address; if the mail tool cannot attach files, report the address instead. Fill forms only from `profile.md`: facts, location and phone for this market, honest answers in structured fields, nothing volunteered in free text. Attach the CV version for this market and language; on platforms that pre-fill a stored file, remove it and upload the current one. When a form asks for certificates, diplomas, transcripts, language proof or reference letters, attach the matching files from `documents/` as listed under Files in `profile.md`; never skip an application for asking. Always add a cover note where a text box exists, in the posting's language, three or four sentences.
 6. Confirm the application actually went through (success page, "applied" badge) before logging it.
 7. Log it: `create_application` with company, role, posting URL, source, location, work mode, status `applied`, `applied_at` as a full ISO 8601 timestamp (for example `2026-10-10T09:41:00+02:00`), description (full posting text or its key sections), requirements (the technologies the posting names, as a list), salary min and max annual when shown, deadline when shown, `resume_id` of the CV version used (from `list_resumes`), and `follow_up_at` 7 days out. Every one of these fields matters later: requirements feed `/stack-radar`, resume_id tells which CV went where, follow_up_at drives Step 3. Duplicates per `rules.md` update the existing entry instead.
 
@@ -64,6 +66,8 @@ Applies to every channel. Content rules are in `rules.md` ("Writing on my behalf
 
 - **Scheduling.** Booking pages (Calendly, cal.com, Zeeg, ATS schedulers) and proposed times by mail: take the earliest slot that fits the rules (at least 3 hours ahead, 09:00 to 19:00 local, 1 hour clear of interviews in `list_interviews`). Confirm with date, time and time zone. Then `schedule_interview` (round, type, link, interviewer) and a calendar event with the link and a reminder, after checking none exists for that company and time. Move the application to `interview`.
 - **Assessments.** Accept, ask for the deadline if missing, log the event, create a calendar event for the deadline, move the application to `screening`. Do not solve it now.
+- **Rescheduling.** When a booked slot has to move, say so as early as possible, apologise once, and offer three concrete alternative slots within the next five workdays. Never cancel without alternatives.
+- **Offers.** Warm and short: thank you, glad about it, looking forward to the draft contract. No acceptance, no money, no decision date named by us. Status `offer`, top of the report, `/offer` next.
 - **Salary.** The figure from `profile.md` for this market, one number. If they name a range or an offer below it: interest plus a question about next steps, no counter, no decline, and put it at the top of the report. Phrase it as interest, not acceptance: "thanks, that is a useful starting point, what are the next steps?" never "that works for me". Never mention a missing skill in the same message.
 - **Commitments are not yours to make.** Employment form (contractor, sole-trader entity, agency, fixed-term), tax or legal setup, visa and relocation, working hours or days, equity terms: reply that you will confirm shortly, and put the question at the top of the report. The same for anything that costs money (paid platform features, paid tests).
 - **Direct questions about stack, location, availability.** Answer directly from `profile.md`. Stack in the profile's order, years per technology from its table.
@@ -78,5 +82,6 @@ Write `reports/<YYYY-MM-DD>-<HHMM>.md` first, then print it as the last message.
 3. **Rejections.** Company, reason recorded.
 4. **Applied.** Company and role, one line each, with the CV version used.
 5. **Skipped.** Company and a one-word reason, one line each.
+6. **Worth an outreach.** Up to three postings from this run where talking to the hiring manager would pay: strong match, a company small enough that the department head is findable, a role clearly inside one team. One line each with the posting URL; `/outreach` does the rest.
 
 If anything in this run taught you something about a platform, add it to `sources.md` under that source's notes (or to `docs/platform-notes.md` if it is general), one line, with the date. A source that produced nothing relevant for two runs in a row gets a "candidate for removal" note; the person decides.

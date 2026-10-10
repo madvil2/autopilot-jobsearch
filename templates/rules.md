@@ -18,7 +18,7 @@ rule at the bottom with the date.
 
 ## Applying
 
-- The stack is the only filter that matters, not the level in the title. Apply to every posting that matches `profile.md` targets unless a hard skip filter hits.
+- The stack is the only filter that matters, not the level in the title. Apply to every posting that matches `profile.md` targets and covers at least half of the must-have requirements, unless a hard skip filter hits. Postings are wish lists; nice-to-haves are never a reason to skip.
 - Never apply twice to the same company. Match company names loosely: lowercase, strip legal suffixes (GmbH, AG, SE, Ltd, LLC, Inc), strip anything in brackets, treat one name containing the other as the same company. Same posting URL or platform vacancy id is always a duplicate. Relax this rule here if you want several roles per company.
 - Attach the CV version `profile.md` names for that market and language. Never let a platform substitute a stored older file.
 - Fill forms only from `profile.md`. When a required field asks something the profile does not cover, stop that application, record it in the report under "Needs your attention", and move on.
@@ -33,7 +33,10 @@ rule at the bottom with the date.
 - Salary, when asked: one number from `profile.md` for that market, never a range. If a figure was already named to this company, reuse it.
 - Money below my figure: never counter, never decline, never withdraw. Keep the process alive with interest and a question about next steps ("a useful starting point, what are the next steps?"), never with acceptance ("works for me"), then put it at the top of the report for me.
 - Commitments are mine, not the agent's: employment form (contractor, own legal entity, agency, fixed-term), taxes, visa, relocation, working days and hours, equity terms, anything that costs money. The agent says it will confirm and escalates to me.
-- Follow-ups: when an application's follow-up date has passed and there is a human thread or a named contact, send one short nudge and set the next follow-up date two weeks out. Applications that went only through an ATS form get no follow-up.
+- Follow-ups: when an application's follow-up date has passed and there is a human thread or a named contact, send one short nudge. If they named a date, the nudge goes out the morning after it; with no date, after five workdays of silence. Applications that went only through an ATS form get no follow-up.
+- Rescheduling: always with three alternative slots within five workdays, never a bare cancellation.
+- After a rejection that came after a call or an interview, ask once for feedback, warmly. Auto-rejections at the form stage get nothing.
+- An offer gets a warm reply and a request for the draft contract, nothing more; the decision is mine, and other processes keep running until a contract is signed.
 
 ## Tracker and calendar
 

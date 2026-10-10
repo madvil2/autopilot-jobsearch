@@ -5,7 +5,7 @@ Keep URLs with the filters already applied (keywords, location, "last 3 days", s
 sweep opens them and reads, instead of clicking through filter UIs.
 
 Fields:
-- type: `inbox` (messages to answer), `jobcubby` (the tracker's own index and matches), `board` (postings to apply to)
+- type: `inbox` (messages to answer), `jobcubby` (the tracker's own index and matches), `board` (postings to apply to), `search` (a web search that finds postings on ATS boards directly)
 - login: `yes` (Playwright profile is logged in), `no` (public, read-only or apply as guest), or `check: <how to verify>`
 - apply: how applications go out here (`easy-apply`, `platform-button`, `company-form`, `read-only`)
 - cv: which CV version and language to attach, if not the default from `profile.md`
@@ -68,6 +68,13 @@ Fields:
 - url: (one line per company or board you watch, for example an Ashby, Greenhouse or Lever board)
 - login: no
 - apply: company-form
+
+### ATS boards through web search
+- type: search
+- url: a search engine query of the form `<role> inurl:<ats domain> intext:<country>`, one line per ATS: personio, join.com, lever.co, workable.com, greenhouse.io, ashbyhq.com, teamtailor.com, recruitee.com
+- login: no
+- apply: company-form
+- notes: finds postings that never reach the big boards; results overlap with the boards above, the duplicate check handles it
 
 ### <Regional board>
 - type: board

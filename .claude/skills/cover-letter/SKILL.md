@@ -15,13 +15,21 @@ Input: a posting URL or pasted posting text, plus optionally the CV version to b
 
 ## Write
 
-Three paragraphs, each with one job. Keep the whole letter under 300 words.
+Three paragraphs, each with one job, two or three sentences each. Keep the whole letter under 300 words. Two structures; pick by what I know about them.
 
 1. **Who I am and what I want to take care of.** Name, role and years from the profile (the main stack first, in the profile's order), then what in their product I would take care of, in their vocabulary.
 2. **Why we are a match, with evidence.** Two or three results from the CV with numbers, chosen to mirror what they ask for. One sentence on how I work (what I put emphasis on). No gaps, no "although I have not used X".
 3. **Their words and the next step.** "You write that ..." with one line from the posting, why that attracted me, where I would join (their city or remote, as the posting says; never volunteer constraints), when I can start, how to reach me, thank you.
 
-Then: greeting to the team or the named contact, signoff from the frontmatter.
+**Problem-first structure**, when there was a call with the hiring manager or an `/outreach` conversation (their words are in the JobCubby description):
+
+1. **I know your problem.** Refer to the conversation and name the challenge in their exact words. If there was no call, name the problem as I read it from the posting, in one sentence.
+2. **I have solved it before.** The one result from my career that proves it, with a number, then one more. What I bring to the table, not what I like about myself.
+3. **Let's talk.** I would like to discuss this in person, thank you, how to reach me.
+
+Then: greeting to the named person ("Dear First Last") or the team, signoff from the frontmatter.
+
+**Email application**, for postings that only accept applications by mail: a plain mail, not a rendered letter. Subject: "Application as <exact title>". Body: greeting to the named person or "<Company> Team"; one line of who I am (title and years from the profile, stack in the profile's order) and that I am applying for <title> found on <source>; one or two sentences of proof matching their asks; that the CV is attached; thank you and that I look forward to discussing how I can contribute. Attach the CV version for the market as PDF. Sent from the profile's address; the sweep uses this variant on its own.
 
 Rules that apply here from `rules.md`: no em-dashes, no copied sentences except the one explicit quote, no self-disclosed gaps, no location caveats, the why-company order (stability, team, growth, money last) when the letter touches motivation, the title level the profile allows. Language of the posting.
 

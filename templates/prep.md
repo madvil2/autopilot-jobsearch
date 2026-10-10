@@ -24,6 +24,10 @@ Order: stability, team, growth, money last. Each point wrapped in a fact about t
 - Growth:
 - (Money, only if asked)
 
+Two concrete reasons I want *this* company (specific enough that no other company fits the sentence):
+1.
+2.
+
 ## 3. Why I fit
 
 - Two or three sentences mapping my strongest results to what the posting asks for
@@ -40,6 +44,11 @@ Order: stability, team, growth, money last. Each point wrapped in a fact about t
 | Salary (one number for this market) | |
 | Availability, authorization, languages | |
 
+Stories in STAR shape (situation, task, action, result with a number), three to five, said aloud before the call:
+- 
+- 
+- 
+
 ## 5. Technical (for technical rounds)
 
 - Their stack cheat-sheet: the five things most likely to come up, one line each
@@ -53,6 +62,10 @@ Order: stability, team, growth, money last. Each point wrapped in a fact about t
 3. Is this a new position or a backfill, and what made you open it now?
 4. Who would I be working with day to day?
 5. Always last: What is the next step? I would love to proceed. When will you be able to give me feedback?
+
+Say before the end: I want this job, and I want to grow here.
+
+Final or culture-fit round only: people met so far (names, roles): ; interviewers connected on LinkedIn the day before: yes / no.
 
 ## 7. Checklist
 

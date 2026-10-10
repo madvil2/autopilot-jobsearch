@@ -184,6 +184,9 @@ function cvView(cv, meta, labels) {
     .map((l) => `<p class="header-line">${inline(l)}</p>`)
     .join("\n");
 
+  const signature = meta.sign_place
+    ? `<div class="signature"><p>${escapeHtml(meta.sign_place)}, ${todayFor(meta.language || "en")}</p>${meta.signature ? `<img class="signature-img" src="${dataUri(resolve(ROOT, meta.signature))}" alt="">` : ""}<p class="signature-name">${escapeHtml(cv.name)}</p></div>`
+    : "";
   const sections = cv.sections
     .map((s) => {
       const bodyHtml = s.entries.length
@@ -203,7 +206,7 @@ function cvView(cv, meta, labels) {
     photo,
     photoClass: showPhoto ? "" : "no-photo",
     header,
-    sections,
+    sections: sections + signature,
     fontsDir: fileUrl(FONTS),
     pageLabel: escapeHtml(labels["page"] || "Page"),
     ofLabel: escapeHtml(labels["of"] || "of"),
@@ -289,6 +292,13 @@ function inline(text) {
 
 function escapeHtml(s) {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function todayFor(language) {
+  const d = new Date();
+  const dd = String(d.getDate()).padStart(2, "0");
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  return language === "de" ? `${dd}.${mm}.${d.getFullYear()}` : `${dd}/${mm}/${d.getFullYear()}`;
 }
 
 function titleCase(s) {

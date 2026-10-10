@@ -14,9 +14,12 @@ I am doing this right now and improving it as I go. What is here is what I use.
 | `/cover-letter` | Writes a three-paragraph letter for one posting and renders it next to the CV |
 | `/sweep` | The twice-daily pass: mail, messages, follow-ups, tracker matches, every board, applications, bookings, report |
 | `/stack-radar` | Counts which technologies the postings you applied to ask for, compares with your CV, proposes tags and a learning plan |
+| `/profiles` | Keeps LinkedIn and every other board profile consistent with the CV: headline, About, experience, keywords, photo |
+| `/outreach` | For postings that matter: finds the hiring manager and people who can refer you, writes the call script and the messages |
 | `/interview-prep` | Researches the company and writes a prep file with your intro, the why-company answer, likely questions and your questions |
 | `/coach` | My interview method: intro, why-company frames, the three-step method for technical questions, ten rules, salary, closing; `/coach mock` to practice |
 | `/debrief` | Transcribes the recording, grades the call against the method, pulls out every fact they revealed, closes the loop in the tracker |
+| `/offer` | When an offer arrives: the reply that keeps it warm, the contract checklist, the package evaluation, the questions to ask |
 
 The example output lives in `examples/`: a fictional engineer's profile, CV ([markdown](examples/cv/base.md), [PDF](examples/cv/Alex_Mustermann_CV.pdf)), a cover letter, a prep file and a sweep report.
 
@@ -53,11 +56,11 @@ Requirements: Node 20+, Claude Code, a JobCubby account, Gmail and Google Calend
 ## Layout
 
 ```
-.claude/skills/      the nine skills
+.claude/skills/      the twelve skills
 templates/           blank workspace files with guidance, CV and letter HTML, section labels per language
 scripts/             render.mjs (md to PDF), test.mjs, lint-skills.mjs
 routines/sweep.md    the scheduled-task prompt (one paragraph: cd into the clone, run /sweep)
-docs/                platform notes, scheduling, recording and transcription
+docs/                platform notes, scheduling, recording and transcription, market notes (Germany first)
 examples/            a fictional person's complete set
 fonts/               Roboto (Apache 2.0)
 GLOSSARY.md          the vocabulary

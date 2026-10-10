@@ -9,6 +9,6 @@ Before any task that applies, writes, replies or prepares on the person's behalf
 3. Before using the JobCubby tracker in a session, read `https://jobcubby.com/SKILL.md`.
 4. When the person corrects you, append the correction as a dated rule to `profile.md` (personal) or `rules.md` (general), then fix the output.
 
-Skills: `/init`, `/profile`, `/cv`, `/cover-letter`, `/sweep`, `/stack-radar`, `/interview-prep`, `/coach`, `/debrief`. Vocabulary: `GLOSSARY.md`.
+Skills: `/init`, `/profile`, `/cv`, `/profiles`, `/cover-letter`, `/sweep`, `/stack-radar`, `/outreach`, `/interview-prep`, `/coach`, `/debrief`, `/offer`. Vocabulary: `GLOSSARY.md`. Market conventions: `docs/markets/`.
 
 No em-dashes in anything written on the person's behalf. Do not add "Co-Authored-By" lines to git commits.

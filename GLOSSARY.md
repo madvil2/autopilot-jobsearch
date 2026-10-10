@@ -38,4 +38,20 @@ The words the skills, docs and templates use. One meaning each.
 
 **Stack radar**: the count of technologies across the requirements of recent Applications, compared with the CV version, with proposed tags and a learning plan.
 
+**Hiring manager**: the person who decides the hire, almost always the head of the department the role sits in, not HR. The target of an Outreach.
+
+**Outreach**: contacting the Hiring manager or someone who can refer me, before or alongside an Application, to learn their problem and skip the screening queue.
+
+**Quickie**: an Application that takes a few clicks and the CV, with only mandatory fields filled. The unit of the numbers game.
+
+**Match**: a quick judgement whether a Posting is worth an Application: the stack fits the Profile and at least half of the must-have requirements are covered. Nice-to-haves never block.
+
+**ABCD bullet**: the shape of a CV bullet: active verb, what was done, how or why, result with a number.
+
+**Story**: an interview answer in STAR shape (situation, task, action, result), prepared in advance and told aloud.
+
+**Culture-fit round**: the interview round, often the last, where the team decides whether they want to work with me; any member may veto.
+
+**Offer**: a written or spoken job proposal before a signed contract. Keeps every other process running until the contract is signed by both sides.
+
 **Market**: a country or platform group with its own conventions for the CV, location, phone and salary figure (for example DE, remote EU, a regional board).
