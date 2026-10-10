@@ -5,7 +5,7 @@ The sweep is the `/sweep` skill. The routine prompt in `routines/sweep.md` only 
 ## Claude Code desktop app: scheduled task
 
 1. Open the clone in the desktop app.
-2. Create a scheduled task with the contents of `routines/sweep.md` as the prompt, with the absolute path of your clone filled in.
+2. Create a scheduled task with the contents of `routines/sweep.md` as the prompt, with the absolute path of your clone filled in. The prompt reads the skill file by path on purpose: a scheduled task does not start inside the clone, so it cannot rely on project skills being loaded.
 3. Schedule: `12 9,19 * * *` (09:12 and 19:12 local time) or whatever suits you.
 4. The task runs in its own session; the first run asks for tool permissions once. Approve the Playwright, JobCubby, mail and calendar tools for the task.
 

@@ -5,11 +5,11 @@ description: One full pass of the job search: answer mail and recruiter messages
 
 # /sweep
 
-You are running the job search for the person described in `profile.md`, under the rules in `rules.md`, across the sources in `sources.md`. Work autonomously and report at the end. Read all three files before doing anything, plus `docs/platform-notes.md` for platform quirks. If you have not used JobCubby in this session, read `https://jobcubby.com/SKILL.md` first.
+You are running the job search for the person described in `profile.md`, under the rules in `rules.md`, across the sources in `sources.md`. All three live in the workspace folder (the folder this file's `.claude/` sits in); every relative path below is relative to it. Work autonomously and report at the end, in the report language set in `profile.md`. Read all three files before doing anything, plus `docs/platform-notes.md` for platform quirks. If you have not used JobCubby in this session, read `https://jobcubby.com/SKILL.md` first.
 
 ## Coverage, non-negotiable
 
-Every run gets through every source in `sources.md`, in the same run. Tool-call cost is never a reason to stop early or to "do the rest next time." A genuine blocker (logged-out session, challenge page, site down) skips that one source with a note; it never stops the run. "Browser is already in use" is not a blocker, it is a chore: fix it with the recipe in `docs/platform-notes.md` and carry on.
+Every run gets through every source in `sources.md`, in the same run, and reads every posting from the last three days on each. Tool-call cost and elapsed time are never reasons to stop early or to "do the rest next time." A genuine blocker (logged-out session, challenge page, site down) skips that one source with a note; it never stops the run. "Browser is already in use" is not a blocker, it is a chore: fix it with the recipe in `docs/platform-notes.md` and carry on.
 
 Use the Playwright browser for everything that needs a session or a file upload. Other browsers cannot upload a CV; use them only to read, and only when Playwright is still dead after the recipe. Never hand the run, or any source, to a subagent: a subagent cannot see the duplicate list and in practice creates duplicates in the tracker.
 
@@ -17,7 +17,7 @@ If the very first reply of the session is a usage-limit or quota message, write 
 
 ## Budget
 
-- One run is one pass. Give each source up to 15 minutes; when the budget is gone, note "time budget hit, N postings unread" for that source and move on.
+- One run is one pass, and time is not a budget: a run takes as long as every source needs. Only context is.
 - Context is the cost driver. Do not snapshot list pages; read lists with `browser_evaluate` and a selector that returns only title, company and link per card. Snapshot only forms you are about to fill. Take a screenshot only when an element cannot be found any other way. Never read a saved tool-result dump into context in full; use `grep` on it.
 - Tools: `browser_navigate`, `browser_navigate_back`, `browser_snapshot`, `browser_find`, `browser_click`, `browser_type`, `browser_fill_form`, `browser_select_option`, `browser_file_upload`, `browser_evaluate`, `browser_tabs`, `browser_press_key`, `browser_wait_for`. A `ref` is valid only from the latest snapshot; after any navigation or click that changes the page, take a fresh snapshot (or `browser_find`) before using refs. `browser_file_upload` works only right after clicking the file control. To go back use `browser_navigate_back`, never a URL like "back".
 

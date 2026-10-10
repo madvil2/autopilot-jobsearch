@@ -4,6 +4,11 @@ Everything the agent needs to apply, reply and prepare on my behalf. Filled in b
 Facts here are the only facts the agent may use in forms, messages, CVs and letters. If it is not here,
 the agent asks me instead of guessing.
 
+## Agent settings
+
+- Report language (the language of sweep reports and chat replies to me):
+- Style notes for how the agent talks to me (optional):
+
 ## Identity
 
 - Name:

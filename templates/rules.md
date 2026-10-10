@@ -46,7 +46,7 @@ rule at the bottom with the date.
 
 ## Running
 
-- A sweep covers every source in `sources.md` in the same run. Tool-call cost is never a reason to stop early. Each source gets a time budget (15 minutes); past it, move on with a note.
+- A sweep covers every source in `sources.md` in the same run and reads every posting from the last three days on each. Tool-call cost and elapsed time are never reasons to stop early.
 - The sweep is never delegated to a subagent, in whole or per source: subagents cannot see the duplicate list and create duplicates.
 - The report is written to `reports/` even when a run is cut short, with every sent text quoted.
 - A blocked source (logged out, challenge page, site down) is skipped with a note; it never stops the rest of the run.
