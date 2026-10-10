@@ -12,9 +12,31 @@ Modes:
 - `/profile` with a filled one: show what is missing or stale and update only that.
 - `/profile add rule <text>` or whenever the person corrects the agent's behaviour: append one dated line under "Personal rules" (or under "Added later" in `rules.md` if the correction is impersonal).
 
+## 0. Start from the CV they already have
+
+Most people come with a CV. Before any question, ask for it, in the format from `CLAUDE.md`:
+
+1. Point me at your current CV (PDF, DOCX, Markdown, or a LinkedIn "Save to PDF" export); I fill in everything it contains and ask only for what is missing (recommended: ten minutes instead of forty)
+2. No CV yet, interview from a blank profile
+
+On 1:
+
+- Copy the file into `cv/old/` under its original name; never modify the original.
+- Read the text. PDF: read the file directly. DOCX: `unzip -p file.docx word/document.xml | sed 's#</w:p>#\n#g; s/<[^>]*>//g'`. Markdown or text: as is.
+- Fill `profile.md` from it, field by field:
+  - Identity: everything the CV states (name, email, phone, address or city, LinkedIn, GitHub, date of birth, citizenship, work authorization, availability, highest education, languages with levels). Copy as written; do not normalise names, levels or spellings.
+  - Stack: every technology the CV names, in the CV's order for now. Years come from the job entries that list the technology: sum the spans, round down, mark the number as derived. A technology named only in a skills line, with no job behind it, gets `?` in Years.
+  - Target: roles and levels read off the title line and the most recent jobs, written as a proposal and marked as derived.
+  - Interview facts: team setup and last-job facts the CV states (team size, what they owned). Everything else stays empty.
+  - Files: the imported file under `cv/old/`.
+- Show one short list back, in two parts: "Taken from your CV" (facts copied as written) and "Derived, please check" (years per technology, roles, levels, stack order). Copied facts stand unless they correct them; derived values need a yes. Apply their corrections.
+- Then run the interview below, skipping every field that is filled and confirmed. Say at the start how many fields are left.
+
+The import never lowers anything: if the CV undersells a language level or years with a technology, ask before writing the CV's number. If the CV and the person disagree on a date, the person wins and the CV gets fixed in `/cv`.
+
 ## Interview order
 
-Ask in blocks. Confirm each block back in two lines before moving on. Facts are asked plainly; every choice is offered in the format from `CLAUDE.md`, recommended option first. Defaults to propose:
+Ask in blocks, only the fields still empty after step 0. Confirm each block back in two lines before moving on. Facts are asked plainly; every choice is offered in the format from `CLAUDE.md`, recommended option first. Defaults to propose:
 
 - Report language: the language the person writes to the agent in (recommended); English.
 - Email everywhere: one address, firstname.lastname style (recommended); whatever they use now.
@@ -34,7 +56,7 @@ Ask in blocks. Confirm each block back in two lines before moving on. Facts are 
 4. **Location by market.** Default city and phone, then exceptions per market or platform, if they present differently on regional platforms. Make sure city, "about" text and phone agree inside one market.
 5. **Salary.** One figure per market, annual, in the local currency. Explain that ranges get the bottom of the range. Record that below-figure offers always go to them.
 6. **Interview facts.** Write the self-introduction script with them, 60 to 90 seconds, in the structure from `/coach`: who I am and my core stack, what I own now or most recently with one number, where I started (short), one memorable personal detail, languages once. Then: why the last job ended (external reason, no blame, two or three sentences), team setup at the last job (never overclaim ownership), the one story for hardest problem / proud of / under pressure, strength and its flip-side weakness with the system against it, questions they always ask at the end.
-7. **Files.** Default CV version, per-market versions, photo path.
+7. **Files.** Default CV version, per-market versions, photo path, the imported CV under `cv/old/` if there is one.
 
 ## After writing
 

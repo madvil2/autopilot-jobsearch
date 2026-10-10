@@ -9,8 +9,8 @@ I am doing this right now and improving it as I go. What is here is what I use.
 | Skill | What happens |
 |---|---|
 | `/init` | Creates your workspace files from templates, checks the tools, logs you in to your boards once |
-| `/profile` | Interviews you and writes `profile.md`: every fact forms ask, your stack order, how you present per market, salary figures, your intro script |
-| `/cv` | Builds your CV section by section, renders an A4 PDF, checks it against the rules, uploads it to the tracker |
+| `/profile` | Reads the CV you already have, fills `profile.md` from it, then asks only for what is missing: every fact forms ask, your stack order, how you present per market, salary figures, your intro script |
+| `/cv` | Converts your existing CV into the template (or builds one section by section), fixes the bullets with you, renders an A4 PDF, uploads it to the tracker |
 | `/cover-letter` | Writes a three-paragraph letter for one posting and renders it next to the CV |
 | `/sweep` | The twice-daily pass: mail, messages, follow-ups, tracker matches, every board, applications, bookings, report |
 | `/stack-radar` | Counts which technologies the postings you applied to ask for, compares with your CV, proposes tags and a learning plan |
@@ -41,7 +41,7 @@ npm install          # Playwright's Chromium for the PDF renderer
 claude               # then: /init
 ```
 
-Then `/profile`, `/cv`, fill `sources.md` with your boards, run `/sweep` once by hand, and schedule it (see `docs/scheduling.md`).
+Then drop your current CV into `cv/old/`, run `/profile` and `/cv` (they start from that file and ask only what it does not say), fill `sources.md` with your boards, run `/sweep` once by hand, and schedule it (see `docs/scheduling.md`).
 
 Requirements: Node 20+, Claude Code, a JobCubby account, Gmail and Google Calendar connectors (or equivalents). Optional: poppler for PDF previews (`brew install poppler`), OBS and `stable-ts` for recording and transcribing interviews (`docs/recording-and-transcription.md`).
 

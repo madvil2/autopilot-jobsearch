@@ -17,6 +17,7 @@ Create these from `templates/` if they do not exist yet (never overwrite an exis
 | `rules.md` | `templates/rules.md` |
 | `sources.md` | `templates/sources.md` |
 | `cv/base.md` | `templates/cv.md` |
+| `cv/old/` | empty folder (the CV they already have, in any format; `/profile` and `/cv` read it first) |
 | `cover-letters/` | empty folder |
 | `prep/` | empty folder |
 | `photos/` | empty folder |
@@ -67,14 +68,14 @@ Never type credentials or one-time codes. Never try to get past a bot check; ask
 
 ## 3b. Order of the next steps (one question)
 
-1. `/profile` now, then `/cv`, then the first `/sweep` by hand (recommended: each one feeds the next)
+1. Drop the current CV into `cv/old/`, then `/profile` (it fills most of the profile from that file), then `/cv`, then the first `/sweep` by hand (recommended: each one feeds the next)
 2. `/sweep` first with an existing CV PDF dropped into `cv/`, profile and CV later
 
 ## 4. Next steps
 
 Tell the person, in this order:
 
-1. `/profile` to fill `profile.md` by interview.
+1. `/profile` to fill `profile.md`: it reads the CV in `cv/old/` first and asks only for what that file does not say.
 2. `/cv` to build the CV and render the PDF.
 3. Fill `sources.md` with the boards for their market (offer to do it together now).
 4. `/sweep` once by hand, then schedule it twice a day (see `docs/scheduling.md`).

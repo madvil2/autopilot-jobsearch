@@ -8,10 +8,23 @@ description: Build, tailor and render the CV. Interviews section by section into
 The CV is markdown in `cv/`, rendered to PDF by `scripts/render.mjs`. `cv/base.md` is the master; variants are separate files (`cv/de.md`, `cv/backend.md`, `cv/acme.md`). The markdown contract is `templates/cv.md`: one `# Name`, header lines, then only these sections: Summary, Technical Skills, Work Experience, Education, Achievements, Certifications, Language Skills, Hobbies. Entries under Work Experience and Education are `### dates | role`. The renderer rejects anything else and skips empty sections.
 
 Modes:
-- `/cv` with no CV yet: full interview, then render.
+- `/cv` with no `cv/base.md` yet and a file in `cv/old/`: convert the existing CV into the contract, then fix only what is marked.
+- `/cv` with no CV at all: full interview, then render.
 - `/cv` with an existing one: review, propose fixes, re-render.
 - `/cv variant <name> for <posting URL or pasted text>`: a tailored copy from `base.md`.
 - `/cv render [file]`: just render.
+
+## Building from the CV they already have
+
+If `cv/old/` has a file (imported by `/profile`) or the person has one, start there, not from a blank interview:
+
+1. Read its text (PDF directly; DOCX through `unzip -p file.docx word/document.xml | sed 's#</w:p>#\n#g; s/<[^>]*>//g'`) and `profile.md`.
+2. Rewrite it into the contract of `templates/cv.md` as `cv/base.md`: the same jobs, dates, employers, projects and education; the skills line in the order from `profile.md`; each bullet rewritten into the ABCD shape where its content allows it and kept as written where it does not. Nothing is added that the old CV or `profile.md` does not say.
+3. Append ` (?)` to every bullet that has no result and no number, to every technology that only appears in the skills line, and to anything that contradicts `profile.md` (a date, a title level, a years figure).
+4. Walk the marks with the person, top to bottom, a few at a time: "what changed because you did it?" for a bullet, "used in real work or a real project?" for a technology, "which one is right?" for a contradiction. Every mark is resolved or the line is removed before rendering; no placeholder survives.
+5. Apply the defaults below (language, variants, photo, birth date, hobbies), run the checks, render.
+
+A CV that already follows the contract (a `base.md` from another clone) needs only steps 3 to 5.
 
 ## Building from scratch
 
