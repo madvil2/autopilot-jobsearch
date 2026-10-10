@@ -25,19 +25,7 @@ The example output lives in `examples/`: a fictional engineer's profile, CV ([ma
 
 ## How it works
 
-- **The clone is the workspace.** Claude Code picks up the skills from `.claude/skills/` when you run it here. Your files (`profile.md`, `rules.md`, `sources.md`, `cv/`, `cover-letters/`, `prep/`, `photos/`, `documents/`, `recordings/`, `transcripts/`, `reports/`) are gitignored. `git pull` updates the method, never your data, and you can change the method and push it without ever touching your data.
-- **Keeping your data in a private repo.** This is how I run it, and the folder looks exactly like everyone else's: the personal files stay where they are, and a second git repository with its own git directory tracks only them. One bare repo outside the clone, one alias, and the public clone never sees any of it:
-
-  ```bash
-  git init --bare ~/.autopilot-jobsearch-private.git
-  alias jsp='git --git-dir=$HOME/.autopilot-jobsearch-private.git --work-tree=$HOME/path/to/autopilot-jobsearch'
-  jsp config status.showUntrackedFiles no
-  jsp add -f profile.md rules.md sources.md cv cover-letters prep photos documents transcripts reports   # -f: the public .gitignore applies to the shared work tree
-  jsp commit -m "workspace" && jsp remote add origin <your private remote> && jsp push -u origin HEAD:main
-  ```
-
-  From then on `git` is the method and `jsp` is the data. `/init` sets this up when you ask for it.
-- **One source of facts.** Everything the agent says about you comes from `profile.md`. It never invents a number, a technology or a title. When you correct it, the correction becomes a dated rule in `profile.md` or `rules.md`.
+- **The clone is the workspace.** Claude Code picks up the skills from `.claude/skills/` when you run it here. Your files (`profile.md`, `rules.md`, `sources.md`, `cv/`, `cover-letters/`, `prep/`, `photos/`, `documents/`, `recordings/`, `transcripts/`, `reports/`) are gitignored. `git pull` updates the method, never your data, and you can change the method and push it without ever touching your data. Back the folder up the way you back up anything else; nothing here needs git.
 - **Tracker: JobCubby.** I use [JobCubby](https://jobcubby.com/r/kostiantyn-53zr), a friend's platform, and it is excellent: a pipeline with statuses and timelines, interviews, contacts, résumé versions, a job index with AI matches against your profile, and an MCP endpoint with OAuth, so the agent reads and writes it directly. The `.mcp.json` in this repo already points at it. Honest note: the free plan caps the tracker at 15 applications and a sweep does that in a day, so a real search needs the Pro plan. That link is my referral. If you want a different tracker, fork and replace the JobCubby calls in the skills; the contract is small (create and update applications, statuses, events, interviews, résumés).
 - **Browser: Playwright MCP.** Also in `.mcp.json`. It keeps its own browser profile, so you log in to each board once (`/init` opens the login pages and waits for you) and the sweep runs on your sessions after that. The agent never types a password.
 - **Mail and calendar.** The claude.ai Gmail and Google Calendar connectors, or any mail and calendar MCP. The skills address them by what they do, not by tool name.

@@ -25,7 +25,7 @@ Create these from `templates/` if they do not exist yet (never overwrite an exis
 | `recordings/` | empty folder |
 | `reports/` | empty folder |
 
-All of them are gitignored. Offer to version them in a private repo without changing the layout: a second git with its own git directory tracks only the personal paths in this same folder (the pattern is in `README.md`, "Keeping your data in a private repo"). If the person wants it: create the bare repo outside the clone, add the alias to their shell profile, set `status.showUntrackedFiles no`, add exactly the personal paths with `-f` (the public .gitignore applies to the shared work tree), commit, and push to a private remote they name. From then on `git` is the method and the alias is the data; `git pull` in the clone never touches the data.
+All of them are gitignored: they stay on this machine, `git pull` never touches them, and nothing about them needs git.
 
 Run `npm install` if `node_modules/` is missing (it installs Playwright's Chromium for the PDF renderer).
 
