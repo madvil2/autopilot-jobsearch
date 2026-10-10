@@ -44,6 +44,8 @@ case "${1:-}" in
     local_paths=()
     while IFS= read -r p; do local_paths+=("$p"); done < <(existing_paths)
     dgit add -f -- "${local_paths[@]}"
+    # media never goes in, even under a personal path
+    dgit rm -q --cached --ignore-unmatch -r -- "*.wav" "*.mov" "*.m4a" "*.mp3" "*.mp4" "*.mkv" 2>/dev/null || true
     if dgit diff --cached --quiet; then
       echo "nothing to save"
     else
