@@ -5,6 +5,7 @@
 # the personal paths are ever added.
 #
 #   scripts/data init                 create .data.git and make the first snapshot
+#   scripts/data init --github [name] same, plus create a private GitHub repo with gh and push (default name: autopilot-jobsearch-data)
 #   scripts/data remote <git url>     set a private remote (GitHub private repo, a server, a drive)
 #   scripts/data save ["message"]     snapshot every personal path and push if a remote is set
 #   scripts/data <any git command>    status, log, diff, checkout ... against the data git
@@ -26,12 +27,31 @@ existing_paths() {
 
 case "${1:-}" in
   init)
-    if [ -d "$GIT_DIR" ]; then echo "data git already exists at $GIT_DIR"; exit 0; fi
-    git init -q --bare "$GIT_DIR"
-    dgit config status.showUntrackedFiles no
-    printf '*.wav\n*.mov\n*.m4a\n*.mp3\n*-[0-9].png\n*-[0-9][0-9].png\n.DS_Store\nrecordings/\n' > "$GIT_DIR/info/exclude"
-    "$0" save "initial snapshot"
-    echo "data git created at .data.git (ignored by the method repo). Set a private remote with: scripts/data remote <url>"
+    if [ ! -d "$GIT_DIR" ]; then
+      git init -q --bare "$GIT_DIR"
+      dgit config status.showUntrackedFiles no
+      printf '*.wav\n*.mov\n*.m4a\n*.mp3\n*-[0-9].png\n*-[0-9][0-9].png\n.DS_Store\nrecordings/\n' > "$GIT_DIR/info/exclude"
+      "$0" save "initial snapshot"
+      echo "data git created at .data.git (ignored by the method repo)."
+    else
+      echo "data git already exists at .data.git"
+    fi
+    if [ "${2:-}" = "--github" ]; then
+      name="${3:-autopilot-jobsearch-data}"
+      command -v gh >/dev/null || { echo "gh is not installed; create a private repo yourself and run: scripts/data remote <url>"; exit 1; }
+      gh auth status >/dev/null 2>&1 || { echo "gh is not logged in (gh auth login); then run: scripts/data init --github $name"; exit 1; }
+      owner="$(gh api user --jq .login)"
+      if gh repo view "$owner/$name" >/dev/null 2>&1; then
+        echo "GitHub repo $owner/$name exists, using it"
+      else
+        gh repo create "$name" --private --description "Private job-search data for autopilot-jobsearch" >/dev/null
+        echo "created private GitHub repo $owner/$name"
+      fi
+      "$0" remote "$(gh repo view "$owner/$name" --json sshUrl --jq .sshUrl)"
+      dgit push -q -u origin HEAD:main && echo "pushed"
+    elif ! dgit remote get-url origin >/dev/null 2>&1; then
+      echo "No remote yet. Either: scripts/data init --github   (creates a private GitHub repo)   or: scripts/data remote <url>"
+    fi
     ;;
   remote)
     [ -n "${2:-}" ] || { echo "usage: scripts/data remote <git url>"; exit 1; }

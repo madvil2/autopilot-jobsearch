@@ -36,7 +36,7 @@ Formal register everywhere: "Dear <First Last>", paragraphs, "thank you" not "th
 - **Referral ask to a connection** (under 90 words): how I know them or that we are connected, that I am looking for <role> work in <market>, the specific opening at their company by title, "is there any chance you could refer me to the hiring manager or HR?", offer to send the CV and anything else needed, thank you, first name.
 - **To someone in the department when the manager is unreachable**: who I am, which role, what I bring in two lines, "who would be the right person to talk to about this?", CV attached.
 
-Save the drafts to `prep/<company>-outreach.md` and show them. After the person sends or calls, log the event on the JobCubby application (`add_event`) and set a follow-up date five workdays out.
+Save the drafts to `prep/<company>-outreach.md` and show them. If `.data.git/` exists, run `scripts/data save "outreach <name>"`. After the person sends or calls, log the event on the JobCubby application (`add_event`) and set a follow-up date five workdays out.
 
 ## 4. After the call
 

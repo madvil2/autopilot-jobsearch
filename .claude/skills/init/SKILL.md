@@ -25,7 +25,17 @@ Create these from `templates/` if they do not exist yet (never overwrite an exis
 | `recordings/` | empty folder |
 | `reports/` | empty folder |
 
-All of them are gitignored: `git pull` never touches them. Offer to version them: `scripts/data init` creates a second git in `.data.git/` that tracks only these paths in place, `scripts/data remote <url>` adds a private remote the person names, and from then on `scripts/data save` (which the sweep runs after every pass) snapshots CVs, prep files and reports. Optional; the layout is identical either way.
+All of them are gitignored: `git pull` never touches them.
+
+## 1b. Data history (one question)
+
+Ask: "Do you want a private history of your data (CVs, prep files, reports) on GitHub? I can set it up now." On yes, run:
+
+```bash
+scripts/data init --github
+```
+
+It creates `.data.git/` (a second git that tracks only the personal paths, in place; the folder looks the same), creates a private GitHub repo `autopilot-jobsearch-data` through `gh`, and pushes the first snapshot. If `gh` is missing or not logged in, the script says what to do; offer `scripts/data init` alone plus `scripts/data remote <url>` for any other private remote. From then on every skill that writes a personal file saves a snapshot, and the person never runs git for their data. On no, skip; it can be done later with the same command.
 
 Run `npm install` if `node_modules/` is missing (it installs Playwright's Chromium for the PDF renderer).
 

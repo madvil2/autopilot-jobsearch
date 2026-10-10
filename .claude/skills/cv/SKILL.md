@@ -46,6 +46,7 @@ The output is `cv/<Firstname_Lastname>_CV.pdf` (suffix from `version:` for varia
 ## After rendering
 
 - Upload the PDF to JobCubby as a labelled resume version (`upload_resume` with the file as base64, label = version and date). Set it as default when it replaces the master (`set_default_resume`). Keep the plain-text content current too (`update_resume` with the markdown text) so JobCubby's matches read it.
+- If `.data.git/` exists, run `scripts/data save "cv <name>"`.
 - Update "Files" in `profile.md` if a new version should be used for a market.
 
 ## Tailoring a variant

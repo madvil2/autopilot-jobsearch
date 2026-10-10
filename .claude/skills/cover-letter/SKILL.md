@@ -39,4 +39,4 @@ Rules that apply here from `rules.md`: no em-dashes, no copied sentences except 
 node scripts/render.mjs cover-letters/<company>-<role>.md
 ```
 
-Check the PNG: one page, header matches the CV header. Then in JobCubby add a timeline event on the application ("Cover letter sent, file cover-letters/<name>.pdf") and, if the application is new, create it with the letter path in the description.
+Check the PNG: one page, header matches the CV header. If `.data.git/` exists, run `scripts/data save "cover letter <name>"`. Then in JobCubby add a timeline event on the application ("Cover letter sent, file cover-letters/<name>.pdf") and, if the application is new, create it with the letter path in the description.

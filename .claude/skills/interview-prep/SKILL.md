@@ -33,4 +33,5 @@ Keep the file under two screens. It is read the day before and closed before the
 
 - If the interview is not in JobCubby yet: `schedule_interview` with date, time, round, type, meeting link, interviewer. Move the application to `interview`.
 - Calendar: create the event with the link and a reminder, unless an event for that company and time already exists. Add a timeline event "Prep written: prep/<company>.md".
+- If `.data.git/` exists, run `scripts/data save "prep <name>"`.
 - Tell the person the three things to do before the call: read the core idea, open the product and find the detail, rehearse the intro aloud once. For a final round, add: connect with the interviewers on LinkedIn today.

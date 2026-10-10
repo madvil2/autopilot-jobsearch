@@ -28,6 +28,7 @@ Ask in blocks. Confirm each block back in two lines before moving on.
 
 - Re-read `profile.md` and check it against `rules.md`: no invented facts, no title level outside what they chose, no gaps written into free-text fields.
 - Push the profile to JobCubby so its matches use current data: `update_profile` (headline, summary, skills in the chosen order, work history, education) and `update_preferences` (target role, seniority, work modes, locations, salary, job types, industries). Read the existing profile first and send only what changed.
+- If `.data.git/` exists, run `scripts/data save "profile <name>"`.
 - Tell the person what is still empty and which skill will ask for it.
 
 ## Recording corrections
