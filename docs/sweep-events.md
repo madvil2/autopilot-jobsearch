@@ -41,3 +41,5 @@ Accept, ask for the deadline if none was given, log the event, create a calendar
 ## A platform shows a logged-out state, a challenge page or a quota wall
 
 Skip that source or that application, say so at the top of the report with the URL, continue. Never type credentials or codes, never try to get past a challenge page, never pay for anything.
+
+A captcha on submit, after the form is filled, is the one case where the work is kept: leave that tab exactly as it is (form filled, CV attached, captcha unsolved), open a new tab with `browser_tabs` and carry on there for the rest of the run. Never close the tab, never reload it. Under "Needs your attention" write the company, the posting URL and "form filled, captcha in the open Playwright tab"; the person solves the captcha and clicks submit. Log the application as `saved` with the same note. If the tab turns out to be gone when the person looks, the URL in the report is enough to redo it.

@@ -71,7 +71,7 @@ Measured over 93 runs: a run reads 170 to 480 million cached tokens and costs 15
 
 - 2026-10-10: SAP SuccessFactors portals (`/talentcommunity/apply/<id>`, e.g. FUNKE, Bundesdruckerei) redirect to the portal home on direct navigation; clicking "Jetzt bewerben" leads to a sign-in, so they need a candidate account. Schwarz Digits' SAP "rocketapply" dialog works without account: set UI5 controls through `sap.ui.getCore().byId(id)`; it shows no confirmation, check the `api/application/$batch` response (204 + ApplicationSet id).
 - 2026-10-10: Dayforce (MoneyGram) offers "Apply without an Account"; its resume import mangles employers and countries, fix the work-history fields before Next.
-- 2026-10-10: Lever forms can end in an hCaptcha on submit; that is a stop, report the link.
+- 2026-10-10: Lever forms can end in an hCaptcha on submit; leave the filled tab open, continue in a new tab, report the link (`docs/sweep-events.md`).
 
 - Always confirm location and work-authorization questions in the actual form before filling; listings mislabel "remote" often.
 - Honest answers in structured fields only; free-text fields get nothing volunteered.
@@ -97,4 +97,4 @@ Measured over 93 runs: a run reads 170 to 480 million cached tokens and costs 15
 
 ## Dead or hostile sources
 
-Remove a source after two runs with no relevant postings or a permanent challenge page. A challenge page is a stop, never something to get past.
+Remove a source after two runs with no relevant postings or a permanent challenge page. A challenge page is never something to get past; a captcha on a filled form is left open for the person, everything else is skipped.
