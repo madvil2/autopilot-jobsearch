@@ -25,7 +25,7 @@ Create these from `templates/` if they do not exist yet (never overwrite an exis
 | `recordings/` | empty folder |
 | `reports/` | empty folder |
 
-All of them are gitignored. Offer the private-repo layout: the personal files live in a second, private git repository at `private/` inside the clone, and the paths above are symlinks into it. If the person wants it: create `private/`, move the files there (or create them there from the templates), symlink each path back to the root (`ln -s private/profile.md profile.md`, `ln -s private/cv cv`, ...), `git init` inside `private/` with its own `.gitignore` for recordings and previews, and push it to a private remote the person names. From then on, method changes are commits in the clone and data changes are commits in `private/`; `git pull` in the clone never touches the data.
+All of them are gitignored. Offer to version them in a private repo without changing the layout: a second git with its own git directory tracks only the personal paths in this same folder (the pattern is in `README.md`, "Keeping your data in a private repo"). If the person wants it: create the bare repo outside the clone, add the alias to their shell profile, set `status.showUntrackedFiles no`, add exactly the personal paths, commit, and push to a private remote they name. From then on `git` is the method and the alias is the data; `git pull` in the clone never touches the data.
 
 Run `npm install` if `node_modules/` is missing (it installs Playwright's Chromium for the PDF renderer).
 

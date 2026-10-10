@@ -18,3 +18,4 @@ node_modules/
 .playwright-mcp/
 .scratch/
 .DS_Store
+/notes
