@@ -32,7 +32,7 @@ The example output lives in `examples/`: a fictional engineer's profile, CV ([ma
   git init --bare ~/.autopilot-jobsearch-private.git
   alias jsp='git --git-dir=$HOME/.autopilot-jobsearch-private.git --work-tree=$HOME/path/to/autopilot-jobsearch'
   jsp config status.showUntrackedFiles no
-  jsp add profile.md rules.md sources.md cv cover-letters prep photos documents transcripts reports
+  jsp add -f profile.md rules.md sources.md cv cover-letters prep photos documents transcripts reports   # -f: the public .gitignore applies to the shared work tree
   jsp commit -m "workspace" && jsp remote add origin <your private remote> && jsp push -u origin HEAD:main
   ```
 
