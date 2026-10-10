@@ -21,6 +21,15 @@ Things I learned running the sweep on real boards. None of this is personal; all
 - Ashby yes/no questions are button groups: click the button inside the question's container (`ancestor::div[.//label][1]`), not a radio.
 - Ashby refuses a second application to the same company within about 90 days; log it as a duplicate.
 
+## JobCubby (the tracker)
+
+Field names that the tools reject silently or with a one-line error; each wrong guess costs a retry and the error text does not always say which field was wrong:
+
+- `update_application_status`: `id` (not `application_id`), `status`, and `rejection_reason` for `rejected`.
+- `add_event`: `application_id`, `note` (not `content` or `text`), optional `occurred_at` as a full ISO timestamp.
+- `create_application` and `update_application`: `applied_at` and `follow_up_at` are full ISO 8601 timestamps with an offset (`2026-10-17T09:00:00+02:00`); a bare date is "invalid". `resume_id` comes from `list_resumes`, once per run.
+- `list_applications` with no filters exceeds the tool-output limit and lands in a file; `grep` it, never `Read` it (the file is over the Read size limit too).
+
 ## Context and tool hygiene (the cost driver)
 
 Measured over 93 runs: a run reads 170 to 480 million cached tokens and costs 15 to 100 dollars on a Sonnet-class model, almost all of it page content. The habits that cause it, and the fix:
@@ -32,6 +41,8 @@ Measured over 93 runs: a run reads 170 to 480 million cached tokens and costs 15
 - Refs from an old snapshot fail with "Ref not found", "Unknown engine ref" or "Malformed value", and each failure costs a retry. After anything that changes the page, snapshot or find again before clicking.
 - `browser_file_upload` only works when a file chooser is open: click the upload control first, then upload.
 - There is no `computer`, `get_page_text` or `javascript_tool` in the Playwright MCP; `browser_evaluate` does all of that. "Back" is `browser_navigate_back`, not a URL.
+- `browser_press_key` uses Playwright key names: `Control+a`, `Meta+a`, `Enter`, `ArrowDown`; `ctrl+a` is "Unknown key". To clear a field, `browser_fill_form` or `browser_evaluate` with `el.value = ""` is cheaper than select-all plus delete.
+- Typing a word like "Immediately" into `<input type="date">` fails with "Malformed value"; it takes `YYYY-MM-DD` only, set through `browser_evaluate` (see Playwright section above).
 - A click that times out after 5 seconds usually targets a covered or detached element: evaluate `.click()` on it, or scroll it into view first.
 
 ## LinkedIn
