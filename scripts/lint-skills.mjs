@@ -4,11 +4,13 @@
 // - every workspace path a skill mentions has a template or is created by /init
 // - every section label used in templates/cv.md exists in templates/labels.json
 // - .claude/settings.json (the sweep's pre-approved tools) is valid, names tools one by one, covers the sweep's Playwright tools and matches templates/settings.json
+// - every image the README embeds exists and is tracked by git (the CV preview is one)
 // Run with `npm run lint`.
 
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { execFileSync } from "node:child_process";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const SKILLS = join(ROOT, ".claude", "skills");
@@ -89,6 +91,13 @@ for (const m of cvTemplate.matchAll(/^##\s+(.+)$/gm)) {
       if (!(allow || []).includes(`mcp__playwright__${m[1]}`)) fail(`.claude/settings.json: sweep Budget names ${m[1]} but mcp__playwright__${m[1]} is not allowed`);
     }
   }
+}
+
+const readme = readFileSync(join(ROOT, "README.md"), "utf8");
+for (const m of readme.matchAll(/!\[[^\]]*\]\(([^)\s]+)\)/g)) {
+  if (/^https?:/.test(m[1])) continue;
+  try { execFileSync("git", ["ls-files", "--error-unmatch", m[1]], { cwd: ROOT, stdio: "ignore" }); }
+  catch { fail(`README.md: image ${m[1]} is missing or not tracked by git`); }
 }
 
 console.log(failed ? `${failed} problem(s)` : "skills ok");
