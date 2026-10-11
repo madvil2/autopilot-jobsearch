@@ -9,8 +9,9 @@
 // Design lives in templates/cv.html and templates/cover-letter.html. This script only
 // parses the markdown and fills the template.
 
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync, mkdirSync, mkdtempSync, rmSync } from "node:fs";
 import { basename, dirname, join, resolve, extname } from "node:path";
+import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
 import { chromium } from "playwright";
@@ -352,10 +353,16 @@ async function launchChromium() {
 
 async function renderPdf(html, out) {
   mkdirSync(dirname(out), { recursive: true });
+  // The page is loaded from a file on disk, not with setContent(): a page set from a string has
+  // the origin about:blank, from which Chromium refuses the file:// fonts in the template, and
+  // the PDF silently gets the system font instead (a different one on every OS).
+  const tmp = mkdtempSync(join(tmpdir(), "autopilot-render-"));
   const browser = await launchChromium();
   try {
+    const htmlFile = join(tmp, "index.html");
+    writeFileSync(htmlFile, html);
     const page = await browser.newPage();
-    await page.setContent(html, { waitUntil: "networkidle" });
+    await page.goto(fileUrl(htmlFile), { waitUntil: "networkidle" });
     await page.evaluate(() => document.fonts.ready);
     // Photos come in at camera size; the PDF only needs ~600px. Downscale in the page so the
     // file stays small enough to mail and to upload to trackers (a 2000px JPEG alone is 150 KB).
@@ -376,6 +383,7 @@ async function renderPdf(html, out) {
     await page.pdf({ path: out, format: "A4", printBackground: true, preferCSSPageSize: true });
   } finally {
     await browser.close();
+    rmSync(tmp, { recursive: true, force: true });
   }
 }
 

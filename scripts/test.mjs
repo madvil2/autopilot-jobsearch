@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 // Smoke test for the renderer: renders every example, checks page counts and that the
-// text made it into the PDF. Run with `npm test`. Needs poppler (pdftotext) for the
-// text check; without it only page counts and file sizes are checked.
+// text made it into the PDF with the template's font embedded. Run with `npm test`. Needs
+// poppler (pdftotext, pdffonts) for the text and font checks; without it only page counts
+// and file sizes are checked.
 
 import { execFileSync } from "node:child_process";
-import { existsSync, statSync, readdirSync } from "node:fs";
+import { existsSync, statSync, readdirSync, readFileSync } from "node:fs";
 import { join, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -15,12 +16,14 @@ const cases = [
   {
     input: "examples/cv/base.md",
     output: "examples/cv/Alex_Mustermann_CV.pdf",
+    template: "cv.html",
     maxPages: 2,
     mustContain: ["Alex Mustermann", "WORK EXPERIENCE", "Northwind Labs", "Technologies used", "HOBBIES"],
   },
   {
     input: "examples/cover-letters/acme-commerce-frontend-engineer.md",
     output: "examples/cover-letters/acme-commerce-frontend-engineer.pdf",
+    template: "cover-letter.html",
     maxPages: 1,
     mustContain: ["Application as Frontend Engineer", "Dear Acme Commerce Team", "Kind regards"],
   },
@@ -58,7 +61,20 @@ for (const c of cases) {
       continue;
     }
   }
-  report(c.input, true, `${pages} page(s)${text === null ? ", text check skipped (no pdftotext)" : ""}`);
+  // The template declares its font with @font-face (Roboto, shipped in fonts/). If the browser
+  // could not load it, the PDF silently carries the system fallback instead, which differs per
+  // OS and makes the layout non-deterministic across machines and CI.
+  const fonts = pdfFonts(output);
+  if (fonts !== null) {
+    const families = declaredFamilies(c.template);
+    const missing = families.filter((family) => !fonts.some((f) => f.includes(family)));
+    if (missing.length) {
+      report(c.input, false, `font not embedded in PDF: ${missing.join(", ")} (embedded: ${fonts.join(", ") || "none"})`);
+      continue;
+    }
+  }
+  const skipped = [text === null && "text check skipped (no pdftotext)", fonts === null && "font check skipped (no pdffonts)"].filter(Boolean);
+  report(c.input, true, `${pages} page(s)${skipped.length ? ", " + skipped.join(", ") : ""}`);
 }
 
 // Every markdown under examples/cv and examples/cover-letters must render without error.
@@ -83,6 +99,28 @@ function pdfText(path) {
   } catch {
     return null;
   }
+}
+
+// Names of the fonts embedded in the PDF, as pdffonts lists them (`AAAAAA+Roboto-Regular`).
+function pdfFonts(path) {
+  try {
+    const out = execFileSync("pdffonts", [path], { encoding: "utf8" });
+    return out
+      .split("\n")
+      .slice(2)
+      .filter((line) => line.trim())
+      .map((line) => line.split(/\s+/)[0]);
+  } catch {
+    return null;
+  }
+}
+
+// The font families the template's @font-face rules declare.
+function declaredFamilies(template) {
+  const css = readFileSync(join(ROOT, "templates", template), "utf8");
+  const families = new Set();
+  for (const m of css.matchAll(/@font-face\s*\{[^}]*font-family:\s*"([^"]+)"/g)) families.add(m[1]);
+  return [...families];
 }
 
 function report(name, ok, msg) {
