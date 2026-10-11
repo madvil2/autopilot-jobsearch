@@ -3,6 +3,7 @@
 // - every skill has frontmatter with name and description
 // - every workspace path a skill mentions has a template or is created by /init
 // - every section label used in templates/cv.md exists in templates/labels.json
+// - .claude/settings.json (the sweep's pre-approved tools) is valid, names tools one by one, covers the sweep's Playwright tools and matches templates/settings.json
 // Run with `npm run lint`.
 
 import { readFileSync, readdirSync, existsSync } from "node:fs";
@@ -55,6 +56,38 @@ for (const m of cvTemplate.matchAll(/^##\s+(.+)$/gm)) {
   const key = m[1].trim().toLowerCase();
   for (const lang of Object.keys(labels)) {
     if (!labels[lang][key]) fail(`templates/labels.json: "${key}" has no ${lang} label`);
+  }
+}
+
+// The sweep's pre-approved tool list (issue 8): .claude/settings.json is the clone's copy, templates/settings.json
+// the one /init writes into a workspace. They must be the same file, valid JSON, with an allow list that names
+// tools one by one (no server-wide or all-tools wildcard) and covers every Playwright tool the sweep's Budget names.
+{
+  const committed = join(ROOT, ".claude", "settings.json");
+  const template = join(ROOT, "templates", "settings.json");
+  for (const file of [committed, template]) if (!existsSync(file)) fail(`${file.slice(ROOT.length + 1)} missing`);
+  if (existsSync(committed) && existsSync(template) && readFileSync(committed, "utf8") !== readFileSync(template, "utf8")) {
+    fail(".claude/settings.json and templates/settings.json differ");
+  }
+  if (existsSync(committed)) {
+    let settings;
+    try {
+      settings = JSON.parse(readFileSync(committed, "utf8"));
+    } catch (e) {
+      fail(`.claude/settings.json is not valid JSON: ${e.message}`);
+    }
+    const allow = settings?.permissions?.allow;
+    if (!Array.isArray(allow) || allow.length === 0) fail(".claude/settings.json: permissions.allow is missing or empty");
+    for (const rule of allow || []) {
+      if (/^mcp__[^_]+(__)?$/.test(rule) || (rule.startsWith("mcp__") && rule.includes("*")) || /^(Bash|WebFetch|\*)(\(\*\))?$/.test(rule)) {
+        fail(`.claude/settings.json: "${rule}" is broader than one tool`);
+      }
+    }
+    const sweep = readFileSync(join(SKILLS, "sweep", "SKILL.md"), "utf8");
+    const budget = (sweep.match(/^- Tools: (.+)$/m) || [])[1] || "";
+    for (const m of budget.matchAll(/`(browser_\w+)`/g)) {
+      if (!(allow || []).includes(`mcp__playwright__${m[1]}`)) fail(`.claude/settings.json: sweep Budget names ${m[1]} but mcp__playwright__${m[1]} is not allowed`);
+    }
   }
 }
 

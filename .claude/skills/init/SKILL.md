@@ -13,6 +13,8 @@ Run this once, in the folder that will hold the job search (an empty folder, or 
 
 If the workspace has no `.mcp.json`, copy `templates/mcp.json` to `.mcp.json` here. It declares the JobCubby MCP (HTTP, OAuth) and the Playwright MCP (started through `npx`), scoped to this folder so they do not run in the person's other projects. Claude Code reads it at start: tell the person to leave the session and run `claude` again in this folder, approve the two servers when asked, then run this skill again; it continues from step 1.
 
+If the workspace has no `.claude/settings.json`, copy `templates/settings.json` to `.claude/settings.json` here. It pre-approves exactly the tools `/sweep` calls (the Playwright browser tools, the JobCubby tools, the few shell commands a run uses) so a scheduled run never waits on a permission prompt; `docs/scheduling.md` says what is in it and how to change it. In a clone the file is already committed.
+
 ## 1. Workspace files
 
 Create these from `templates/` if they do not exist yet (never overwrite an existing one):
