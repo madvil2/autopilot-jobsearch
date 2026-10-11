@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_navigate_back",
+      "mcp__playwright__browser_snapshot",
+      "mcp__playwright__browser_find",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_type",
+      "mcp__playwright__browser_fill_form",
+      "mcp__playwright__browser_select_option",
+      "mcp__playwright__browser_file_upload",
+      "mcp__playwright__browser_evaluate",
+      "mcp__playwright__browser_tabs",
+      "mcp__playwright__browser_press_key",
+      "mcp__playwright__browser_wait_for",
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__jobcubby__list_applications",
+      "mcp__jobcubby__get_application",
+      "mcp__jobcubby__create_application",
+      "mcp__jobcubby__update_application",
+      "mcp__jobcubby__update_application_status",
+      "mcp__jobcubby__add_event",
+      "mcp__jobcubby__list_resumes",
+      "mcp__jobcubby__list_matches",
+      "mcp__jobcubby__list_saved_searches",
+      "mcp__jobcubby__run_saved_search",
+      "mcp__jobcubby__save_posting",
+      "mcp__jobcubby__schedule_interview",
+      "mcp__jobcubby__list_interviews",
+      "mcp__jobcubby__create_contact",
+      "Bash(mkdir -p reports)",
+      "Bash(date:*)",
+      "Bash(cat >> reports/*)",
+      "Bash(ps -eo pid,etime,command:*)",
+      "Bash(kill:*)",
+      "Bash(sleep:*)",
+      "Edit(reports/**)",
+      "Edit(sources.md)",
+      "WebFetch(domain:jobcubby.com)"
+    ],
+    "deny": [
+      "mcp__jobcubby__delete_application",
+      "mcp__jobcubby__delete_resume",
+      "mcp__jobcubby__delete_contact",
+      "mcp__jobcubby__delete_saved_search",
+      "Bash(rm:*)"
+    ]
+  }
+}
