@@ -1,5 +1,7 @@
 # autopilot-jobsearch
 
+[![CI](https://github.com/madvil2/autopilot-jobsearch/actions/workflows/ci.yml/badge.svg)](https://github.com/madvil2/autopilot-jobsearch/actions/workflows/ci.yml)
+
 The skills I use to run my job search on autopilot with Claude Code. Not a demo: this is the setup that applies for me twice a day, right now.
 
 A job search is a numbers game, and by hand you lose it. The fresh postings go out at nine, the first slot goes to whoever answers first, the follow-up never gets sent, and the tracker is a spreadsheet nobody updates. So I gave the whole thing to an agent. Twice a day it reads my mail and recruiter messages, answers them, checks every board I care about, applies, books the earliest interview slot, logs everything to a tracker and my calendar, and leaves me a short report. Around that it keeps my profile, a CV that renders to PDF, cover letters, interview prep and debriefs, all as markdown in one folder.
