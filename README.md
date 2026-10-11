@@ -75,6 +75,10 @@ When it matters:
 
 Example output in `examples/`: a fictional engineer's profile, CV ([markdown](examples/cv/base.md), [PDF](examples/cv/Alex_Mustermann_CV.pdf)), a cover letter, a prep file and a sweep report.
 
+![The first page of the example CV, rendered to PDF](examples/cv/Alex_Mustermann_CV-preview.png)
+
+*The first page of [the example CV](examples/cv/Alex_Mustermann_CV.pdf), rendered by `scripts/render.mjs` from [base.md](examples/cv/base.md).*
+
 ## How it works
 
 - **A folder is the workspace.** The skills come from the plugin; your files (`profile.md`, `rules.md`, `sources.md`, `cv/`, `cover-letters/`, `prep/`, `photos/`, `documents/`, `recordings/`, `transcripts/`, `reports/`) live in whatever folder you run Claude Code in. In a clone the same files are gitignored, so `git pull` updates the method and never your data.
@@ -113,7 +117,7 @@ fonts/               Roboto (Apache 2.0)
 GLOSSARY.md          the vocabulary
 ```
 
-`npm test` renders the examples and checks the PDFs. `npm run lint` checks the skills.
+`npm test` renders the examples and checks the PDFs. `npm run lint` checks the skills and that every image the README embeds is committed. The CV preview above is `pdftoppm -png -r 120 -f 1 -l 1 -singlefile examples/cv/Alex_Mustermann_CV.pdf examples/cv/Alex_Mustermann_CV-preview`; rerun it when the example CV changes.
 
 ## License
 
