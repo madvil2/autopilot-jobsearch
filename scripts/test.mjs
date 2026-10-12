@@ -250,6 +250,11 @@ const cal = await import(pathToFileURL(calendar).href);
   same("calendar: Calendar.app find output", JSON.stringify(parsed.map((e) => [e.title, e.start.getHours(), e.end.getDate()])), JSON.stringify([["Acme\tR1", 10, 14], ["All day", 0, 16]]));
 }
 
+for (const script of ["mail.mjs", "calendar.mjs"]) {
+  const text = readFileSync(join(ROOT, "scripts", script), "utf8");
+  same(`${script}: reads no environment`, /process\.env|[$]env:/.test(text), false);
+}
+
 process.exit(failed ? 1 : 0);
 
 function transportIs(name, env, platform, expected) {

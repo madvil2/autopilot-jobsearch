@@ -7,6 +7,7 @@ Notable changes to this project, in the spirit of [Keep a Changelog](https://kee
 ### Skills
 
 - The sweep ends a source in the report ledger with the Edit tool, replacing its `[sources] <name>: pending` line, instead of a shell one-liner.
+- On Windows, `scripts/mail.mjs` and `scripts/calendar.mjs` pass their data to classic Outlook on stdin as UTF-8, not through the environment.
 
 ## 0.1.0 - 2026-10-12
 

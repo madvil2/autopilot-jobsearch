@@ -479,12 +479,15 @@ function osascript(script, args) {
 
 // ---------- classic Outlook (Windows) ----------
 
-// The data travels as JSON in an environment variable, never spliced into the script, and the constant script goes in
-// as -EncodedCommand. Times cross as UTC ISO strings and are converted to local DateTime here.
+// The data travels as UTF-8 JSON on stdin, read as raw bytes so the console code page cannot mangle it, never spliced
+// into the script, and the constant script goes in as -EncodedCommand. Times cross as UTC ISO strings and are
+// converted to local DateTime here.
 // Exit 3: no Outlook COM class (the new Outlook has none). Exit 4: no calendar with that name.
 const OUTLOOK_PS = `
 $ErrorActionPreference = 'Stop'
-$d = $env:AUTOPILOT_CALENDAR_JSON | ConvertFrom-Json
+$ms = New-Object System.IO.MemoryStream
+[Console]::OpenStandardInput().CopyTo($ms)
+$d = [System.Text.Encoding]::UTF8.GetString($ms.ToArray()) | ConvertFrom-Json
 try { $ol = New-Object -ComObject Outlook.Application } catch { exit 3 }
 $ns = $ol.GetNamespace('MAPI')
 $default = $ns.GetDefaultFolder(9)
@@ -535,7 +538,7 @@ $a.Save()
 
 function outlook(payload) {
   const r = spawnSync("powershell", ["-NoProfile", "-NonInteractive", "-EncodedCommand", Buffer.from(OUTLOOK_PS, "utf16le").toString("base64")], {
-    env: { ...process.env, AUTOPILOT_CALENDAR_JSON: JSON.stringify(payload) },
+    input: Buffer.from(JSON.stringify(payload), "utf8"),
     encoding: "utf8",
   });
   if (r.error) fail(`could not run powershell: ${r.error.message}`);

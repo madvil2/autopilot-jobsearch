@@ -643,12 +643,14 @@ function warnIfLeft(left) {
 
 // ---------- classic Outlook (Windows) ----------
 
-// The data travels as JSON in an environment variable, never spliced into the script. The script itself is constant
-// and goes in as -EncodedCommand rather than on stdin: "-Command -" reads stdin line by line and
-// mishandles multi-line blocks. Exit 3: no Outlook COM class (the new Outlook has none).
+// The data travels as UTF-8 JSON on stdin, read as raw bytes so the console code page cannot mangle it, never spliced
+// into the script. The script itself is constant and goes in as -EncodedCommand rather than on stdin: "-Command -"
+// reads stdin line by line and mishandles multi-line blocks. Exit 3: no Outlook COM class (the new Outlook has none).
 const OUTLOOK_PS = `
 $ErrorActionPreference = 'Stop'
-$d = $env:AUTOPILOT_MAIL_JSON | ConvertFrom-Json
+$ms = New-Object System.IO.MemoryStream
+[Console]::OpenStandardInput().CopyTo($ms)
+$d = [System.Text.Encoding]::UTF8.GetString($ms.ToArray()) | ConvertFrom-Json
 try { $ol = New-Object -ComObject Outlook.Application } catch { exit 3 }
 $accounts = @($ol.Session.Accounts)
 if ($d.mode -eq 'accounts') { foreach ($a in $accounts) { [Console]::Out.WriteLine($a.SmtpAddress) }; exit 0 }
@@ -703,7 +705,7 @@ $m.Send()
 
 function powershell(payload) {
   const r = spawnSync("powershell", ["-NoProfile", "-NonInteractive", "-EncodedCommand", Buffer.from(OUTLOOK_PS, "utf16le").toString("base64")], {
-    env: { ...process.env, AUTOPILOT_MAIL_JSON: JSON.stringify(payload) },
+    input: Buffer.from(JSON.stringify(payload), "utf8"),
     encoding: "utf8",
   });
   if (r.error) fail(`could not run powershell: ${r.error.message}`);
