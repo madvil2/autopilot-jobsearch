@@ -338,8 +338,12 @@ function fileUrl(path) {
 // ---------- PDF ----------
 
 async function launchChromium() {
+  // Hinting off, so glyph advances are not rounded to the pixel grid: Linux Chromium (FreeType)
+  // hints by default and macOS does not, and the rounded widths move line breaks. Without it the
+  // text metrics are identical on every OS and the committed example PDFs compare equal in CI.
+  const args = ["--font-render-hinting=none"];
   try {
-    return await chromium.launch();
+    return await chromium.launch({ args });
   } catch (e) {
     if (!/Executable doesn't exist|browserType.launch/.test(String(e))) throw e;
     // Installed as a plugin, the playwright package arrives without its postinstall step, so the
@@ -347,7 +351,7 @@ async function launchChromium() {
     console.error("Chromium for Playwright is not installed yet, downloading it once...");
     const { execFileSync } = await import("node:child_process");
     execFileSync(process.execPath, [join(ROOT, "node_modules", "playwright", "cli.js"), "install", "chromium"], { stdio: "inherit" });
-    return await chromium.launch();
+    return await chromium.launch({ args });
   }
 }
 
