@@ -5,6 +5,7 @@
 // - every section label used in templates/cv.md exists in templates/labels.json
 // - .claude/settings.json (the sweep's pre-approved tools) is valid, names tools one by one, covers the sweep's Playwright tools and matches templates/settings.json
 // - every image the README embeds exists and is tracked by git (the CV preview is one)
+// - package.json, .claude-plugin/plugin.json and the plugin's marketplace entry carry the same version
 // Run with `npm run lint`.
 
 import { readFileSync, readdirSync, existsSync } from "node:fs";
@@ -65,6 +66,7 @@ for (const m of cvTemplate.matchAll(/^##\s+(.+)$/gm)) {
 // the one /init writes into a workspace. They must be the same file, valid JSON, with an allow list that names
 // tools one by one (no server-wide or all-tools wildcard) and covers every Playwright tool the sweep and its docs name.
 checkSettings();
+checkVersions();
 
 // Every image the README embeds must exist and be committed. git ls-files says whether it is tracked;
 // without a repository (a plugin install, an exported tarball) nothing is tracked, so the check falls
@@ -117,6 +119,16 @@ function checkSettings() {
   for (const tool of new Set([...sweepText.matchAll(/\b(browser_[a-z_]+)\b/g)].map((m) => m[1]))) {
     if (!allow.includes(`mcp__playwright__${tool}`)) fail(`.claude/settings.json: the sweep uses ${tool} but mcp__playwright__${tool} is not allowed`);
   }
+}
+
+function checkVersions() {
+  const read = (p) => JSON.parse(readFileSync(join(ROOT, p), "utf8"));
+  const pkg = read("package.json").version;
+  const plugin = read(".claude-plugin/plugin.json").version;
+  const entry = read(".claude-plugin/marketplace.json").plugins?.find((p) => p.name === "autopilot-jobsearch")?.version;
+  if (!pkg) fail("package.json has no version");
+  if (plugin !== pkg) fail(`.claude-plugin/plugin.json version ${plugin} differs from package.json ${pkg}`);
+  if (entry !== pkg) fail(`.claude-plugin/marketplace.json plugin version ${entry} differs from package.json ${pkg}`);
 }
 
 // True when a permission rule approves exactly one tool, narrowed or not. False for a whole MCP server
