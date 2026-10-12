@@ -29,7 +29,6 @@
       "mcp__jobcubby__save_posting",
       "mcp__jobcubby__schedule_interview",
       "mcp__jobcubby__list_interviews",
-      "mcp__jobcubby__create_contact",
       "Bash(mkdir -p reports)",
       "Bash(date:*)",
       "Bash(cat >> reports/*)",
@@ -38,6 +37,7 @@
       "Bash(sleep:*)",
       "Edit(reports/**)",
       "Edit(sources.md)",
+      "Edit(docs/platform-notes.md)",
       "WebFetch(domain:jobcubby.com)"
     ],
     "deny": [
