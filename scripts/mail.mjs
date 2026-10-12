@@ -646,13 +646,16 @@ function warnIfLeft(left) {
 // The data travels as UTF-8 JSON on stdin, read as raw bytes so the console code page cannot mangle it, never spliced
 // into the script, and the output comes back as UTF-8 without a BOM. The script itself is constant and goes in as
 // -EncodedCommand rather than on stdin: "-Command -" reads stdin line by line and mishandles multi-line blocks.
-// Exit 3: no Outlook COM class (the new Outlook has none).
+// Exit 3: no Outlook COM class (the new Outlook has none). Exit 6: no data on stdin.
 const OUTLOOK_PS = `
 $ErrorActionPreference = 'Stop'
 [Console]::OutputEncoding = New-Object System.Text.UTF8Encoding $false
 $ms = New-Object System.IO.MemoryStream
 [Console]::OpenStandardInput().CopyTo($ms)
-$d = [System.Text.Encoding]::UTF8.GetString($ms.ToArray()) | ConvertFrom-Json
+$raw = [System.Text.Encoding]::UTF8.GetString($ms.ToArray())
+if (-not $raw.Trim()) { [Console]::Error.WriteLine('no JSON on stdin'); exit 6 }
+$d = $raw | ConvertFrom-Json
+if (-not $d) { [Console]::Error.WriteLine('no JSON on stdin'); exit 6 }
 try { $ol = New-Object -ComObject Outlook.Application } catch { exit 3 }
 $accounts = @($ol.Session.Accounts)
 if ($d.mode -eq 'accounts') { foreach ($a in $accounts) { [Console]::Out.WriteLine($a.SmtpAddress) }; exit 0 }
@@ -714,6 +717,7 @@ function powershell(payload) {
   if (r.status === 3) fail("classic Outlook is not installed (the new Outlook has no scripting interface); sending needs classic Outlook");
   if (r.status === 4) fail(`Outlook has no account for ${payload.user}: add it in Outlook under File > Account Settings`);
   if (r.status === 5) fail(`no message with id ${payload.id} in Outlook`);
+  if (r.status === 6) fail("PowerShell received no data on stdin");
   if (r.status !== 0) fail(`Outlook failed: ${firstLine((r.stderr || "").trim()) || `powershell exit ${r.status}`}`);
   return r.stdout;
 }

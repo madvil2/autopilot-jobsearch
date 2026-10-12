@@ -482,13 +482,16 @@ function osascript(script, args) {
 // The data travels as UTF-8 JSON on stdin, read as raw bytes so the console code page cannot mangle it, never spliced
 // into the script, and the output comes back as UTF-8 without a BOM. The constant script goes in as -EncodedCommand.
 // Times cross as UTC ISO strings and are converted to local DateTime here.
-// Exit 3: no Outlook COM class (the new Outlook has none). Exit 4: no calendar with that name.
+// Exit 3: no Outlook COM class (the new Outlook has none). Exit 4: no calendar with that name. Exit 6: no data on stdin.
 const OUTLOOK_PS = `
 $ErrorActionPreference = 'Stop'
 [Console]::OutputEncoding = New-Object System.Text.UTF8Encoding $false
 $ms = New-Object System.IO.MemoryStream
 [Console]::OpenStandardInput().CopyTo($ms)
-$d = [System.Text.Encoding]::UTF8.GetString($ms.ToArray()) | ConvertFrom-Json
+$raw = [System.Text.Encoding]::UTF8.GetString($ms.ToArray())
+if (-not $raw.Trim()) { [Console]::Error.WriteLine('no JSON on stdin'); exit 6 }
+$d = $raw | ConvertFrom-Json
+if (-not $d) { [Console]::Error.WriteLine('no JSON on stdin'); exit 6 }
 try { $ol = New-Object -ComObject Outlook.Application } catch { exit 3 }
 $ns = $ol.GetNamespace('MAPI')
 $default = $ns.GetDefaultFolder(9)
@@ -545,6 +548,7 @@ function outlook(payload) {
   if (r.error) fail(`could not run powershell: ${r.error.message}`);
   if (r.status === 3) fail("classic Outlook is not installed (the new Outlook has no scripting interface)");
   if (r.status === 4) fail(`Outlook has no calendar named "${payload.calendar}"; run: node scripts/calendar.mjs calendars, and set CALENDAR_NAME in .calendar.env to one of them`);
+  if (r.status === 6) fail("PowerShell received no data on stdin");
   if (r.status !== 0) fail(`Outlook failed: ${firstLine((r.stderr || "").trim()) || `powershell exit ${r.status}`}`);
   return r.stdout;
 }
