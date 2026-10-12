@@ -644,10 +644,12 @@ function warnIfLeft(left) {
 // ---------- classic Outlook (Windows) ----------
 
 // The data travels as UTF-8 JSON on stdin, read as raw bytes so the console code page cannot mangle it, never spliced
-// into the script. The script itself is constant and goes in as -EncodedCommand rather than on stdin: "-Command -"
-// reads stdin line by line and mishandles multi-line blocks. Exit 3: no Outlook COM class (the new Outlook has none).
+// into the script, and the output comes back as UTF-8 without a BOM. The script itself is constant and goes in as
+// -EncodedCommand rather than on stdin: "-Command -" reads stdin line by line and mishandles multi-line blocks.
+// Exit 3: no Outlook COM class (the new Outlook has none).
 const OUTLOOK_PS = `
 $ErrorActionPreference = 'Stop'
+[Console]::OutputEncoding = New-Object System.Text.UTF8Encoding $false
 $ms = New-Object System.IO.MemoryStream
 [Console]::OpenStandardInput().CopyTo($ms)
 $d = [System.Text.Encoding]::UTF8.GetString($ms.ToArray()) | ConvertFrom-Json

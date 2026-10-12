@@ -480,11 +480,12 @@ function osascript(script, args) {
 // ---------- classic Outlook (Windows) ----------
 
 // The data travels as UTF-8 JSON on stdin, read as raw bytes so the console code page cannot mangle it, never spliced
-// into the script, and the constant script goes in as -EncodedCommand. Times cross as UTC ISO strings and are
-// converted to local DateTime here.
+// into the script, and the output comes back as UTF-8 without a BOM. The constant script goes in as -EncodedCommand.
+// Times cross as UTC ISO strings and are converted to local DateTime here.
 // Exit 3: no Outlook COM class (the new Outlook has none). Exit 4: no calendar with that name.
 const OUTLOOK_PS = `
 $ErrorActionPreference = 'Stop'
+[Console]::OutputEncoding = New-Object System.Text.UTF8Encoding $false
 $ms = New-Object System.IO.MemoryStream
 [Console]::OpenStandardInput().CopyTo($ms)
 $d = [System.Text.Encoding]::UTF8.GetString($ms.ToArray()) | ConvertFrom-Json
