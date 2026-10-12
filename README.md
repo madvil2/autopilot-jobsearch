@@ -117,7 +117,9 @@ fonts/               Roboto (Apache 2.0)
 GLOSSARY.md          the vocabulary
 ```
 
-`npm test` renders the examples and checks the PDFs. `npm run lint` checks the skills and that every image the README embeds is committed. The CV preview above is `pdftoppm -png -r 90 -f 1 -l 1 -singlefile examples/cv/Alex_Mustermann_CV.pdf examples/cv/Alex_Mustermann_CV-preview` (90 dpi keeps it under the plugin scanner's 256 KB limit); rerun it when the example CV changes.
+`npm test` renders the examples and checks the PDFs. `npm run lint` checks the skills and that every image the README embeds is committed. The CV preview above is `pdftoppm -png -r 90 -f 1 -l 1 -singlefile examples/cv/Alex_Mustermann_CV.pdf examples/cv/Alex_Mustermann_CV-preview`; rerun it when the example CV changes.
+
+On every release, bump `version` in package.json, .claude-plugin/plugin.json and the marketplace entry; `npm run lint` checks they match.
 
 ## License
 
