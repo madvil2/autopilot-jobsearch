@@ -1,0 +1,83 @@
+# Lint the skills and render the examples on every push and pull request, so a broken
+# skill, template or renderer shows up within minutes.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # poppler gives pdftotext, pdfinfo and pdftoppm: the test's text check, the page
+      # count below and the PNG previews all need it.
+      - name: Install poppler
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils
+
+      # postinstall downloads Chromium for Playwright; install-deps adds its system libraries.
+      - name: Install dependencies
+        run: |
+          npm ci
+          npx playwright install-deps chromium
+
+      - name: Lint skills
+        run: npm run lint
+
+      - name: Render examples
+        run: npm test
+
+      # npm test overwrites the example PDFs in examples/. Identical renders differ in bytes
+      # (Chromium stamps a creation date and a document id into every PDF), so a git diff of
+      # the files is always noisy. Instead the regenerated PDFs are compared with the
+      # committed ones by page count and by the text with its layout (pdftotext -layout): a
+      # layout regression changes line breaks, page breaks or the text itself, and shows up
+      # here as a failing diff. A changed example is accepted by committing its new PDF.
+      - name: Compare regenerated PDFs with the committed ones
+        run: |
+          set -eu
+          committed="$(mktemp -d)"
+          failed=0
+          # NUL-separated so a file name with spaces stays one name; process substitution keeps
+          # the loop in this shell so "failed" survives it.
+          while IFS= read -r -d '' f; do
+            mkdir -p "$committed/$(dirname "$f")"
+            git show "HEAD:$f" > "$committed/$f"
+            before="$(pdfinfo "$committed/$f" | awk '/^Pages:/{print $2}')"
+            after="$(pdfinfo "$f" | awk '/^Pages:/{print $2}')"
+            if [ "$before" != "$after" ]; then
+              echo "FAIL $f: committed PDF has $before page(s), regenerated has $after"
+              failed=1
+              continue
+            fi
+            if diff -u --label "committed/$f" --label "regenerated/$f" \
+                 <(pdftotext -layout "$committed/$f" -) <(pdftotext -layout "$f" -); then
+              echo "ok   $f: $after page(s), same text and layout"
+            else
+              echo "FAIL $f: text or layout differs from the committed PDF (diff above)"
+              failed=1
+            fi
+          done < <(git ls-files -z 'examples/**/*.pdf')
+          exit "$failed"
+
+      # Previews of what was actually rendered, for looking at a failed diff or a new layout.
+      - name: Render PNG previews
+        if: always()
+        run: |
+          find examples -name '*.pdf' -exec sh -c 'pdftoppm -r 72 -png "$1" "${1%.pdf}"' _ {} \;
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rendered-examples
+          path: |
+            examples/**/*.pdf
+            examples/**/*.png
+          if-no-files-found: warn

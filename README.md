@@ -1,5 +1,7 @@
 # autopilot-jobsearch
 
+[![CI](https://github.com/madvil2/autopilot-jobsearch/actions/workflows/ci.yml/badge.svg)](https://github.com/madvil2/autopilot-jobsearch/actions/workflows/ci.yml)
+
 The skills I use to run my job search on autopilot with Claude Code. Not a demo: this is the setup that applies for me twice a day, right now.
 
 A job search is a numbers game, and by hand you lose it. The fresh postings go out at nine, the first slot goes to whoever answers first, the follow-up never gets sent, and the tracker is a spreadsheet nobody updates. So I gave the whole thing to an agent. Twice a day it reads my mail and recruiter messages, answers them, checks every board I care about, applies, books the earliest interview slot, logs everything to a tracker and my calendar, and leaves me a short report. Around that it keeps my profile, a CV that renders to PDF, cover letters, interview prep and debriefs, all as markdown in one folder.
@@ -73,6 +75,10 @@ When it matters:
 
 Example output in `examples/`: a fictional engineer's profile, CV ([markdown](examples/cv/base.md), [PDF](examples/cv/Alex_Mustermann_CV.pdf)), a cover letter, a prep file and a sweep report.
 
+![The first page of the example CV, rendered to PDF](examples/cv/Alex_Mustermann_CV-preview.png)
+
+*The first page of [the example CV](examples/cv/Alex_Mustermann_CV.pdf), rendered by `scripts/render.mjs` from [base.md](examples/cv/base.md).*
+
 ## How it works
 
 - **A folder is the workspace.** The skills come from the plugin; your files (`profile.md`, `rules.md`, `sources.md`, `cv/`, `cover-letters/`, `prep/`, `photos/`, `documents/`, `recordings/`, `transcripts/`, `reports/`) live in whatever folder you run Claude Code in. In a clone the same files are gitignored, so `git pull` updates the method and never your data.
@@ -111,7 +117,7 @@ fonts/               Roboto (Apache 2.0)
 GLOSSARY.md          the vocabulary
 ```
 
-`npm test` renders the examples and checks the PDFs. `npm run lint` checks the skills.
+`npm test` renders the examples and checks the PDFs. `npm run lint` checks the skills and that every image the README embeds is committed. The CV preview above is `pdftoppm -png -r 120 -f 1 -l 1 -singlefile examples/cv/Alex_Mustermann_CV.pdf examples/cv/Alex_Mustermann_CV-preview`; rerun it when the example CV changes.
 
 ## License
 

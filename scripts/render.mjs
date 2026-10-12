@@ -9,8 +9,9 @@
 // Design lives in templates/cv.html and templates/cover-letter.html. This script only
 // parses the markdown and fills the template.
 
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync, mkdirSync, mkdtempSync, rmSync } from "node:fs";
 import { basename, dirname, join, resolve, extname } from "node:path";
+import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
 import { chromium } from "playwright";
@@ -337,8 +338,12 @@ function fileUrl(path) {
 // ---------- PDF ----------
 
 async function launchChromium() {
+  // Hinting off, so glyph advances are not rounded to the pixel grid: Linux Chromium (FreeType)
+  // hints by default and macOS does not, and the rounded widths move line breaks. Without it the
+  // text metrics are identical on every OS and the committed example PDFs compare equal in CI.
+  const args = ["--font-render-hinting=none"];
   try {
-    return await chromium.launch();
+    return await chromium.launch({ args });
   } catch (e) {
     if (!/Executable doesn't exist|browserType.launch/.test(String(e))) throw e;
     // Installed as a plugin, the playwright package arrives without its postinstall step, so the
@@ -346,16 +351,24 @@ async function launchChromium() {
     console.error("Chromium for Playwright is not installed yet, downloading it once...");
     const { execFileSync } = await import("node:child_process");
     execFileSync(process.execPath, [join(ROOT, "node_modules", "playwright", "cli.js"), "install", "chromium"], { stdio: "inherit" });
-    return await chromium.launch();
+    return await chromium.launch({ args });
   }
 }
 
 async function renderPdf(html, out) {
   mkdirSync(dirname(out), { recursive: true });
   const browser = await launchChromium();
+  // The temp dir is created inside the try, after the launch, so a failed launch leaves nothing behind.
+  let tmp;
   try {
+    // The page is loaded from a file on disk, not with setContent(): a page set from a string has
+    // the origin about:blank, from which Chromium refuses the file:// fonts in the template, and
+    // the PDF silently gets the system font instead (a different one on every OS).
+    tmp = mkdtempSync(join(tmpdir(), "autopilot-render-"));
+    const htmlFile = join(tmp, "index.html");
+    writeFileSync(htmlFile, html);
     const page = await browser.newPage();
-    await page.setContent(html, { waitUntil: "networkidle" });
+    await page.goto(fileUrl(htmlFile), { waitUntil: "networkidle" });
     await page.evaluate(() => document.fonts.ready);
     // Photos come in at camera size; the PDF only needs ~600px. Downscale in the page so the
     // file stays small enough to mail and to upload to trackers (a 2000px JPEG alone is 150 KB).
@@ -376,6 +389,7 @@ async function renderPdf(html, out) {
     await page.pdf({ path: out, format: "A4", printBackground: true, preferCSSPageSize: true });
   } finally {
     await browser.close();
+    if (tmp) rmSync(tmp, { recursive: true, force: true });
   }
 }
 
