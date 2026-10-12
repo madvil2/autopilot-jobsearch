@@ -81,7 +81,7 @@ Measured over 93 runs: a run reads 170 to 480 million cached tokens and costs 15
 - Status lists (hh.ru negotiations, Habr responses, Djinni inbox) read as one block of text shift statuses onto neighbouring cards. Use the list only to see what changed; open the card or thread before writing a status to the tracker.
 - Voice messages (LinkedIn) cannot be transcribed by the sweep; report them once with the sender and date, then leave them to the person.
 - Forms that ask for a messenger handle (Telegram, WhatsApp) need it in the profile; without it the application stops and goes to the report.
-- "Apply by email with CV attached" postings: the mail connector takes an attachment only as base64 inside the tool-call arguments, so a 130 to 250 KB CV costs 60,000 to 110,000 output tokens per mail and the call often fails outright. Email applications go through `scripts/mail.mjs` (Gmail SMTP with an app password in `.mail.env`, the file read from disk; recipe in `docs/sweep-events.md`), never through the connector. Without `.mail.env` the posting goes to the report with the address.
+- "Apply by email with CV attached" postings: the mail connector takes an attachment only as base64 inside the tool-call arguments, so a 130 to 250 KB CV costs 60,000 to 110,000 output tokens per mail and the call often fails outright. Email applications go through `scripts/mail.mjs` (Mail.app on macOS, classic Outlook on Windows, or SMTP with an app password, the sender in `.mail.env`, the file read from disk; recipe in `docs/sweep-events.md`), never through the connector. Without `.mail.env` the posting goes to the report with the address.
 
 ## Regional boards
 

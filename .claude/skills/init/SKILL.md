@@ -76,24 +76,31 @@ Never type credentials or one-time codes. Never try to get past a bot check; ask
 
 ## 3a. Mail for email applications
 
-Some postings accept applications only by email with the CV attached. The sweep sends those itself through `scripts/mail.mjs`, from a Gmail account whose app password sits in `.mail.env` in the workspace; the mail connector from step 2 keeps reading the inbox but never sends applications, because it cannot attach a file at a sane cost. Check first:
+Some postings accept applications only by email with the CV attached. The sweep sends those itself through `scripts/mail.mjs`, which reads the sender from `.mail.env` in the workspace and hands the mail to a transport: Mail.app on macOS or classic Outlook on Windows (no password), or SMTP with an app password on any OS. The mail connector from step 2 keeps reading the inbox but never sends applications, because it cannot attach a file at a sane cost. Check first:
 
 ```bash
 node "${CLAUDE_PLUGIN_ROOT}/scripts/mail.mjs" check
 ```
 
-If it prints the sender address, go on to 3b. If it fails, ask, in the format from `CLAUDE.md`:
+If it prints the transport and the sender address, go on to 3b. If it fails, ask, in the format from `CLAUDE.md`:
 
 1. Set it up now (recommended: email-only postings then get applied to in the same run as everything else, and it takes two minutes)
 2. Skip for now: the sweep puts email-only postings under "Needs your attention" in the report with the address, and the person sends them by hand; this step runs again on the next `/init`
 
-On 1, tell the person what to do and do none of it yourself: copy `templates/mail.env` to `.mail.env` in the workspace; put the Gmail address in `MAIL_USER` and their name in `MAIL_FROM_NAME`; create an app password at https://myaccount.google.com/apppasswords (2-step verification has to be on; name it "autopilot-jobsearch"; copy the 16 characters without the spaces) into `MAIL_APP_PASSWORD`; then run `chmod 600 .mail.env`. You never see, ask for or type the password and you never read `.mail.env`; the person edits the file. When they say it is done, run:
+On 1, ask which way it sends, in the same format:
+
+1. The mail app on this machine (recommended: no password needed, and many Google accounts no longer offer app passwords). On macOS that is Mail.app: the person adds the account in System Settings > Internet Accounts (for Gmail, the Google entry with Mail switched on) and opens Mail once. On Windows it is classic Outlook with the account added; the new Outlook has no scripting interface and cannot be used, and this path is untested
+2. SMTP with an app password, on any OS where the account offers one: the person creates it at https://myaccount.google.com/apppasswords (2-step verification has to be on; name it "autopilot-jobsearch"; copy the 16 characters without the spaces), puts it in `MAIL_APP_PASSWORD` and runs `chmod 600 .mail.env`
+
+On Linux only 2 works; say so instead of asking.
+
+Then the person copies `templates/mail.env` to `.mail.env` in the workspace and puts the sending address in `MAIL_USER` and their name in `MAIL_FROM_NAME`. Tell them what to do and do none of it yourself: they add the account and edit the file. You never see, ask for or type a password and you never read `.mail.env`. When they say it is done, run `check` again; with Mail.app it says whether Mail has an account for that address. Then:
 
 ```bash
 node "${CLAUDE_PLUGIN_ROOT}/scripts/mail.mjs" test
 ```
 
-It mails the account itself with the subject "autopilot-jobsearch mail test". Ask whether it arrived; the inbox tool from step 2 can confirm it too. An authentication error means the password was copied wrong or 2-step verification is off; "readable by other users" means the `chmod` is missing. Repeat what the script said and let them fix it, then run the test again.
+It mails the account itself with the subject "autopilot-jobsearch mail test". Ask whether it arrived; the inbox tool from step 2 can confirm it too. Repeat what the script said on a failure and let them fix it, then run the test again: "no account for" means the address in `MAIL_USER` is not added in the mail app; "not allowed to control Mail" means macOS asked for Automation permission and it was refused (System Settings > Privacy & Security > Automation, allow the terminal or Claude to control Mail); an authentication error means the app password was copied wrong or 2-step verification is off; "readable by other users" means the `chmod` is missing. With Mail.app, the first `check` makes macOS ask whether the terminal (or Claude) may control Mail; the person has to allow it now, interactively, or a scheduled run later fails on it.
 
 ## 3b. Order of the next steps (one question)
 
