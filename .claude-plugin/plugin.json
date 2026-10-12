@@ -9,6 +9,10 @@
   },
   "homepage": "https://github.com/madvil2/autopilot-jobsearch",
   "repository": "https://github.com/madvil2/autopilot-jobsearch",
+  "documentationUrl": "https://github.com/madvil2/autopilot-jobsearch#readme",
+  "supportUrl": "https://github.com/madvil2/autopilot-jobsearch/issues",
+  "privacyPolicyUrl": "https://github.com/madvil2/autopilot-jobsearch/blob/main/PRIVACY.md",
+  "termsOfServiceUrl": "https://github.com/madvil2/autopilot-jobsearch/blob/main/LICENSE",
   "license": "MIT",
   "icon": "./.claude-plugin/icon.png",
   "keywords": [

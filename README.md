@@ -115,6 +115,7 @@ docs/                platform notes, scheduling, recording and transcription, ma
 examples/            a fictional person's complete set
 fonts/               Roboto (Apache 2.0)
 GLOSSARY.md          the vocabulary
+PRIVACY.md           what the plugin does with your data (nothing leaves your machine through it)
 ```
 
 `npm test` renders the examples and checks the PDFs. `npm run lint` checks the skills and that every image the README embeds is committed. The CV preview above is `pdftoppm -png -r 90 -f 1 -l 1 -singlefile examples/cv/Alex_Mustermann_CV.pdf examples/cv/Alex_Mustermann_CV-preview`; rerun it when the example CV changes.
