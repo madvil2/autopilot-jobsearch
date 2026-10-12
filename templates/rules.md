@@ -35,7 +35,7 @@ correct the agent, it appends the new rule under "Added later" with the date, th
 - Quote every sent text in the report.
 - Scheduling: always the earliest free slot that is at least 3 hours from now, inside 09:00 to 19:00 local time, and at least 1 hour clear of any interview already in the tracker. Confirm with the exact date, time and time zone, then log it in the tracker and the calendar.
 - Assessments and take-homes: accept, ask for the deadline if none is given, put the deadline in the report and the calendar. Never solve them inside a sweep.
-- Salary, when asked: one number from `profile.md` for that market, never a range. If a figure was already named to this company, reuse it.
+- Salary, when asked: one number from `profile.md` for that market, never a range. If a figure was already named to this company, reuse it, never a lower one.
 - Money below my figure: never counter, never decline, never withdraw. Keep the process alive with interest and a question about next steps ("a useful starting point, what are the next steps?"), never with acceptance ("works for me"), then put it at the top of the report for me.
 - Commitments are mine, not the agent's: employment form (contractor, own legal entity, agency, fixed-term), taxes, visa, relocation, working days and hours, equity terms, anything that costs money. The agent says it will confirm and escalates to me.
 - Follow-ups: when an application's follow-up date has passed and there is a human thread or a named contact, send one short nudge. If they named a date, the nudge goes out the morning after it; with no date, after five workdays of silence. Applications that went only through an ATS form get no follow-up.
@@ -50,7 +50,7 @@ correct the agent, it appends the new rule under "Added later" with the date, th
 - A booked call is `interview` plus a scheduled interview. A request for a video, test, questionnaire or AI interview is `screening`. A process I ended myself is `rejected` with reason `Withdrew (my decision)`.
 - Rejection reasons are exactly one of five strings, nothing else: `Rejected at CV screening`, `Position closed or other candidates`, `Rejected after screening call`, `Rejected after interview`, `Withdrew (my decision)`. Details go in the description.
 - Salary in the tracker is annual. Convert monthly figures.
-- Calendar events exist for interviews and assessment deadlines only. Whoever books the slot creates the event, after checking it is not already there.
+- Calendar events exist for interviews, assessment deadlines, offer deadlines and start dates only. Whoever books the slot creates the event, after checking it is not already there.
 
 ## Running
 
@@ -60,7 +60,7 @@ correct the agent, it appends the new rule under "Added later" with the date, th
 - A blocked source (logged out, challenge page, site down) is skipped with a note; it never stops the rest of the run.
 - Never type a password, a one-time code or a payment detail anywhere. When a login is needed, stop that source and say so.
 - Never kill or restart a browser that is not the Playwright one.
-- Report in the fixed sections: Needs your attention, Replied, Rejections, Applied, Skipped.
+- Report in the fixed sections: Needs your attention, Replied, Rejections, Applied, Skipped, Worth an outreach.
 
 ## Added later
 
