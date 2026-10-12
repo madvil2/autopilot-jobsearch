@@ -35,7 +35,10 @@
       "Bash(ps -eo pid,etime,command:*)",
       "Bash(kill:*)",
       "Bash(sleep:*)",
+      "Bash(*scripts/mail.mjs* send *)",
+      "Bash(*scripts/mail.mjs* check)",
       "Edit(reports/**)",
+      "Edit(cover-letters/**)",
       "Edit(sources.md)",
       "Edit(docs/platform-notes.md)",
       "WebFetch(domain:jobcubby.com)"
@@ -45,7 +48,8 @@
       "mcp__jobcubby__delete_resume",
       "mcp__jobcubby__delete_contact",
       "mcp__jobcubby__delete_saved_search",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Read(.mail.env)"
     ]
   }
 }

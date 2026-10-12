@@ -46,7 +46,7 @@ npm install          # the PDF renderer's dependency
 claude               # then: /init
 ```
 
-Requirements: Node 20+, Claude Code, a JobCubby account, Gmail and Google Calendar connectors (or equivalents). Optional: poppler for PDF previews (`brew install poppler`), OBS and `stable-ts` for recording and transcribing interviews (`docs/recording-and-transcription.md`).
+Requirements: Node 20+, Claude Code, a JobCubby account, Gmail and Google Calendar connectors (or equivalents). Optional: a Gmail app password for the postings that accept applications only by email (without it the sweep lists them in the report for you to send by hand), poppler for PDF previews (`brew install poppler`), OBS and `stable-ts` for recording and transcribing interviews (`docs/recording-and-transcription.md`).
 
 ## The skills
 
@@ -54,7 +54,7 @@ Installed as a plugin they are `/autopilot-jobsearch:<name>`; inside a clone the
 
 Setting up:
 
-- **`/init`**: workspace files from templates, tool checks, one-time board logins, optional private history of your data.
+- **`/init`**: workspace files from templates, tool checks, one-time board logins, the mail account for email applications, optional private history of your data.
 - **`/profile`**: reads your existing CV, fills `profile.md` from it, then asks only for what is missing: every fact forms ask, your stack order, how you present per market, salary figures, your intro script.
 - **`/cv`**: converts your CV into the template (or builds one from scratch), fixes every bullet with you until it carries a result, renders an A4 PDF, uploads it to the tracker.
 - **`/profiles`**: keeps LinkedIn and every other board profile consistent with the CV: headline, About, experience, keywords, photo.
@@ -85,7 +85,7 @@ Example output in `examples/`: a fictional engineer's profile, CV ([markdown](ex
 - **Your data gets a history, privately (optional).** `/init` asks one question and runs the plugin's `scripts/data init --github`: a second git (`.data.git/`, ignored by the method repo) tracks only your personal paths in place, a private GitHub repo is created for it through `gh`, and from then on every skill that writes a CV, a prep file or a report saves a snapshot. You never run git for your data; `scripts/data log` and `scripts/data diff` are there when you want to look back. Any other private remote works with `scripts/data remote <url>`.
 - **Tracker: JobCubby.** I use [JobCubby](https://jobcubby.com/r/kostiantyn-53zr), a friend's platform: a pipeline with statuses and timelines, interviews, contacts, résumé versions, a job index with AI matches against your profile, and an MCP endpoint with OAuth, so the agent reads and writes it directly. `/init` writes a `.mcp.json` into your workspace that points at it (and at the Playwright MCP), so both servers run only in that folder. The free plan carries a real search: 10,000 applications per account including the archive, 200 new a day, 30 a minute. That link is my referral. For a different tracker, fork and replace the JobCubby calls; the contract is small (create and update applications, statuses, events, interviews, résumés).
 - **Browser: Playwright MCP.** In the same `.mcp.json`. It keeps its own browser profile, so you log in to each board once and the sweep runs on your sessions after that. The agent never types a password.
-- **Mail and calendar.** The claude.ai Gmail and Google Calendar connectors, or any mail and calendar MCP. The skills address them by what they do, not by tool name.
+- **Mail and calendar.** The claude.ai Gmail and Google Calendar connectors, or any mail and calendar MCP. The skills address them by what they do, not by tool name. One exception: applications by email with the CV attached go out through `scripts/mail.mjs`, Gmail SMTP with an app password, because a connector takes an attachment only as base64 inside the tool call, which costs more than the whole rest of the run.
 - **PDFs.** `scripts/render.mjs` turns `cv/*.md` and `cover-letters/*.md` into A4 PDFs through Chromium, with the layout in `templates/cv.html` and `templates/cover-letter.html`: Roboto, single column, date column on the left, photo top right, no tables, so parsers and humans both read it. Edit the HTML to change the design; the markdown contract stays.
 
 ## The daily rhythm
