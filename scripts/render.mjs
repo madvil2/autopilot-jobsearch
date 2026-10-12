@@ -357,12 +357,14 @@ async function launchChromium() {
 
 async function renderPdf(html, out) {
   mkdirSync(dirname(out), { recursive: true });
-  // The page is loaded from a file on disk, not with setContent(): a page set from a string has
-  // the origin about:blank, from which Chromium refuses the file:// fonts in the template, and
-  // the PDF silently gets the system font instead (a different one on every OS).
-  const tmp = mkdtempSync(join(tmpdir(), "autopilot-render-"));
   const browser = await launchChromium();
+  // The temp dir is created inside the try, after the launch, so a failed launch leaves nothing behind.
+  let tmp;
   try {
+    // The page is loaded from a file on disk, not with setContent(): a page set from a string has
+    // the origin about:blank, from which Chromium refuses the file:// fonts in the template, and
+    // the PDF silently gets the system font instead (a different one on every OS).
+    tmp = mkdtempSync(join(tmpdir(), "autopilot-render-"));
     const htmlFile = join(tmp, "index.html");
     writeFileSync(htmlFile, html);
     const page = await browser.newPage();
@@ -387,7 +389,7 @@ async function renderPdf(html, out) {
     await page.pdf({ path: out, format: "A4", printBackground: true, preferCSSPageSize: true });
   } finally {
     await browser.close();
-    rmSync(tmp, { recursive: true, force: true });
+    if (tmp) rmSync(tmp, { recursive: true, force: true });
   }
 }
 
