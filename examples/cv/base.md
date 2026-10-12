@@ -5,6 +5,7 @@ language: en
 title: Frontend / Fullstack Engineer (React / TypeScript)
 photo: examples/photos/headshot.png
 show_birth_date: true
+approved: 2026-10-10 95ff7f042c95
 ---
 # Alex Mustermann
 Berlin | Born 14/03/1996 | +49 160 0000000
