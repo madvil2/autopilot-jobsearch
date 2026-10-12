@@ -15,7 +15,7 @@ Walk through the OBS setup from the doc: one scene with the screen, the micropho
 
 ## 2. Transcribe
 
-From the doc: extract audio with ffmpeg, run stable-ts (medium model by default; large-v3 when the audio is noisy), produce `transcripts/<company>-<date>.txt` with timestamps. Deduplicate repeated segments. Check the first minute: if it is silence, the call started before the recording, say so.
+From the doc: extract audio with ffmpeg, run stable-ts (medium model by default; large-v3 when the audio is noisy), produce `transcripts/<company>-<date>.txt` with timestamps. Deduplicate repeated segments. If the first minute is silence, tell the person the call started before the recording.
 
 ## 3. Facts
 
@@ -40,4 +40,4 @@ Then three lines: what went well, the one thing to fix first, how to practice it
 - `complete_interview` with a short outcome ("done, waiting for feedback" or what they said).
 - If a next round was named: `schedule_interview` if a time exists, otherwise a timeline event with the expected date, and a calendar event through the calendar path from `.calendar.env` when the slot is known (recipe in `docs/sweep-events.md` under "Putting an event in the calendar").
 - If `.data.git/` exists, run `"${CLAUDE_PLUGIN_ROOT}/scripts/data" save "debrief <name>"`.
-- If a rule emerged from the mistake ("never do X again"), append it to `profile.md` personal rules with the date, through the same mechanism `/profile` uses.
+- If a rule emerged from the mistake ("never do X again"), append it to `profile.md` personal rules with the date.
