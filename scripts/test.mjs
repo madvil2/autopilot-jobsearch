@@ -162,6 +162,8 @@ transportIs("applemail off macOS is an error", { MAIL_TRANSPORT: "applemail" }, 
     cliRefuses(mail, dir, "mail: list when MAIL_READ is absent (connector)", ["list", "--since", "2d"], /MAIL_READ is connector/);
     writeFileSync(join(dir, ".mail.env"), "MAIL_USER=a@b.c\nMAIL_READ=imap\n");
     cliRefuses(mail, dir, "mail: an unknown MAIL_READ", ["check"], /MAIL_READ "imap" is not one of connector, app/);
+    writeFileSync(join(dir, ".mail.env"), "MAIL_USER=a@b.c\nMAIL_READ=imap\nMAIL_APP_PASSWORD=abcdabcdabcdabcd\n");
+    cliRefuses(mail, dir, "mail: a leftover MAIL_APP_PASSWORD is warned about", ["check"], /SMTP was removed, so delete that line[\s\S]*MAIL_READ "imap"/);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

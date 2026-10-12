@@ -289,6 +289,7 @@ function loadConfig({ readsMail = false } = {}) {
     env[line.slice(0, eq).trim()] = unquote(line.slice(eq + 1).trim());
   }
   const user = env.MAIL_USER || "";
+  if ((env.MAIL_APP_PASSWORD || "").trim()) console.error("warning: .mail.env still has MAIL_APP_PASSWORD; SMTP was removed, so delete that line from .mail.env");
   if (!user || !user.includes("@") || user === "you@gmail.com") fail(".mail.env: MAIL_USER is missing or still the template value");
   let transport;
   let read;
