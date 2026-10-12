@@ -44,11 +44,7 @@ EOF
 | `outreach` | Worth an outreach | Company, posting URL, one line of why. |
 | `sources` | Sources | The ledger. |
 
-The ledger: append one line `<name>: pending` per `###` source in `sources.md`, the name exactly as written there. A source ends when its line becomes `<name>: N postings in 3 days, A applied, S skipped, D duplicates` (an inbox: `N threads, R replied, U status changes`) or `<name>: blocked: <url>`:
-
-```bash
-N='<name>' R='<result>' perl -pi -e 's/^\[sources\] \Q$ENV{N}\E: pending$/[sources] $ENV{N}: $ENV{R}/' reports/<file>.md
-```
+The ledger: append one line `<name>: pending` per `###` source in `sources.md`, the name exactly as written there. A source ends when its line becomes `<name>: N postings in 3 days, A applied, S skipped, D duplicates` (an inbox: `N threads, R replied, U status changes`) or `<name>: blocked: <url>`. To end a source, find its line with `grep -nxF -- '[sources] <name>: pending' reports/<file>.md`. Read only that line (the Read tool with `offset` set to the line number grep printed and `limit` 1), and straight after it, with no append in between, use the Edit tool: `old_string` `[sources] <name>: pending`, `new_string` `[sources] <name>: <result>`. Never Read the whole report. If grep prints nothing, the source was already ended; do not add a second line.
 
 Call `list_applications` once, with no filters. The result usually lands in a saved file: keep its path for the whole run and never read it into context or delegate reading it. Entries created this run are missing from it, so every `create_application` and `save_posting` appends its `[applied]` line (status `saved` noted) to the report at once.
 

@@ -1,6 +1,6 @@
 {
   "name": "autopilot-jobsearch",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "My job search on autopilot with Claude Code: twice-daily sweeps, applications, JobCubby tracking, CV and cover letter rendering, interview prep and debriefs.",
   "type": "module",
   "private": true,

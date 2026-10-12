@@ -2,6 +2,12 @@
 
 Notable changes to this project, in the spirit of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follow [Semantic Versioning](https://semver.org/).
 
+## 0.1.1 - 2026-10-13
+
+### Skills
+
+- The sweep ends a source in the report ledger with the Edit tool, replacing its `[sources] <name>: pending` line, instead of a shell one-liner.
+
 ## 0.1.0 - 2026-10-12
 
 The first release: the method as it stands after 93 real sweep runs (637 applications, 18 interviews booked).
