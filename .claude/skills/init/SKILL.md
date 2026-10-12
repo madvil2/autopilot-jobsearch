@@ -57,19 +57,14 @@ Check each one by calling it, and report what works:
 - **PDF renderer**: needs the `playwright` package next to `scripts/render.mjs`: a plugin install has it, in a clone run `npm install` once. Chromium downloads on the first render (about 150 MB), or now with `node "${CLAUDE_PLUGIN_ROOT}/node_modules/playwright/cli.js" install chromium`.
 - **Mail and calendar**: step 2a.
 
-## 2a. Mail and calendar (three questions)
+## 2a. Mail and calendar (two questions)
 
-Ask these one at a time. When reading is `app`, sending is the mail app too, so skip the second question. On Linux reading and the calendar are `connector` and sending is `smtp`; say so instead of asking.
+Ask these one at a time. Email applications with the CV attached always go out through the mail app on this machine, `applemail` on macOS or `outlook` on Windows; say so instead of asking. On Linux reading and the calendar are `connector` and nothing sends email applications: the sweep escalates email-only postings for the person to send; say so instead of asking, and skip `.mail.env`'s `check` and `test`.
 
 Reading and answering mail:
 
 1. `connector` (recommended: reads Gmail on the server, never misses mail the app has not downloaded): the claude.ai Gmail connector or any mail MCP
 2. `app`: the mail app on this machine (Mail.app on macOS, classic Outlook on Windows, the Outlook path untested) through `scripts/mail.mjs`
-
-Sending email applications with the CV attached:
-
-1. The mail app on this machine, `applemail` on macOS or `outlook` on Windows (recommended: needs no password; the account is added to the app once)
-2. `smtp` with an app password, for an account that offers app passwords
 
 Writing interviews and deadlines to the calendar:
 
@@ -78,7 +73,7 @@ Writing interviews and deadlines to the calendar:
 
 ## 2b. Writing the choices
 
-**`.mail.env`.** The person copies `templates/mail.env` to `.mail.env` in the workspace and sets `MAIL_USER` (the address), `MAIL_FROM_NAME`, `MAIL_READ` (`connector` or `app`) and `MAIL_TRANSPORT` (`applemail`, `outlook` or `smtp`) to the answers. Tell them what to put there and do none of it yourself; never read `.mail.env`. For the mail app, the person adds the account in System Settings > Internet Accounts on macOS (for Gmail, the Google entry with Mail switched on) and opens Mail once, or adds it to classic Outlook on Windows. For `smtp`, the person creates an app password at https://myaccount.google.com/apppasswords (2-step verification on; name it "autopilot-jobsearch"; the 16 characters without the spaces), puts it in `MAIL_APP_PASSWORD` and runs `chmod 600 .mail.env`. When they say it is done:
+**`.mail.env`.** The person copies `templates/mail.env` to `.mail.env` in the workspace and sets `MAIL_USER` (the address), `MAIL_FROM_NAME`, `MAIL_READ` (`connector` or `app`) and `MAIL_TRANSPORT` (`applemail` on macOS, `outlook` on Windows) to the answers. Tell them what to put there and do none of it yourself; never read `.mail.env`. For the mail app, the person adds the account in System Settings > Internet Accounts on macOS (for Gmail, the Google entry with Mail switched on) and opens Mail once, or adds it to classic Outlook on Windows. When they say it is done:
 
 ```bash
 node "${CLAUDE_PLUGIN_ROOT}/scripts/mail.mjs" check
