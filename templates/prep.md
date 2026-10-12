@@ -17,6 +17,8 @@ Format: <video / phone / onsite>, <duration> | Language: <language of the call>
 
 ## 2. Why this company
 
+Opening: the detail from section 0, "I was on your product yesterday and noticed X."
+Frame (early startup: ownership; big company: growth in a team; the frontend is the product: craft): <one sentence of my motivation>
 - Stability:
 - Team:
 - Growth:
@@ -29,7 +31,7 @@ Two concrete reasons I want *this* company (specific enough that no other compan
 ## 3. Why I fit
 
 - Two or three sentences mapping my strongest results to what the posting asks for
-- The bridge for anything in their stack I have not used: "That is not my daily stack, but my daily stack is X and I pick up tools inside that ecosystem fast", then the story of the last time I did exactly that
+- The bridge for anything in their stack I have not used: "I love going deep into new domains. At <last job> I had to learn <X> from zero, and within months I was the person owning that part of the product."
 
 ## 4. Likely questions
 
@@ -42,7 +44,7 @@ Two concrete reasons I want *this* company (specific enough that no other compan
 | Salary (one number for this market) | |
 | Availability, authorization, languages | |
 
-Stories in STAR shape (situation, task, action, result with a number), three to five, said aloud before the call:
+Stories in STAR shape, result with a number, three to five, said aloud before the call:
 - 
 - 
 - 
@@ -61,20 +63,21 @@ Stories in STAR shape (situation, task, action, result with a number), three to 
 4. Who would I be working with day to day?
 5. Always last: What is the next step? I would love to proceed. When will you be able to give me feedback?
 
-Say before the end: I want this job, and I want to grow here.
-
-Final or culture-fit round only: people met so far (names, roles): ; interviewers connected on LinkedIn the day before: yes / no.
+Final or culture-fit round only: people met so far (names, roles): ; two personal specifics to share (where, with whom, when): ; interviewers connected on LinkedIn the day before: yes / no.
 
 ## 7. Checklist
 
-Day before: core idea read, product opened, one detail found, salary figure set, intro rehearsed aloud.
-Camera and room, checked the day before and again ten minutes before: laptop on a table, camera at eye level, face lit from the front (a window or a lamp in front of me, never behind). The background is my real room, tidy and plain: no blur, no virtual background, no wallpaper. Nothing on the desk behind the laptop, no clutter, nobody walking through, door closed, headset in.
+Day before: core idea read (the domain trap), product opened and one detail found, two concrete reasons and two questions their site does not answer ready, sections 1, 2 and 5 re-read, intro rehearsed aloud, salary figure set, time zone and link checked. Final round: interviewers added on LinkedIn with a one-line note that I look forward to the call.
+Camera and room, checked the day before and again ten minutes before: laptop on a table, camera at eye level and straight, face lit from the front (a window or a lamp in front of me, never behind), quiet room. The background is my real room, tidy and plain: no blur, no virtual background, no wallpaper; a clean wall reads as calm. Nothing on the desk behind the laptop, no clutter, nobody walking through, door closed, headset in.
 Recording: OBS open, scene tested with a ten-second recording that has both voices, recording started before I join the call. Every call is recorded: `/debrief` grades it and takes the facts and numbers from it.
-Ten minutes before: notes closed, AI assistant closed, water, call link tested, five minutes early in the room.
-During: ask before answering, think out loud, structure first, never end on "I don't know", only the call language, questions at the end, long fade-out.
+Ten minutes before: notes closed, AI assistant closed, water, call link tested, five minutes early in the room. Nobody there fifteen minutes in: one polite mail asking whether I had the right link.
+During: ask before answering, think out loud, stages then details, never end on "I don't know", face alive, only the call language.
+At the end, always: two or three questions, say that I want the job, the next-steps question, long fade-out.
+Cancelling or moving a call: say so early, apologise once, offer three slots within five workdays.
 
 ## 8. Debrief (filled by `/debrief` after the call)
 
 - Facts they revealed (team, process, numbers, next steps):
 - What went well:
-- What to fix next time:
+- What to fix first:
+- How to practice it this week:

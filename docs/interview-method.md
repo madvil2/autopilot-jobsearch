@@ -24,7 +24,7 @@ No single script. Talk about my motivation, not their industry. Three frames by 
 
 The rule above any script: one concrete detail I noticed in their product beats ten compliments. Open the product the day before. "I was on your product yesterday and noticed X."
 
-In writing (prep files, letters) the order is the why-company order in `docs/rules.md`.
+In writing (prep files, letters) the answer is built as the why-company line in `docs/rules.md` says: the product detail first, then the frame for the company type, then its points in order.
 
 ### A2b. Two concrete reasons
 
@@ -129,10 +129,37 @@ One system-design question, timer on, aloud, in the interview language, no notes
 
 ## Part C. Checklists
 
-**Day before**: read what their product is built on (the domain trap), open the product and find one detail, prepare two concrete reasons and two questions not answered on their site, re-read A1, A2 and B1, set the salary figure for this market, check the time zone and the link, add the interviewers on LinkedIn if this is a final round.
+The checklists (day before, camera and room, recording, ten minutes before, during, at the end, cancelling) are section 7 of `templates/prep.md`, so every prep file carries them.
 
-**Ten minutes before**: laptop on a table at eye level, camera straight, face lit from the front, quiet room, headset. The background is the real room, tidy and plain: no blur, no virtual background; those read as something to hide, a clean wall reads as calm. Nobody walking behind me, notes closed, AI assistant closed, water. OBS recording started before I join (the recording is what `/debrief` works from and where the statistics come from; an unrecorded call teaches nothing). Five minutes early in the room. If nobody has joined fifteen minutes in: one polite mail asking whether I had the right link.
+## Rubric
 
-**During**: ask before answering, think out loud, stages then details, never end on "I don't know", face alive, only the interview language.
+`/debrief` grades a recorded call and `/coach mock` grades each answer against these lines. Each line gets a verdict (yes, no, partly), a quote with its timestamp, and the better line; N/A only with a reason (for example: no technical question was asked).
 
-**At the end, always**: two or three questions, say that I want the job, the next-steps question, long fade-out. If I have to cancel or move a call: say so early, apologise once, offer three slots within five workdays.
+B3.2, B3.3, B3.6 and B3.7 are graded under B1, A1 and A2. B3.8 to B3.10 and B4 are practice and preparation, not graded from a call.
+
+- A1: the intro opens with what I own now or owned last, runs 60 to 90 seconds (60 on a 15-minute screen), carries one number and one memorable personal detail, names the languages once.
+- A2: the why-company answer opens with a concrete detail from their product and uses the frame that fits the company type, about my motivation, not their industry.
+- A2b: two reasons said that could not be said about another company.
+- A3: two sentences mapping my results to their asks; any stack gap closed with the bridge.
+- A4: the last job in two or three sentences, external reason, nobody blamed, ending on what I want next, then silence.
+- A5: no gap or constraint volunteered that nobody asked about; if asked, the A5 answer.
+- A5b: every example answer has the four beats, the action and the result with a number carrying most of the air time.
+- A6: strength and weakness are one trait; the weakness comes with the system against it; the word perfectionist absent.
+- A7: team values named with the one-sentence why.
+- A8: salary as one number, not a range, repeated once at most when pushed; for a founding role, the equity questions asked.
+- A9: availability said with confidence, work authorization in one sentence, languages at the level in `profile.md`.
+- A9b: a sentence saying I want this job before the close: yes/no plus timestamp; no "I will see after a year".
+- A10: at least two questions asked, two of them not answered by their website or the posting, the next-steps question last.
+- A11: the long fade-out: thanks by name, a great conversation, hope to hear soon, have a great day.
+- B1: on every technical question, a clarifying question out loud before the answer, the stages named before any detail, each stage walked out loud.
+- B2: three to five clarifying questions before a system-design answer, at least one about the cost of an error, then the transition line.
+- B2b: with a product owner or CTO: questions about the feature they are building, a parallel to something I built, questions back.
+- B3.1: every silence over five seconds, with its timestamp.
+- B3.4: time bought with a line out loud, never with silence.
+- B3.5: no answer ends on "I don't know"; each ends on an attempt or on how I would find out.
+- B3.11: every answer addresses the question that was asked; no talking over the end of a question, no comment on the question's quality.
+- B3.12: every question gets an answer, an educated guess with the reasoning, or how I would find out.
+- B3.13: no passage where the interviewer asked me to repeat or misheard me; my pace in my three longest answers in words per minute.
+- B3.14: in a culture-fit round, personal answers carry where, with whom, when.
+- B3.15: in a final round, the people met earlier in the process mentioned by name.
+- C: the recording starts before the first greeting; the whole call in the interview language.
