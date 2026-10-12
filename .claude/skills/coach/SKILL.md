@@ -1,13 +1,13 @@
 ---
 name: coach
-description: My interview method: the intro structure, the three why-company frames, the three-step method for technical questions with the clarifying-question bank, ten rules, salary frames, closing, and a daily practice protocol. Run /coach to read it, /coach mock <topic> to practice.
+description: My interview method: the intro structure, the three why-company frames, the three-step method for technical questions with the clarifying-question bank, the rules, salary frames, closing, and a daily practice protocol. Run /coach to read it, /coach mock <topic> to practice.
 ---
 
 # /coach
 
-Files: the method's own files (`templates/`, `scripts/`, `docs/`, `examples/`) live in the plugin root, written here as `${CLAUDE_PLUGIN_ROOT}`; when that text is not replaced by an absolute path, the method root is the clone this skill file sits in. Everything personal (`profile.md`, `rules.md`, `sources.md`, `cv/`, `cover-letters/`, `prep/`, `photos/`, `documents/`, `transcripts/`, `reports/`) lives in the workspace, the current folder; every relative path below is relative to it. Before doing anything on the person's behalf, read `profile.md` and `rules.md`: facts come only from them, choices are asked the way `rules.md` says, and a correction from the person becomes a dated rule there.
+Files: `templates/`, `scripts/`, `docs/`, `examples/` and `routines/` are in the method root, `${CLAUDE_PLUGIN_ROOT}` (the clone holding this skill when that is not replaced by a path); every other relative path is in the workspace, the current folder. Before acting on the person's behalf, read `profile.md` and `rules.md`.
 
-This is how I run interviews. It is written from my own calls, mock interviews and the notes I took after them. `/interview-prep` applies it to one company; `/debrief` grades a recording against it.
+`/interview-prep` applies this method to one company; `/debrief` grades a recording against it.
 
 Modes: `/coach` prints the method. `/coach mock <HR | system design | <topic>>` runs a mock in chat: you play the interviewer, ask one question at a time, and after each answer grade it against the rules below in three lines (what worked, what to fix, the better line). Text cannot hear silence, so in mocks ask the person to type the clarifying questions they would ask out loud before answering.
 
@@ -35,7 +35,7 @@ No single script. Talk about my motivation, not their industry. Three frames by 
 
 The rule above any script: one concrete detail I noticed in their product beats ten compliments. Open the product the day before. "I was on your product yesterday and noticed X."
 
-In writing (prep files, letters) the order is stability, team, growth, money last, each wrapped in a fact about them.
+In writing (prep files, letters) the order is the why-company order in `rules.md`.
 
 ### A2b. Two concrete reasons
 

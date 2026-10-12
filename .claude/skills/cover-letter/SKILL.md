@@ -5,23 +5,25 @@ description: Write a cover letter for one posting in the three-paragraph structu
 
 # /cover-letter
 
-Files: the method's own files (`templates/`, `scripts/`, `docs/`, `examples/`) live in the plugin root, written here as `${CLAUDE_PLUGIN_ROOT}`; when that text is not replaced by an absolute path, the method root is the clone this skill file sits in. Everything personal (`profile.md`, `rules.md`, `sources.md`, `cv/`, `cover-letters/`, `prep/`, `photos/`, `documents/`, `transcripts/`, `reports/`) lives in the workspace, the current folder; every relative path below is relative to it. Before doing anything on the person's behalf, read `profile.md` and `rules.md`: facts come only from them, choices are asked the way `rules.md` says, and a correction from the person becomes a dated rule there.
+Files: `templates/`, `scripts/`, `docs/`, `examples/` and `routines/` are in the method root, `${CLAUDE_PLUGIN_ROOT}` (the clone holding this skill when that is not replaced by a path); every other relative path is in the workspace, the current folder. Before acting on the person's behalf, read `profile.md` and `rules.md`.
 
 Input: a posting URL or pasted posting text, plus optionally the CV version to base it on. Output: `cover-letters/<company>-<role>.md` and its PDF, rendered by `scripts/render.mjs`. The markdown contract is `templates/cover-letter.md`: frontmatter with sender, recipient, place, date, subject, greeting and signoff, then plain paragraphs.
 
 ## Gather
 
-1. Read `profile.md`, `rules.md` and the CV version for this market.
+1. Read the CV version `profile.md` names for this market.
 2. Read the posting. Pull out: the exact role title, the team or product, the three things they ask for most, one sentence worth quoting back, the city or remote setup, the company's legal name and address if shown, the hiring contact's name if shown.
 3. If the posting is in the tracker, read the JobCubby application for anything already said to this company (salary figure, earlier contact).
 
 ## Write
 
-Three paragraphs, each with one job, two or three sentences each. Keep the whole letter under 300 words. Two structures; pick by what I know about them.
+Three paragraphs, each with one job, two or three sentences each. Keep the whole letter under 300 words, in the language of the posting. Two structures; pick by what I know about them.
+
+**Default structure**:
 
 1. **Who I am and what I want to take care of.** Name, role and years from the profile (the main stack first, in the profile's order), then what in their product I would take care of, in their vocabulary.
-2. **Why we are a match, with evidence.** Two or three results from the CV with numbers, chosen to mirror what they ask for. One sentence on how I work (what I put emphasis on). No gaps, no "although I have not used X".
-3. **Their words and the next step.** "You write that ..." with one line from the posting, why that attracted me, where I would join (their city or remote, as the posting says; never volunteer constraints), when I can start, how to reach me, thank you.
+2. **Why we are a match, with evidence.** Two or three results from the CV with numbers, chosen to mirror what they ask for. One sentence on how I work (what I put emphasis on).
+3. **Their words and the next step.** "You write that ..." with one line from the posting, why that attracted me, where I would join (their city or remote, as the posting says), when I can start, how to reach me, thank you.
 
 **Problem-first structure**, when there was a call with the hiring manager or an `/outreach` conversation (their words are in the JobCubby description):
 
@@ -31,9 +33,7 @@ Three paragraphs, each with one job, two or three sentences each. Keep the whole
 
 Then: greeting to the named person ("Dear First Last") or the team, signoff from the frontmatter.
 
-**Email application**, for postings that only accept applications by mail: a plain mail, not a rendered letter. Subject: "Application as <exact title>". Body: greeting to the named person or "<Company> Team"; one line of who I am (title and years from the profile, stack in the profile's order) and that I am applying for <title> found on <source>; one or two sentences of proof matching their asks; that the CV is attached; thank you and that I look forward to discussing how I can contribute. Attach the CV version for the market as PDF. It goes out through `scripts/mail.mjs` from the account in `.mail.env`, with the body saved as `cover-letters/<company>-<role>.txt` and the CV as `--attach`; the sweep uses this variant on its own, and `docs/sweep-events.md` has the exact command.
-
-Rules that apply here from `rules.md`: no em-dashes, no copied sentences except the one explicit quote, no self-disclosed gaps, no location caveats, the why-company order (stability, team, growth, money last) when the letter touches motivation, the title level the profile allows. Language of the posting.
+**Email application**, for postings that only accept applications by mail: a plain mail, not a rendered letter. Subject: "Application as <exact title>". Body: greeting to the named person or "<Company> Team"; one line of who I am (title and years from the profile, stack in the profile's order) and that I am applying for <title> found on <source>; one or two sentences of proof matching their asks; that the CV is attached; thank you and that I look forward to discussing how I can contribute. Attach the CV version for the market as PDF. It goes out through `scripts/mail.mjs` from the account in `.mail.env`, with the body saved as `cover-letters/<company>-<role>.txt` and the CV as `--attach`; the exact command is in `docs/sweep-events.md`.
 
 ## Render and record
 

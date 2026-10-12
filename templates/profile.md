@@ -1,8 +1,6 @@
 # Profile
 
-Everything the agent needs to apply, reply and prepare on my behalf. Filled in by `/profile`.
-Facts here are the only facts the agent may use in forms, messages, CVs and letters. If it is not here,
-the agent asks me instead of guessing.
+Facts and personal rules the agent uses on my behalf. Filled in by `/profile`.
 
 ## Agent settings
 
@@ -28,7 +26,7 @@ the agent asks me instead of guessing.
 ## Target
 
 - Roles I apply to (titles and what they mean in practice):
-- Levels I apply to (for example: mid and senior; never skip a posting for the level in the title):
+- Levels I apply to (for example: mid and senior):
 - Title level I claim for myself in free text and CVs (for example: none, "Mid", "Senior"):
 - Work modes: remote / hybrid / onsite, and where:
 - Markets: countries and platforms, plus what counts as a match on each:
@@ -45,7 +43,6 @@ The order here is the order used everywhere: CV skills line, intro, messages, fo
 |  |  |  |
 
 - Structured "years with X" fields: use the Years column; never round up.
-- Technologies not in this table: in structured fields answer honestly that I have not used them; in free text do not mention them at all.
 
 ## Location by market
 
@@ -62,8 +59,6 @@ Keep city, free-text "about" and phone consistent inside one market.
 |  |  |  |
 
 - If a posting shows a range, aim at its upper half.
-- If I already named a figure to a company, reuse it, never lower.
-- An offer or stated range below my figure is never countered or declined by the agent; it goes to me.
 
 ## Interview facts
 
@@ -90,7 +85,6 @@ Keep city, free-text "about" and phone consistent inside one market.
 
 ## Personal rules
 
-Rules specific to me that the agent must follow. `/profile` writes them, and every time I correct the
-agent it appends one line here with the date.
+Rules specific to me, one dated line each.
 
 - YYYY-MM-DD: ...
