@@ -149,6 +149,55 @@ transportIs("applemail off macOS is an error", { MAIL_TRANSPORT: "applemail" }, 
   }
 }
 
+// Reading and replying refuse bad input before .mail.env is read or a mail app is touched, and a workspace that
+// sends through SMTP gets one clean line saying SMTP cannot read. Nothing here reads or sends a message.
+{
+  const dir = mkdtempSync(join(tmpdir(), "autopilot-mail-read-"));
+  try {
+    cliRefuses(mail, dir, "mail: reply refuses an em-dash", ["reply", "--id", "x@y", "--body", `x ${String.fromCharCode(0x2014)} y`], /em-dash/);
+    cliRefuses(mail, dir, "mail: reply refuses a double hyphen", ["reply", "--id", "x@y", "--body", "x -- y"], /double hyphen/);
+    cliRefuses(mail, dir, "mail: reply without an id", ["reply", "--body", "Thanks"], /--id is required/);
+    cliRefuses(mail, dir, "mail: reply without a body", ["reply", "--id", "x@y"], /--body or --body-file is required/);
+    cliRefuses(mail, dir, "mail: reply refuses a missing attachment", ["reply", "--id", "x@y", "--body", "x", "--attach", "missing.pdf"], /attachment not found/);
+    cliRefuses(mail, dir, "mail: list with a bad --since", ["list", "--since", "yesterday"], /--since: .*neither an ISO 8601 time/);
+    cliRefuses(mail, dir, "mail: list with a time without offset", ["list", "--since", "2026-10-12T08:00:00"], /--since/);
+    cliRefuses(mail, dir, "mail: list with an unknown mailbox", ["list", "--since", "2d", "--mailbox", "drafts"], /not one of inbox, junk, both/);
+    cliRefuses(mail, dir, "mail: --all does not apply to send", ["send", "--all"], /does not apply to send/);
+    writeFileSync(join(dir, ".mail.env"), "MAIL_USER=a@b.c\nMAIL_READ=app\nMAIL_TRANSPORT=smtp\nMAIL_APP_PASSWORD=abcdabcdabcdabcd\n");
+    chmodSync(join(dir, ".mail.env"), 0o600);
+    cliRefuses(mail, dir, "mail: list with the SMTP transport", ["list", "--since", "2d"], /SMTP cannot read mail/);
+    cliRefuses(mail, dir, "mail: show with the SMTP transport", ["show", "--id", "x@y"], /SMTP cannot read mail/);
+    cliRefuses(mail, dir, "mail: check with MAIL_READ=app and SMTP", ["check"], /SMTP cannot read mail/);
+    writeFileSync(join(dir, ".mail.env"), "MAIL_USER=a@b.c\nMAIL_TRANSPORT=smtp\nMAIL_APP_PASSWORD=abcdabcdabcdabcd\n");
+    chmodSync(join(dir, ".mail.env"), 0o600);
+    cliRefuses(mail, dir, "mail: list when MAIL_READ is absent (connector)", ["list", "--since", "2d"], /MAIL_READ is connector/);
+    writeFileSync(join(dir, ".mail.env"), "MAIL_USER=a@b.c\nMAIL_READ=imap\nMAIL_TRANSPORT=smtp\nMAIL_APP_PASSWORD=abcdabcdabcdabcd\n");
+    chmodSync(join(dir, ".mail.env"), 0o600);
+    cliRefuses(mail, dir, "mail: an unknown MAIL_READ", ["check"], /MAIL_READ "imap" is not one of connector, app/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+{
+  const { parseSince, pickRead, parseAppleList, appleListArgs } = await import(pathToFileURL(mail).href);
+  const now = new Date("2026-10-12T12:00:00Z");
+  same("mail: --since 2d", parseSince("2d", now).toISOString(), "2026-10-10T12:00:00.000Z");
+  same("mail: --since 12h", parseSince("12H", now).toISOString(), "2026-10-12T00:00:00.000Z");
+  same("mail: --since an ISO time with offset", parseSince("2026-10-12T08:00:00+02:00", now).toISOString(), "2026-10-12T06:00:00.000Z");
+  for (const bad of ["0d", "2w", "yesterday", "2026-10-12T08:00:00", ""]) {
+    let threw = false;
+    try { parseSince(bad, now); } catch { threw = true; }
+    same(`mail: --since "${bad}" is refused`, threw, true);
+  }
+  same("mail: MAIL_READ absent means connector", pickRead({}), "connector");
+  same("mail: MAIL_READ=App means app", pickRead({ MAIL_READ: " App " }), "app");
+  same("mail: Mail.app list arguments", JSON.stringify(appleListArgs("a@b.c", new Date("2026-10-12T06:00:00Z"), "both", 8, "Europe/Berlin")), JSON.stringify(["a@b.c", "both", "8", "2026", "10", "12", "8", "0", "0"]));
+  const RS = String.fromCharCode(30);
+  const FS = String.fromCharCode(31);
+  const parsed = parseAppleList(`junk:yes${RS}abc@x${FS}11${FS}2026,10,12,36000${FS}Ann <a@x>${FS}Hi${RS}${FS}12${FS}2026,10,11,0${FS}Bob <b@x>${FS}Re${FS}x\n`);
+  same("mail: Mail.app list output", JSON.stringify([parsed.junk, ...parsed.messages.map((m) => [m.id, m.date.getHours(), m.from, m.subject])]), JSON.stringify([true, ["abc@x", 10, "Ann <a@x>", "Hi"], ["#12", 0, "Bob <b@x>", "Re x"]]));
+}
+
 // The calendar script refuses bad input before it reaches Calendar.app or Outlook, and a forced transport this
 // platform lacks ends in one clean line. Spawned for real, so a crash in the CLI entry (a stack trace, a constant
 // used before initialization) fails here. Nothing in this file creates an event.
@@ -167,6 +216,10 @@ try {
   const forced = process.platform === "darwin" ? "outlook" : "applecal";
   writeFileSync(join(calDir, ".calendar.env"), `CALENDAR_NAME=Test\nCALENDAR_TRANSPORT=${forced}\n`);
   cliRefuses(calendar, calDir, `calendar: check with CALENDAR_TRANSPORT=${forced} forced on ${process.platform}`, ["check"], /works only on (Windows|macOS)/);
+  writeFileSync(join(calDir, ".calendar.env"), "CALENDAR_VIA=connector\n");
+  cliRuns(calendar, calDir, "calendar: check with CALENDAR_VIA=connector", ["check"], /CALENDAR_VIA=connector: .*not used/);
+  writeFileSync(join(calDir, ".calendar.env"), "CALENDAR_VIA=phone\n");
+  cliRefuses(calendar, calDir, "calendar: an unknown CALENDAR_VIA", ["check"], /CALENDAR_VIA "phone" is not one of app, connector/);
 } finally {
   rmSync(calDir, { recursive: true, force: true });
 }
@@ -190,6 +243,8 @@ const cal = await import(pathToFileURL(calendar).href);
   same("calendar: duplicate when both start in the same minute", cal.isDuplicate(ev("Call with Bob", "2026-10-14T10:00:00Z", "2026-10-14T10:15:00Z"), wanted), true);
   same("calendar: no duplicate for another title at another time", cal.isDuplicate(ev("Dentist", "2026-10-14T10:30:00Z", "2026-10-14T11:30:00Z"), wanted), false);
   same("calendar: no duplicate without overlap", cal.isDuplicate(ev("Interview Acme", "2026-10-14T11:00:00Z", "2026-10-14T12:00:00Z"), wanted), false);
+  same("calendar: CALENDAR_VIA absent means app", cal.pickVia({}), "app");
+  same("calendar: CALENDAR_VIA=Connector means connector", cal.pickVia({ CALENDAR_VIA: "Connector" }), "connector");
   same("calendar: macOS picks Calendar.app", cal.pickTransport({}, "darwin"), "applecal");
   same("calendar: Windows picks Outlook", cal.pickTransport({}, "win32"), "outlook");
   for (const [name, env, platform] of [["Linux has no transport", {}, "linux"], ["applecal off macOS", { CALENDAR_TRANSPORT: "applecal" }, "win32"], ["unknown transport", { CALENDAR_TRANSPORT: "x" }, "darwin"]]) {
@@ -227,6 +282,13 @@ function cliRefuses(script, cwd, name, args, reason) {
   const clean = !/\n\s+at |before initialization|ReferenceError|TypeError/.test(out);
   if (r.status === 1 && reason.test(out) && clean) report(name, true, out.split("\n")[0].slice(0, 60));
   else report(name, false, `expected exit 1 with one clean line matching ${reason}, got exit ${r.status}: ${out}`);
+}
+
+function cliRuns(script, cwd, name, args, expect) {
+  const r = spawnSync("node", [script, ...args], { cwd, encoding: "utf8" });
+  const out = `${r.stderr}${r.stdout}`.trim();
+  if (r.status === 0 && expect.test(out)) report(name, true, out.split("\n")[0].slice(0, 60));
+  else report(name, false, `expected exit 0 matching ${expect}, got exit ${r.status}: ${out}`);
 }
 
 function mailRefuses(name, args, reason) {
