@@ -13,10 +13,10 @@ This repository is that setup with my data removed, packaged as a Claude Code pl
 I did not make this up over a weekend.
 
 - **It is live.** Between late August and early October 2026 the sweep ran 93 times on my account: 637 applications, 18 interviews booked, 199 rejections filed with a reason, follow-ups sent, every call logged. The funnel is public: [my JobCubby page](https://jobcubby.com/s/madvil2) shows the running counts, the conversion from applied to screening to interview, and the milestone log, updated by the sweep itself. The skills in this repo are the method as it stands after reading all 93 transcripts and fixing what broke, what cost money, and what got applications lost.
-- **The method is researched, not guessed.** I went through everything I could find on how hiring works in the markets I apply in, worked with a career coach and took his full course, kept the parts that held up in practice and threw out the rest. The CV template, the bullet shape, the intro script, the interview method and the offer checklist all come from that, in my own words.
+- **The method is researched, not guessed.** I went through everything I could find on how hiring works in the markets I apply in, did several courses, worked through a career coach's full course, and took the best from all of it: what held up in practice stayed, the rest went. The CV template, the bullet shape, the intro script, the interview method and the offer checklist all come from that, in my own words.
 - **It is checked against people who hire.** I talked to recruiters and HR people on both sides of the table, asked friends who run hiring and friends who just finished their own search, and changed the rules whenever they told me something I did not know. Several rules in here exist because one recruiter told me how a specific thing looked from their side.
 - **I have been on the market long enough to know what matters.** Years of frontend and fullstack work, over five of them in React and TypeScript, searches in Germany and Ukraine on their own boards and in their own languages, remote and onsite, startups and corporates. The market notes in `docs/markets/` are what I learned the hard way.
-- **The agent is on a short leash.** It never invents a fact about you, never claims a skill you did not confirm, never answers on money, visa, relocation or contracts, never types a password, never gets past a bot check. Everything it sends in your name is quoted in full in the report.
+- **It does the work, from your facts.** It applies, answers recruiters, names your salary figure, books the earliest slot, sends follow-ups and email applications with your CV, and logs every step, without waiting for you. Every fact it writes comes from your profile and your approved CV, and everything it sends in your name is quoted in full in the report.
 
 Hack around with it. Change the rules to yours. The method is mine; the search is yours.
 
@@ -100,7 +100,7 @@ Example output in `examples/`: a fictional engineer's profile, CV ([markdown](ex
 ## What it will not do
 
 - Run for free. A full sweep over fifteen to twenty boards reads a lot of pages; on a Sonnet-class model mine cost between 15 and 100 dollars, around 40 on average. `docs/platform-notes.md` has the habits that keep it down.
-- Run without you entirely. Logins, bot checks and anything that asks for a commitment (contract form, visa, relocation, money) stop and go to the report. That is the point, not a gap.
+- Type a password, solve a bot check or commit you to a contract form, a visa or a relocation. Those few steps wait in the report for you; everything else runs on its own.
 - Apply to anything. It applies when the stack matches your profile and skips on your hard filters; it does not pad your numbers with postings you would not take.
 - Replace a lawyer. The contract checklist in `/offer` is a reading aid; for a contract in a new jurisdiction, get a human.
 
