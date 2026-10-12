@@ -7,7 +7,7 @@ description: Sweep the job search once: mail, platform inboxes, due follow-ups, 
 
 Files: `templates/`, `scripts/`, `docs/`, `examples/` and `routines/` are in the method root, `${CLAUDE_PLUGIN_ROOT}` (the clone holding this skill when that is not replaced by a path); every other relative path is in the workspace, the current folder. Before acting on the person's behalf, read `profile.md`, `docs/rules.md` and the workspace `rules.md`; the workspace one wins on conflict.
 
-Also read `sources.md` and `docs/platform-notes.md` before starting, and `https://jobcubby.com/SKILL.md` if you have not used JobCubby in this session. Work autonomously and report at the end, in the report language set in `profile.md`.
+Also read `sources.md` and `docs/platform-notes.md` before starting. Work autonomously and report at the end, in the report language set in `profile.md`.
 
 Where a rule is unclear, take the reversible action that keeps the process alive (apply, reply, log) and escalate the doubt in one line. To escalate is to append an `[attention]` line to the report (Step 0).
 

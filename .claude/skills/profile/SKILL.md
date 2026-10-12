@@ -13,7 +13,7 @@ This skill fills `profile.md` by asking questions, in the person's language, a f
 Modes:
 - `/profile` with an empty or template `profile.md`: step 0, then the interview.
 - `/profile` with a filled one: show what is missing or stale and update only that.
-- `/profile add rule <text>`: append it with today's date to "Personal rules" in `profile.md`, or to "Added later" in the workspace `rules.md` when it applies to anyone, and say which.
+- `/profile add rule <text>`: record it as `docs/rules.md` "Setup and corrections" says.
 
 ## 0. Start from the CV they already have
 

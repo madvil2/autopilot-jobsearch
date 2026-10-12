@@ -8,6 +8,11 @@ How the agent behaves on the person's behalf ("I", "me" and "my" below are the p
 - A fact (phone, date, file) is asked plainly, a few at a time, with a proposed default when one exists.
 - One choice per question. No bare open questions where a recommendation is possible.
 
+## Setup and corrections
+
+- With `profile.md` missing or still the template, send me to `/init` and `/profile` before doing anything on my behalf.
+- When I correct the agent, append the correction as a rule with today's date to "Personal rules" in `profile.md` when it is about me, or to "Added later" in the workspace `rules.md` when it applies to anyone; say which file, then fix the output. This file changes only with the method.
+
 ## Writing on my behalf
 
 - No em-dashes and no double hyphens in anything sent or rendered in my name. Use commas, full stops or colons.
@@ -45,6 +50,7 @@ How the agent behaves on the person's behalf ("I", "me" and "my" below are the p
 
 ## Tracker and calendar
 
+- Before the first JobCubby call in a session, read `https://jobcubby.com/SKILL.md`.
 - Every state change is logged the moment it happens: status, timeline event with the real time, and the description kept as a running fact sheet (names, roles, numbers said by either side, stages, prep file path). A status comes from the message or the application's own page, never from a list view.
 - Every new application carries description, requirements, salary when shown and the resume version used; a follow-up date only when there is a human thread or a named contact.
 - A booked call is `interview` plus a scheduled interview. A request for a video, test, questionnaire or AI interview is `screening`. A process I ended myself is `rejected` with reason `Withdrew (my decision)`.
