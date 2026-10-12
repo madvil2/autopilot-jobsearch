@@ -4,17 +4,17 @@
 
 ## An offer arrives
 
-Reply warm and short in the thread's language: thank you, I am glad about it, I look forward to the draft contract. Nothing about accepting, nothing about money, no decision date named by us; if they ask for one, ask how long I have. Then: status `offer` with the terms in `offer_details`, a calendar event for any deadline they named ("Putting an event in the calendar" below), a timeline event, and the offer at the top of the report with every number. Nothing is withdrawn. `/offer` takes it from there.
+Reply warm and short in the thread's language: thank you, I am glad about it, I look forward to the draft contract. Nothing about accepting, nothing about money, no decision date named by us; if they ask for one, ask how long I have. Then: status `offer` with the terms in `offer_details`, a calendar event for any deadline they named ("Putting an event in the calendar" below), a timeline event, and escalate the offer with every number. Nothing is withdrawn. `/offer` takes it from there.
 
 ## A posting accepts applications only by email
 
-Write the mail per "Email application" in `${CLAUDE_PLUGIN_ROOT}/.claude/skills/cover-letter/SKILL.md` and save the body as `cover-letters/<company>-<role>.txt`. Send it from the workspace with the mail script, never the mail connector; the script reads the sender and the transport (`MAIL_TRANSPORT`) from `.mail.env` and every attachment from disk. Without `.mail.env`, put the posting and its address under "Needs your attention" instead.
+Write the mail per "Email application" in `${CLAUDE_PLUGIN_ROOT}/.claude/skills/cover-letter/SKILL.md` and save the body as `cover-letters/<company>-<role>.txt`. Send it from the workspace with the mail script, never the mail connector; the script reads the sender and the transport (`MAIL_TRANSPORT`) from `.mail.env` and every attachment from disk. Without `.mail.env`, escalate the posting and its address instead.
 
 ```bash
 node "${CLAUDE_PLUGIN_ROOT}/scripts/mail.mjs" send --to <address> --subject "Application as <exact title>" --body-file cover-letters/<company>-<role>.txt --attach cv/<file for the market>.pdf
 ```
 
-Attach the CV version for this market and language. When the posting asks for certificates, diplomas, transcripts or other proof, add one `--attach documents/<file>` per file as listed under Files in `profile.md`. On success the script prints the message id (SMTP) or "sent via Mail.app" and the recipients. It refuses a body with an em-dash or a double hyphen: fix the text and send again. Quote the full text in the report under Applied and log the application like any other, with `applied_at` and `resume_id`.
+Attach the CV version for this market and language. When the posting asks for certificates, diplomas, transcripts or other proof, add one `--attach documents/<file>` per file as listed under Files in `profile.md`. On success the script prints the message id (SMTP) or "sent via Mail.app" and the recipients. It refuses a body with an em-dash or a double hyphen: fix the text and send again. Quote the full text in the report under `[applied]` and log the application per step 5.7 of the sweep, with `follow_up_at`: this is a human thread.
 
 ## A rejection after a call or an interview
 
@@ -30,15 +30,11 @@ When the person reports it afterwards or the mail thread shows it: fifteen minut
 
 ## A question the profile cannot answer
 
-A form or a recruiter asks for a fact that is not in `profile.md` (a messenger handle, a certificate, a licence, a salary in an unusual currency, a legal detail). Stop that application or that reply, write exactly what was asked under "Needs your attention", and move on. No guess, no placeholder.
+A form or a recruiter asks for a fact that is not in `profile.md` (a messenger handle, a certificate, a licence, a salary in an unusual currency, a legal detail). Stop that application or that reply, escalate exactly what was asked, and move on. No guess, no placeholder.
 
 ## A commitment is requested
 
-Anything on the commitment list in `docs/rules.md` "Replying and scheduling", including paid platform features, paid tests and paid courses: reply that I will confirm shortly and put the question at the top of the report.
-
-## A posting worth an outreach
-
-Strong match, a company small enough that the department head is findable, a role clearly inside one team, no giant ATS funnel. Up to three per run go into the report's "Worth an outreach" section with the posting URL and one line of why. The sweep still applies through the normal path.
+Anything on the commitment list in `docs/rules.md` "Replying and scheduling", including paid platform features, paid tests and paid courses: reply that I will confirm shortly and escalate the question.
 
 ## An assessment or take-home arrives
 
@@ -63,6 +59,6 @@ Every time carries the offset of the time zone the slot was confirmed in; the sc
 
 ## A platform shows a logged-out state, a challenge page or a quota wall
 
-Skip that source or that application, say so at the top of the report with the URL, continue. Never try to get past a challenge page and never pay for anything; credentials per `docs/rules.md` "Running".
+Skip that source or that application, escalate it with the URL, continue. Never try to get past a challenge page and never pay for anything; credentials per `docs/rules.md` "Running".
 
-A captcha on submit, after the form is filled, is the one case where the work is kept: leave that tab exactly as it is (form filled, CV attached, captcha unsolved), open a new tab with `browser_tabs` and carry on there for the rest of the run. Never close or reload that tab. Under "Needs your attention" write the company, the posting URL and "form filled, captcha in the open Playwright tab"; log the application as `saved` with the same note.
+A captcha on submit, after the form is filled, is the one case where the work is kept: leave that tab exactly as it is (form filled, CV attached, captcha unsolved), open a new tab with `browser_tabs` and carry on there for the rest of the run. Never close or reload that tab. Escalate the company, the posting URL and "form filled, captcha in the open Playwright tab"; log the application as `saved` with the same note.
