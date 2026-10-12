@@ -60,7 +60,7 @@ Check each one by calling it, and report what works:
 
 - **JobCubby MCP**: call `get_profile`. If it fails, the person needs to approve the OAuth prompt for the `jobcubby` server from the workspace `.mcp.json` (Claude Code shows it on first use, or they run `/mcp`). Then read `https://jobcubby.com/SKILL.md` once so you know its tools and rules. Point them to the referral link in `README.md` if they have no account yet.
 - **Playwright MCP**: call `browser_navigate` to `https://example.com`. If the server is missing, the `.mcp.json` entry starts it through `npx`; the first start downloads a browser.
-- **Mail**: look for a tool that searches the inbox (the claude.ai Gmail connector, or any mail MCP). If none, tell the person which to enable; the sweep runs without mail but cannot answer recruiters.
+- **Mail**: look for a tool that searches the inbox (the claude.ai Gmail connector, or any mail MCP). If none, tell the person which to enable; the sweep runs without mail but cannot answer recruiters. Sending applications by email is a separate setup, step 3a below: the connector only reads.
 - **Calendar**: look for a tool that creates calendar events (the claude.ai Google Calendar connector or any calendar MCP). Optional; without it interviews are logged only in JobCubby.
 
 ## 2b. Sources (one question)
@@ -73,6 +73,27 @@ Check each one by calling it, and report what works:
 For every source in `sources.md` with `login: yes`, open its login page in the Playwright browser and ask the person to log in there themselves. Wait for them to say they are done, then verify by loading a page that needs a session (the messaging page on LinkedIn, the profile page elsewhere). Playwright keeps its own browser profile, so this is a one-time step.
 
 Never type credentials or one-time codes. Never try to get past a bot check; ask the person to do it in the same window.
+
+## 3a. Mail for email applications
+
+Some postings accept applications only by email with the CV attached. The sweep sends those itself through `scripts/mail.mjs`, from a Gmail account whose app password sits in `.mail.env` in the workspace; the mail connector from step 2 keeps reading the inbox but never sends applications, because it cannot attach a file at a sane cost. Check first:
+
+```bash
+node "${CLAUDE_PLUGIN_ROOT}/scripts/mail.mjs" check
+```
+
+If it prints the sender address, go on to 3b. If it fails, ask, in the format from `CLAUDE.md`:
+
+1. Set it up now (recommended: email-only postings then get applied to in the same run as everything else, and it takes two minutes)
+2. Skip for now: the sweep puts email-only postings under "Needs your attention" in the report with the address, and the person sends them by hand; this step runs again on the next `/init`
+
+On 1, tell the person what to do and do none of it yourself: copy `templates/mail.env` to `.mail.env` in the workspace; put the Gmail address in `MAIL_USER` and their name in `MAIL_FROM_NAME`; create an app password at https://myaccount.google.com/apppasswords (2-step verification has to be on; name it "autopilot-jobsearch"; copy the 16 characters without the spaces) into `MAIL_APP_PASSWORD`; then run `chmod 600 .mail.env`. You never see, ask for or type the password and you never read `.mail.env`; the person edits the file. When they say it is done, run:
+
+```bash
+node "${CLAUDE_PLUGIN_ROOT}/scripts/mail.mjs" test
+```
+
+It mails the account itself with the subject "autopilot-jobsearch mail test". Ask whether it arrived; the inbox tool from step 2 can confirm it too. An authentication error means the password was copied wrong or 2-step verification is off; "readable by other users" means the `chmod` is missing. Repeat what the script said and let them fix it, then run the test again.
 
 ## 3b. Order of the next steps (one question)
 

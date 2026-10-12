@@ -8,7 +8,13 @@ Reply warm and short in the thread's language: thank you, I am glad about it, I 
 
 ## A posting accepts applications only by email
 
-Use the email variant from `/cover-letter`: subject "Application as <exact title>", greeting to the named person or "<Company> Team", one line of who I am (title and years from the profile, stack in the profile's order) and that I am applying for <title> found on <source>, one or two sentences of proof matching their asks, that the CV is attached, thank you, looking forward to discussing how I can contribute. Attach the CV PDF for the market, send from the profile's address. If the mail tool cannot attach files, do not send a mail without the CV: put the address and the posting in the report under "Needs your attention". Log the application like any other.
+Compose the mail per the email variant in `/cover-letter`: subject "Application as <exact title>", greeting to the named person or "<Company> Team", one line of who I am (title and years from the profile, stack in the profile's order) and that I am applying for <title> found on <source>, one or two sentences of proof matching their asks, that the CV is attached, thank you, looking forward to discussing how I can contribute. Save the body as `cover-letters/<company>-<role>.txt` (it is the cover letter for that posting, and the data history keeps a copy), then send it from the workspace with the mail script, which reads the account from `.mail.env` and every attachment from disk:
+
+```bash
+node "${CLAUDE_PLUGIN_ROOT}/scripts/mail.mjs" send --to <address> --subject "Application as <exact title>" --body-file cover-letters/<company>-<role>.txt --attach cv/<file for the market>.pdf
+```
+
+Attach the CV version for this market and language. When the posting asks for certificates, diplomas, transcripts or other proof, add one `--attach documents/<file>` per file as listed under Files in `profile.md`. The script prints the message id and the recipient on success; it refuses a body with an em-dash or a double hyphen, so fix the text and send again rather than working around it. Quote the full text in the report under Applied and log the application like any other, with `applied_at` and `resume_id`. Never send an application through the mail connector tool: it takes an attachment only as base64 inside the tool call, which costs tens of thousands of tokens per CV and fails often. Only when `node "${CLAUDE_PLUGIN_ROOT}/scripts/mail.mjs" check` fails (no `.mail.env` in the workspace; `/init` sets it up) does the posting go to "Needs your attention" with the address and the posting URL instead.
 
 ## A rejection after a call or an interview
 
