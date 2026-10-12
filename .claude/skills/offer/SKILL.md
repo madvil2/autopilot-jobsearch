@@ -55,5 +55,5 @@ Onboarding plan and first weeks, equipment, who my manager is, team size, review
 
 ## 5. After my decision
 
-- Accept: confirm in writing, send the signed contract the way they asked, log the event, set the start date in the calendar, run `/profiles` to update the headline when the time comes, and tell the other open processes politely that I have signed.
+- Accept: confirm in writing, send the signed contract the way they asked, log the event, put the start date in the calendar with `scripts/calendar.mjs add` (recipe in `docs/sweep-events.md`), run `/profiles` to update the headline when the time comes, and tell the other open processes politely that I have signed.
 - Decline: one short, warm message, no reasons beyond "I have decided on another option", `rejected` with `Withdrew (my decision)` in the tracker, a thank-you to the people I met.

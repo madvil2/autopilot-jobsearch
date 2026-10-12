@@ -4,7 +4,7 @@ The sweep skill keeps the twice-daily path short. The situations below happen a 
 
 ## An offer arrives
 
-Reply warm and short in the thread's language: thank you, I am glad about it, I look forward to the draft contract. Nothing about accepting, nothing about money, no decision date named by us; if they ask for one, ask how long I have. Then: status `offer` with the terms in `offer_details`, a calendar event for any deadline they named, a timeline event, and the offer at the top of the report with every number. Other processes keep running; nothing is withdrawn. `/offer` takes it from there.
+Reply warm and short in the thread's language: thank you, I am glad about it, I look forward to the draft contract. Nothing about accepting, nothing about money, no decision date named by us; if they ask for one, ask how long I have. Then: status `offer` with the terms in `offer_details`, a calendar event for any deadline they named (see "Putting an event in the calendar" below), a timeline event, and the offer at the top of the report with every number. Other processes keep running; nothing is withdrawn. `/offer` takes it from there.
 
 ## A posting accepts applications only by email
 
@@ -22,7 +22,7 @@ Form-stage auto-rejections get nothing. A no after a screening call, a technical
 
 ## A booked slot has to move
 
-As early as possible, in the thread's language: apologise once, give the reason in one line if there is one, offer three concrete alternative slots within the next five workdays, each with the time zone. Never a bare cancellation. Update the interview in the tracker and the calendar once they confirm.
+As early as possible, in the thread's language: apologise once, give the reason in one line if there is one, offer three concrete alternative slots within the next five workdays, each with the time zone. Never a bare cancellation. Update the interview in the tracker once they confirm, and move the calendar event: `remove` the old one with its exact title and start, then `add` the new slot ("Putting an event in the calendar" below).
 
 ## Nobody joined the call
 
@@ -42,7 +42,22 @@ Strong match, a company small enough that the department head is findable, a rol
 
 ## An assessment or take-home arrives
 
-Accept, ask for the deadline if none was given, log the event, create a calendar event for the deadline, move the application to `screening`. The sweep never solves it.
+Accept, ask for the deadline if none was given, log the event, create a calendar event for the deadline ("Putting an event in the calendar" below: a 30-minute event ending at the deadline, `--alarm 1440` so it shows up a day before), move the application to `screening`. The sweep never solves it.
+
+## Putting an event in the calendar
+
+Every calendar event the skills create, a booked interview, an assessment deadline, an offer deadline, a start date, goes through the calendar script, never through a calendar connector: the connector is often not connected in a scheduled session, and the script works in every run. It writes to the calendar app on this machine (Calendar.app on macOS, classic Outlook on Windows) into the calendar named by `CALENDAR_NAME` in `.calendar.env`; when that calendar belongs to the person's Google account in System Settings > Internet Accounts, the event syncs to Google. Look first, then add:
+
+```bash
+node "${CLAUDE_PLUGIN_ROOT}/scripts/calendar.mjs" find --from 2026-10-14T00:00:00+02:00 --to 2026-10-15T00:00:00+02:00 --match "<Company>"
+node "${CLAUDE_PLUGIN_ROOT}/scripts/calendar.mjs" add --title "Interview <Company>, <round>" --start 2026-10-14T10:00:00+02:00 --duration 60 --url <meeting link> --notes "<role> with <interviewer>, prep in prep/<company>.md"
+```
+
+Every time carries its offset: the one of the time zone the slot was confirmed in, never a bare local time, which the script refuses. The script prints times in this machine's time zone. Titles are "Interview <Company>, <round>" and "Deadline <Company>, <what>", with no em-dash or double hyphen (the script refuses them in the title and the notes). The alarm defaults to 30 minutes before; `--alarm <minutes>` changes it. `--notes-file <path>` takes longer notes from a file.
+
+`add` prints `added: <title> <start> (<calendar>)` when it created the event and `exists: <title> <start>` when the calendar already has one overlapping that time whose title contains the new title or is contained in it, or that starts in the same minute; then nothing is created, which is the normal outcome when the person or an earlier run already put it there. To move a slot, `remove --title "<exact old title>" --start <old start>` deletes the old event (only an exact title at that exact start), then `add` the new one.
+
+When the script fails (no `.calendar.env`, a calendar that is not there, "not allowed to control Calendar"), put the event under "Needs your attention" in the report with title, time and link, so the person adds it by hand; `/init` sets the calendar up. The tracker entry is made either way.
 
 ## A platform shows a logged-out state, a challenge page or a quota wall
 

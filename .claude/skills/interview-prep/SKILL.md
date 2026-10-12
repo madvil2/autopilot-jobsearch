@@ -34,6 +34,6 @@ Keep the file under two screens. It is read the day before and closed before the
 ## 3. Log
 
 - If the interview is not in JobCubby yet: `schedule_interview` with date, time, round, type, meeting link, interviewer. Move the application to `interview`.
-- Calendar: create the event with the link and a reminder, unless an event for that company and time already exists. Add a timeline event "Prep written: prep/<company>.md".
+- Calendar: `node "${CLAUDE_PLUGIN_ROOT}/scripts/calendar.mjs" find` for that day and company, then `add` with the link in `--url` and the prep path in `--notes`; it prints `exists:` instead of creating a second one. The recipe is in `docs/sweep-events.md` under "Putting an event in the calendar". Never a calendar connector. Add a timeline event "Prep written: prep/<company>.md".
 - If `.data.git/` exists, run `"${CLAUDE_PLUGIN_ROOT}/scripts/data" save "prep <name>"`.
 - Tell the person the things to do before the call: read the core idea, open the product and find the detail, rehearse the intro aloud once, check the camera and the room (real tidy background, no blur or virtual background, light from the front), and set up OBS with a ten-second test so the recording starts before they join; say plainly that the recording is for them (`/debrief` grades it) and for the statistics, not optional. For a final round, add: connect with the interviewers on LinkedIn today. If OBS is not set up yet, point at `docs/recording-and-transcription.md`.
