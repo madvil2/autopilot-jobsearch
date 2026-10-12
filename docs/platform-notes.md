@@ -17,7 +17,7 @@ Platform quirks for `/sweep`.
 - `<input type="date">` takes `YYYY-MM-DD` only (typing a word fails with "Malformed value"): set the value through the native setter and dispatch `input` and `change` events from `browser_evaluate`.
 - Location autocompletes reject free text: type a partial string, then pick from the listbox.
 - Angular and some React forms ignore `fill`: focus the field and type slowly.
-- "Ref not found", "Unknown engine ref" or "Malformed value" on a click means a stale ref: snapshot or find again.
+- A `ref` is valid only from the latest snapshot: after a navigation or a click that changes the page, `browser_snapshot` or `browser_find` again before using refs. "Ref not found", "Unknown engine ref" or "Malformed value" on a click means a stale ref.
 - The Playwright MCP has no `computer`, `get_page_text` or `javascript_tool`; `browser_evaluate` does all of that.
 - `browser_press_key` uses Playwright key names: `Control+a`, `Meta+a`, `Enter`, `ArrowDown` (`ctrl+a` is "Unknown key"). To clear a field, use `browser_fill_form` or `browser_evaluate` with `el.value = ""`.
 
