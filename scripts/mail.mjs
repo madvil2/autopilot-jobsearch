@@ -25,14 +25,13 @@
 // for a minute. A message id is the Message-ID header as Mail reports it, stable when the message moves
 // between mailboxes; a message without one gets "#" plus Mail's own number for it, which holds only
 // while the message stays in its mailbox. show and reply look an id up in the inbox, then the junk
-// mailbox, of the same account. In Outlook the id is the item's EntryID. Reply in Mail.app and all of
-// the Outlook reading path are untested.
+// mailbox, of the same account. In Outlook the id is the item's EntryID. Reply in Mail.app is untested.
 //
 // Transports, picked by pickTransport() below:
 //   applemail  macOS: Mail.app through osascript, from an account added in System Settings > Internet
 //              Accounts. Needs no password; the default on macOS.
 //   outlook    Windows: classic Outlook through its COM interface (PowerShell). Needs no password; the
-//              default on Windows. UNTESTED: written without a Windows machine to run it on.
+//              default on Windows.
 // Other platforms have no transport: the sweep escalates email-only postings for the person to send.
 //
 // Config: .mail.env in the workspace, the folder the command runs in (template: templates/mail.env),
@@ -86,8 +85,7 @@ function check() {
   const config = loadConfig();
   const reads = config.read === "app" ? `reads mail via ${LABEL[config.transport]} (MAIL_READ=app)` : "reads mail via the mail connector (MAIL_READ=connector)";
   requireAccount(config);
-  const note = config.transport === "outlook" ? " (the Outlook transport is untested)" : "";
-  console.log(`sends as ${config.user} via ${LABEL[config.transport]}, account found, ${reads}${note}`);
+  console.log(`sends as ${config.user} via ${LABEL[config.transport]}, account found, ${reads}`);
 }
 
 async function test() {
@@ -642,10 +640,9 @@ function warnIfLeft(left) {
   if (left) console.error("warning: Mail.app took the mail, but its outgoing message was still open after 10 seconds; check Sent and Outbox in Mail, and if Mail asks on quit to save it, choose Don't Save");
 }
 
-// ---------- classic Outlook (Windows), UNTESTED ----------
+// ---------- classic Outlook (Windows) ----------
 
-// Written against the Outlook object model without a Windows machine to run it on. The data travels
-// as JSON in an environment variable, never spliced into the script. The script itself is constant
+// The data travels as JSON in an environment variable, never spliced into the script. The script itself is constant
 // and goes in as -EncodedCommand rather than on stdin: "-Command -" reads stdin line by line and
 // mishandles multi-line blocks. Exit 3: no Outlook COM class (the new Outlook has none).
 const OUTLOOK_PS = `

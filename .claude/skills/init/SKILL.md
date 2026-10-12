@@ -64,11 +64,11 @@ Ask these one at a time. Email applications with the CV attached always go out t
 Reading and answering mail:
 
 1. `connector` (recommended: reads Gmail on the server, never misses mail the app has not downloaded): the claude.ai Gmail connector or any mail MCP
-2. `app`: the mail app on this machine (Mail.app on macOS, classic Outlook on Windows, the Outlook path untested) through `scripts/mail.mjs`
+2. `app`: the mail app on this machine (Mail.app on macOS, classic Outlook on Windows) through `scripts/mail.mjs`
 
 Writing interviews and deadlines to the calendar:
 
-1. `app` (recommended: works in every scheduled run without a connector): the calendar app on this machine (Calendar.app on macOS, classic Outlook on Windows, the Outlook path untested) through `scripts/calendar.mjs`
+1. `app` (recommended: works in every scheduled run without a connector): the calendar app on this machine (Calendar.app on macOS, classic Outlook on Windows) through `scripts/calendar.mjs`
 2. `connector`: the claude.ai Google Calendar connector or any calendar MCP
 
 ## 2b. Writing the choices

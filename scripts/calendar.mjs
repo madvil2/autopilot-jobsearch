@@ -14,8 +14,7 @@
 //
 // Transports, picked by pickTransport() below:
 //   applecal  macOS: Calendar.app through osascript.
-//   outlook   Windows: classic Outlook through its COM interface (PowerShell). UNTESTED: written
-//             without a Windows machine to run it on.
+//   outlook   Windows: classic Outlook through its COM interface (PowerShell).
 //
 // Config: optional .calendar.env in the workspace, the folder the command runs in (template:
 // templates/calendar.env), KEY=VALUE lines: CALENDAR_VIA (app or connector, app when absent),
@@ -177,11 +176,10 @@ function check(args) {
   const list = listCalendars(config);
   const target = config.calendar;
   const hits = target ? list.filter((c) => c.name === target) : list.filter((c) => c.isDefault);
-  const note = config.transport === "outlook" ? " (the Outlook transport is untested)" : "";
   if (!hits.length) fail(`${LABEL[config.transport]} has no calendar named "${target}"; run: node scripts/calendar.mjs calendars, then set CALENDAR_NAME in .calendar.env to one of them`);
   if (!hits.some((c) => c.writable)) fail(`the calendar "${target}" in ${LABEL[config.transport]} is read-only; pick a writable one from: node scripts/calendar.mjs calendars`);
   const twins = hits.length > 1 ? `, ${hits.length} calendars share this name and the first is used` : "";
-  console.log(`CALENDAR_VIA=app: writes to "${target || hits[0].name}" via ${LABEL[config.transport]}, calendar found and writable${twins}${note}`);
+  console.log(`CALENDAR_VIA=app: writes to "${target || hits[0].name}" via ${LABEL[config.transport]}, calendar found and writable${twins}`);
 }
 
 function calendars() {
@@ -479,10 +477,9 @@ function osascript(script, args) {
   return r.stdout;
 }
 
-// ---------- classic Outlook (Windows), UNTESTED ----------
+// ---------- classic Outlook (Windows) ----------
 
-// Written against the Outlook object model without a Windows machine to run it on. The data travels
-// as JSON in an environment variable, never spliced into the script, and the constant script goes in
+// The data travels as JSON in an environment variable, never spliced into the script, and the constant script goes in
 // as -EncodedCommand. Times cross as UTC ISO strings and are converted to local DateTime here.
 // Exit 3: no Outlook COM class (the new Outlook has none). Exit 4: no calendar with that name.
 const OUTLOOK_PS = `

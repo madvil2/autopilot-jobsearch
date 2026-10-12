@@ -45,8 +45,8 @@ The choices from `/init` live in `.mail.env` (`MAIL_READ`, `MAIL_TRANSPORT`) and
 
 - **`MAIL_READ=connector`**: the mail connector enabled in the session that runs the task, and its tools approved as in "Connectors" above.
 - **`MAIL_TRANSPORT=applemail`** (for sending, and for reading with `MAIL_READ=app`): the account in Mail.app, and the one-time macOS permission for the program that runs the task to control Mail. Run `node "${CLAUDE_PLUGIN_ROOT}/scripts/mail.mjs" check` once interactively from that same app and allow it (System Settings > Privacy & Security > Automation lists it). With `MAIL_READ=app`, `list` asks Mail to check the account and waits `MAIL_CHECK_WAIT` seconds (8 by default) before reading, since Mail lists only what it has downloaded. `send` and `reply` open Mail's compose window for a moment and wait up to 10 seconds for Mail to close it after sending; if it stays open, the script prints a warning on stderr.
-- **`MAIL_TRANSPORT=outlook`** (for reading or sending): classic Outlook with the account added. Untested.
-- **`CALENDAR_VIA=app`**: `CALENDAR_NAME` naming a writable calendar, and on macOS the one-time permission to control Calendar, granted the same way by running `node "${CLAUDE_PLUGIN_ROOT}/scripts/calendar.mjs" check` interactively. On Windows, classic Outlook (untested).
+- **`MAIL_TRANSPORT=outlook`** (for reading or sending): classic Outlook with the account added.
+- **`CALENDAR_VIA=app`**: `CALENDAR_NAME` naming a writable calendar, and on macOS the one-time permission to control Calendar, granted the same way by running `node "${CLAUDE_PLUGIN_ROOT}/scripts/calendar.mjs" check` interactively. On Windows, classic Outlook.
 - **`CALENDAR_VIA=connector`**: the calendar connector enabled in the session that runs the task, and its tools approved as in "Connectors" above.
 
 ## What a run needs
