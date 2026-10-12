@@ -1,6 +1,7 @@
 ---
 name: init
-description: First run in a fresh clone. Creates the personal workspace files from templates, checks that JobCubby, Playwright, mail and calendar respond, and walks the person through logging in to their job boards once.
+description: First-run setup of a job-search workspace: files, tools, mail, calendar, board logins.
+disable-model-invocation: true
 ---
 
 # /init
@@ -11,9 +12,9 @@ Run in the folder that will hold the job search (an empty folder, or the clone i
 
 ## 0. Tool servers
 
-If the workspace has no `.mcp.json`, copy `templates/mcp.json` to `.mcp.json`. It declares the JobCubby MCP (HTTP, OAuth) and the Playwright MCP (started through `npx`). Tell the person to leave the session, run `claude` again in this folder, approve the two servers, then run this skill again; it continues from step 1.
-
 If the workspace has no `.claude/settings.json`, copy `templates/settings.json` to `.claude/settings.json`. It pre-approves exactly the tools `/sweep` calls. In a clone the file is already committed.
+
+If the workspace has no `.mcp.json`, copy `templates/mcp.json` to `.mcp.json`. It declares the JobCubby MCP (HTTP, OAuth) and the Playwright MCP (started through `npx`). Tell the person to leave the session, run `claude` again in this folder, approve the two servers, then run this skill again; it continues from step 1.
 
 ## 1. Workspace files
 
@@ -24,8 +25,7 @@ Create these from `templates/` if they do not exist yet (never overwrite an exis
 | `profile.md` | `templates/profile.md` |
 | `rules.md` | `templates/rules.md` |
 | `sources.md` | `templates/sources.md` |
-| `cv/base.md` | `templates/cv.md` |
-| `cv/old/` | empty folder (the CV they already have, in any format; `/profile` and `/cv` read it first) |
+| `cv/old/` | empty folder (the CV they already have, in any format; `/profile` reads it first, `/cv` writes `cv/base.md` from it) |
 | `cover-letters/` | empty folder |
 | `prep/` | empty folder |
 | `photos/` | empty folder |
@@ -48,19 +48,18 @@ On 1, run:
 
 It creates `.data.git/` (a second git tracking only the personal paths), creates a private GitHub repo `autopilot-jobsearch-data` through `gh`, and pushes the first snapshot. If `gh` is missing or not logged in, the script says what to do. On 2, run `"${CLAUDE_PLUGIN_ROOT}/scripts/data" init` plus `"${CLAUDE_PLUGIN_ROOT}/scripts/data" remote <url>`. On 3, skip.
 
-The PDF renderer needs the `playwright` package next to `scripts/render.mjs`: a plugin install has it, in a clone run `npm install` once. Chromium downloads on the first render (about 150 MB), or now with `node "${CLAUDE_PLUGIN_ROOT}/node_modules/playwright/cli.js" install chromium`.
-
 ## 2. Tools
 
 Check each one by calling it, and report what works:
 
 - **JobCubby MCP**: call `get_profile`. If it fails, the person approves the OAuth prompt for the `jobcubby` server (Claude Code shows it on first use, or they run `/mcp`). Then read `https://jobcubby.com/SKILL.md`. Point them to the referral link in `README.md` if they have no account yet.
 - **Playwright MCP**: call `browser_navigate` to `https://example.com`. The `.mcp.json` entry starts it through `npx`; the first start downloads a browser.
+- **PDF renderer**: needs the `playwright` package next to `scripts/render.mjs`: a plugin install has it, in a clone run `npm install` once. Chromium downloads on the first render (about 150 MB), or now with `node "${CLAUDE_PLUGIN_ROOT}/node_modules/playwright/cli.js" install chromium`.
 - **Mail and calendar**: step 2a.
 
 ## 2a. Mail and calendar (three questions)
 
-Ask these one at a time.
+Ask these one at a time. When reading is `app`, sending is the mail app too, so skip the second question. On Linux reading and the calendar are `connector` and sending is `smtp`; say so instead of asking.
 
 Reading and answering mail:
 
@@ -76,8 +75,6 @@ Writing interviews and deadlines to the calendar:
 
 1. `app` (recommended: works in every scheduled run without a connector): the calendar app on this machine (Calendar.app on macOS, classic Outlook on Windows, the Outlook path untested) through `scripts/calendar.mjs`
 2. `connector`: the claude.ai Google Calendar connector or any calendar MCP
-
-When reading is `app`, sending is the mail app too, so skip the second question. On Linux reading and the calendar are `connector` and sending is `smtp`; say so instead of asking.
 
 ## 2b. Writing the choices
 
@@ -112,11 +109,12 @@ It prints the calendar path, and for `app` whether the calendar exists and is wr
 
 For every source in `sources.md` with `login: yes`, open its login page in the Playwright browser and ask the person to log in there themselves, including any bot check. Wait for them to say they are done, then verify by loading a page that needs a session (the messaging page on LinkedIn, the profile page elsewhere).
 
-## 3b. Order of the next steps (one question)
-
-1. Drop the current CV into `cv/old/`, then `/profile` (it fills most of the profile from that file and asks only for the rest), then `/cv` to build and render the CV, then the first `/sweep` by hand (recommended: each one feeds the next)
-2. `/sweep` first with an existing CV PDF dropped into `cv/`, profile and CV later
-
 ## 4. Next steps
 
-Tell the person the steps in the chosen order, plus `sources.md` if it was left for later, and that after the first `/sweep` by hand it runs twice a day (`docs/scheduling.md`).
+Tell the person the steps in this order, plus `sources.md` first if it was left for later:
+
+1. Drop the current CV into `cv/old/` (any format; skip when there is none).
+2. `/profile`: fills `profile.md` from that CV and asks only for what is missing.
+3. `/cv`: builds `cv/base.md` from the profile and the old CV, asks only for what is missing or weak, renders the PDF and asks for approval.
+4. `/profiles`: takes the approved CV to LinkedIn and the boards.
+5. The first `/sweep` by hand; after that it runs twice a day (`docs/scheduling.md`).
