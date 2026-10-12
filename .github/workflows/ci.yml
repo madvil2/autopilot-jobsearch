@@ -45,7 +45,9 @@ jobs:
           set -eu
           committed="$(mktemp -d)"
           failed=0
-          for f in $(git ls-files 'examples/**/*.pdf'); do
+          # NUL-separated so a file name with spaces stays one name; process substitution keeps
+          # the loop in this shell so "failed" survives it.
+          while IFS= read -r -d '' f; do
             mkdir -p "$committed/$(dirname "$f")"
             git show "HEAD:$f" > "$committed/$f"
             before="$(pdfinfo "$committed/$f" | awk '/^Pages:/{print $2}')"
@@ -62,16 +64,14 @@ jobs:
               echo "FAIL $f: text or layout differs from the committed PDF (diff above)"
               failed=1
             fi
-          done
+          done < <(git ls-files -z 'examples/**/*.pdf')
           exit "$failed"
 
       # Previews of what was actually rendered, for looking at a failed diff or a new layout.
       - name: Render PNG previews
         if: always()
         run: |
-          for f in $(find examples -name '*.pdf'); do
-            pdftoppm -r 72 -png "$f" "${f%.pdf}"
-          done
+          find examples -name '*.pdf' -exec sh -c 'pdftoppm -r 72 -png "$1" "${1%.pdf}"' _ {} \;
 
       - uses: actions/upload-artifact@v4
         if: always()
