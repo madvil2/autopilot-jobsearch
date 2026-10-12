@@ -5,6 +5,7 @@ language: de
 title: Frontend-/Fullstack-Entwickler (React / TypeScript)
 photo: examples/photos/headshot.png
 show_birth_date: true
+approved: 2026-10-10 7b1118ac639a
 ---
 # Alex Mustermann
 Berlin | Geboren am 14.03.1996 | +49 160 0000000

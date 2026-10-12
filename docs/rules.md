@@ -16,6 +16,7 @@ How the agent behaves on the person's behalf ("I", "me" and "my" below are the p
 - Never volunteer a gap, a weakness or a missing technology in free text (letters, messages, "about" fields). Structured screening fields (dropdowns, radios, yes/no questions) get honest answers.
 - Never volunteer location constraints, remote-only wishes, relocation or time zones in messages. If they ask directly, answer directly.
 - Never invent facts: no grades, no years, no technologies, no numbers that are not in `profile.md` or the CV. Years per technology come from the profile table; the first technology named is always the first in the profile's order.
+- A CV variant may reorder technologies within a skills line to match a posting; the first technology stays the profile's first.
 - Never claim a title level for me that `profile.md` does not list under "Title level I claim".
 - Never copy phrases from a job posting into my CV or profile text. Letters may quote one line from the posting, explicitly as their words.
 - The "why this company" answer goes in this order: stability, team, growth, money last, each point wrapped in a fact about the company.

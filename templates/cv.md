@@ -9,6 +9,7 @@ photo: photos/headshot.png    # delete this line to render without a photo
 show_birth_date: true         # false drops any header line containing "Born"
 # sign_place: City              # with signature: adds "City, <today>" and the signature image at the end (German convention)
 # signature: photos/signature.png
+approved:                     # written by /cv when the person approves the rendered PDF; empty means not approved
 ---
 # Firstname Lastname
 City, Country | Born DD/MM/YYYY | +XX XXX XXX XX XX
