@@ -22,6 +22,10 @@ Notable changes to this project, in the spirit of [Keep a Changelog](https://kee
 
 - On Windows, `scripts/mail.mjs` and `scripts/calendar.mjs` pass their data to classic Outlook on stdin as UTF-8, not through the environment, and read its output as UTF-8.
 
+### Plugin packaging
+
+- `.claude-plugin/plugin.json` carries the marketplace listing URLs (documentation, support, privacy policy, terms), and `PRIVACY.md` states what the plugin stores and what each connected service receives.
+
 ## 0.1.0 - 2026-10-12
 
 The first release: the method as it stands after 93 real sweep runs (637 applications, 18 interviews booked).
