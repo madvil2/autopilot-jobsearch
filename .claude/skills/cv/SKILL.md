@@ -5,7 +5,7 @@ description: Build, tailor and render the CV. Interviews section by section into
 
 # /cv
 
-Files: `templates/`, `scripts/`, `docs/`, `examples/` and `routines/` are in the method root, `${CLAUDE_PLUGIN_ROOT}` (the clone holding this skill when that is not replaced by a path); every other relative path is in the workspace, the current folder. Before acting on the person's behalf, read `profile.md` and `rules.md`.
+Files: `templates/`, `scripts/`, `docs/`, `examples/` and `routines/` are in the method root, `${CLAUDE_PLUGIN_ROOT}` (the clone holding this skill when that is not replaced by a path); every other relative path is in the workspace, the current folder. Before acting on the person's behalf, read `profile.md`, `docs/rules.md` and the workspace `rules.md`; the workspace one wins on conflict.
 
 The CV is markdown in `cv/`, rendered to PDF by `scripts/render.mjs`. `cv/base.md` is the master; variants are separate files (`cv/de.md`, `cv/backend.md`, `cv/acme.md`). The markdown contract is `templates/cv.md`: one `# Name`, header lines, then only these sections: Summary, Technical Skills, Work Experience, Education, Achievements, Certifications, Language Skills, Hobbies. Entries under Work Experience and Education are `### dates | role`. The renderer rejects anything else and skips empty sections.
 
@@ -48,7 +48,7 @@ Ask nothing that `profile.md` already says. Interview section by section, in the
 
 ## Checks before rendering
 
-Every rule in `rules.md` "Writing on my behalf", plus:
+Every rule in `docs/rules.md` "Writing on my behalf", plus:
 
 - Years never rounded up.
 - Every technology confirmed: "Have you used X in real work or a real project?" A "no" means it stays out, however often postings ask for it; `/stack-radar` handles that gap.

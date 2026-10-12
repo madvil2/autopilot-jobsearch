@@ -5,7 +5,7 @@ description: Write a cover letter for one posting in the three-paragraph structu
 
 # /cover-letter
 
-Files: `templates/`, `scripts/`, `docs/`, `examples/` and `routines/` are in the method root, `${CLAUDE_PLUGIN_ROOT}` (the clone holding this skill when that is not replaced by a path); every other relative path is in the workspace, the current folder. Before acting on the person's behalf, read `profile.md` and `rules.md`.
+Files: `templates/`, `scripts/`, `docs/`, `examples/` and `routines/` are in the method root, `${CLAUDE_PLUGIN_ROOT}` (the clone holding this skill when that is not replaced by a path); every other relative path is in the workspace, the current folder. Before acting on the person's behalf, read `profile.md`, `docs/rules.md` and the workspace `rules.md`; the workspace one wins on conflict.
 
 Input: a posting URL or pasted posting text, plus optionally the CV version to base it on. Output: `cover-letters/<company>-<role>.md` and its PDF, rendered by `scripts/render.mjs`. The markdown contract is `templates/cover-letter.md`: frontmatter with sender, recipient, place, date, subject, greeting and signoff, then plain paragraphs.
 

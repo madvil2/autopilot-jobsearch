@@ -5,7 +5,7 @@ description: My interview method: the intro structure, the three why-company fra
 
 # /coach
 
-Files: `templates/`, `scripts/`, `docs/`, `examples/` and `routines/` are in the method root, `${CLAUDE_PLUGIN_ROOT}` (the clone holding this skill when that is not replaced by a path); every other relative path is in the workspace, the current folder. Before acting on the person's behalf, read `profile.md` and `rules.md`.
+Files: `templates/`, `scripts/`, `docs/`, `examples/` and `routines/` are in the method root, `${CLAUDE_PLUGIN_ROOT}` (the clone holding this skill when that is not replaced by a path); every other relative path is in the workspace, the current folder. Before acting on the person's behalf, read `profile.md`, `docs/rules.md` and the workspace `rules.md`; the workspace one wins on conflict.
 
 `/interview-prep` applies this method to one company; `/debrief` grades a recording against it.
 
@@ -35,7 +35,7 @@ No single script. Talk about my motivation, not their industry. Three frames by 
 
 The rule above any script: one concrete detail I noticed in their product beats ten compliments. Open the product the day before. "I was on your product yesterday and noticed X."
 
-In writing (prep files, letters) the order is the why-company order in `rules.md`.
+In writing (prep files, letters) the order is the why-company order in `docs/rules.md`.
 
 ### A2b. Two concrete reasons
 

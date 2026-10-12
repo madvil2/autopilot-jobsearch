@@ -25,7 +25,7 @@ German hiring is risk-averse and long-term oriented. The hiring manager has a pr
 - Be five minutes early to every call. Lateness reads as "my time matters more than yours".
 - Take words literally and expect to be taken literally. A promise is a commitment.
 - Formal register in writing until they switch: "Dear First Last", full sentences, paragraphs, "thank you", a closing line. "Sie" in German unless they use "du". Short messages, no small talk in text, no "Hi" openers to strangers.
-- Act on invitations the same day. Follow-ups, rescheduling and feedback requests follow `rules.md` "Replying and scheduling".
+- Act on invitations the same day. Follow-ups, rescheduling and feedback requests follow `docs/rules.md` "Replying and scheduling".
 
 ## The CV
 

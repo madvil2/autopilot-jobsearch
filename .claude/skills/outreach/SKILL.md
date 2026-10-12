@@ -5,7 +5,7 @@ description: Skip the line on a posting that matters: find the hiring manager an
 
 # /outreach <company> [posting URL]
 
-Files: `templates/`, `scripts/`, `docs/`, `examples/` and `routines/` are in the method root, `${CLAUDE_PLUGIN_ROOT}` (the clone holding this skill when that is not replaced by a path); every other relative path is in the workspace, the current folder. Before acting on the person's behalf, read `profile.md` and `rules.md`.
+Files: `templates/`, `scripts/`, `docs/`, `examples/` and `routines/` are in the method root, `${CLAUDE_PLUGIN_ROOT}` (the clone holding this skill when that is not replaced by a path); every other relative path is in the workspace, the current folder. Before acting on the person's behalf, read `profile.md`, `docs/rules.md` and the workspace `rules.md`; the workspace one wins on conflict.
 
 This skill prepares the contact with the person who decides (the head of the department with the vacancy) or someone who can introduce me; the person makes the call and sends the messages. The sweep report flags candidates: strong match, no big ATS, a role clearly inside one team.
 

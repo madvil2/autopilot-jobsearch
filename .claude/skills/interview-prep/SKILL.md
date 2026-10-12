@@ -5,7 +5,7 @@ description: Prepare one interview: research the company, write prep/<company>.m
 
 # /interview-prep <company> [round] [date time]
 
-Files: `templates/`, `scripts/`, `docs/`, `examples/` and `routines/` are in the method root, `${CLAUDE_PLUGIN_ROOT}` (the clone holding this skill when that is not replaced by a path); every other relative path is in the workspace, the current folder. Before acting on the person's behalf, read `profile.md` and `rules.md`.
+Files: `templates/`, `scripts/`, `docs/`, `examples/` and `routines/` are in the method root, `${CLAUDE_PLUGIN_ROOT}` (the clone holding this skill when that is not replaced by a path); every other relative path is in the workspace, the current folder. Before acting on the person's behalf, read `profile.md`, `docs/rules.md` and the workspace `rules.md`; the workspace one wins on conflict.
 
 Output: `prep/<company>.md` from `templates/prep.md`. Read `.claude/skills/coach/SKILL.md` first; the prep applies the coach method to one company.
 
@@ -21,7 +21,7 @@ Output: `prep/<company>.md` from `templates/prep.md`. Read `.claude/skills/coach
 Follow `templates/prep.md` section by section:
 
 - **Intro**: paste the self-introduction from `profile.md` unchanged. Add a 60-second cut for short screens. Never rewrite the intro per company.
-- **Why this company**: four points in the `rules.md` why-company order, money only if asked. Each point is one fact about them plus one sentence of what it means for me. No essay about their industry. Then the two concrete reasons from `/coach` A2b, written out.
+- **Why this company**: four points in the `docs/rules.md` why-company order, money only if asked. Each point is one fact about them plus one sentence of what it means for me. No essay about their industry. Then the two concrete reasons from `/coach` A2b, written out.
 - **Why I fit**: map two or three CV results to the posting's top asks. Add the bridge for any stack gap, with the story of the last time I learned a new stack fast.
 - **Likely questions**: fill the table from `profile.md` interview facts: why the last job ended, what since, hardest problem, strength and weakness, salary (the one figure for this market), availability, authorization, languages. Two or three sentences each, then silence. Example answers in STAR shape (situation, task, action, result with a number), action and result carrying most of the words.
 - **Culture-fit or final round**: add the names of everyone met so far in the process, two personal specifics I can share when asked about myself (where, with whom, when), and the reminder to say out loud that I want the job and intend to stay.

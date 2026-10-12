@@ -5,7 +5,7 @@ description: When an offer arrives: the reply that keeps it warm without committ
 
 # /offer <company>
 
-Files: `templates/`, `scripts/`, `docs/`, `examples/` and `routines/` are in the method root, `${CLAUDE_PLUGIN_ROOT}` (the clone holding this skill when that is not replaced by a path); every other relative path is in the workspace, the current folder. Before acting on the person's behalf, read `profile.md` and `rules.md`.
+Files: `templates/`, `scripts/`, `docs/`, `examples/` and `routines/` are in the method root, `${CLAUDE_PLUGIN_ROOT}` (the clone holding this skill when that is not replaced by a path); every other relative path is in the workspace, the current folder. Before acting on the person's behalf, read `profile.md`, `docs/rules.md` and the workspace `rules.md`; the workspace one wins on conflict.
 
 When an offer arrives the sweep replies with the text in step 1, moves the application to `offer` with the terms in `offer_details`, calendars any deadline they named and puts it at the top of the report. This skill does everything after that.
 

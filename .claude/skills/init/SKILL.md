@@ -5,9 +5,9 @@ description: First run in a fresh clone. Creates the personal workspace files fr
 
 # /init
 
-Files: `templates/`, `scripts/`, `docs/`, `examples/` and `routines/` are in the method root, `${CLAUDE_PLUGIN_ROOT}` (the clone holding this skill when that is not replaced by a path); every other relative path is in the workspace, the current folder. Before acting on the person's behalf, read `profile.md` and `rules.md`.
+Files: `templates/`, `scripts/`, `docs/`, `examples/` and `routines/` are in the method root, `${CLAUDE_PLUGIN_ROOT}` (the clone holding this skill when that is not replaced by a path); every other relative path is in the workspace, the current folder. Before acting on the person's behalf, read `profile.md`, `docs/rules.md` and the workspace `rules.md`; the workspace one wins on conflict.
 
-Run in the folder that will hold the job search (an empty folder, or the clone itself). Every question below follows `rules.md` "Asking me" (`templates/rules.md` before step 1 has run).
+Run in the folder that will hold the job search (an empty folder, or the clone itself). Every question below follows `docs/rules.md` "Asking me".
 
 ## 0. Tool servers
 

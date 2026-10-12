@@ -5,13 +5,13 @@ description: One full pass of the job search: answer mail and recruiter messages
 
 # /sweep
 
-Files: `templates/`, `scripts/`, `docs/`, `examples/` and `routines/` are in the method root, `${CLAUDE_PLUGIN_ROOT}` (the clone holding this skill when that is not replaced by a path); every other relative path is in the workspace, the current folder. Before acting on the person's behalf, read `profile.md` and `rules.md`.
+Files: `templates/`, `scripts/`, `docs/`, `examples/` and `routines/` are in the method root, `${CLAUDE_PLUGIN_ROOT}` (the clone holding this skill when that is not replaced by a path); every other relative path is in the workspace, the current folder. Before acting on the person's behalf, read `profile.md`, `docs/rules.md` and the workspace `docs/rules.md`; the workspace one wins on conflict.
 
 Also read `sources.md` and `docs/platform-notes.md` before starting, and `https://jobcubby.com/SKILL.md` if you have not used JobCubby in this session. Work autonomously and report at the end, in the report language set in `profile.md`.
 
 ## Coverage, non-negotiable
 
-Coverage, blocked sources and the no-subagent rule are in `rules.md` "Running": every source, every posting from the last three days, in this run. "Browser is already in use" is not a blocker: fix it with the recipe in `docs/platform-notes.md` and carry on.
+Coverage, blocked sources and the no-subagent rule are in `docs/rules.md` "Running": every source, every posting from the last three days, in this run. "Browser is already in use" is not a blocker: fix it with the recipe in `docs/platform-notes.md` and carry on.
 
 Use the Playwright browser for everything that needs a session or a file upload. Other browsers only read, and only when Playwright is still dead after the recipe.
 
@@ -35,7 +35,7 @@ Read mail through the path in `.mail.env` (`MAIL_READ`). With `connector`, that 
 
 This is the Email source in `sources.md`: the last day, inbox and junk. Open anything that looks like a status change (rejection, invite, screening request, assessment link, offer) or a question. Ignore alerts, newsletters and marketing.
 
-- Status changes: find the application in the duplicate list from Step 0 (company matching per `rules.md` "Applying"), then `update_application_status` with the right status (for rejections, one of the five reasons in `rules.md` "Tracker and calendar") and a timeline event with the real time.
+- Status changes: find the application in the duplicate list from Step 0 (company matching per `docs/rules.md` "Applying"), then `update_application_status` with the right status (for rejections, one of the five reasons in `docs/rules.md` "Tracker and calendar") and a timeline event with the real time.
 - Questions and invites: answer per "How to reply" below, in the same run.
 - An offer, a rejection after a call or interview, an assessment, a slot that has to move, a question the profile cannot answer, a request for a commitment: read the matching section of `docs/sweep-events.md` when the event shows up.
 
@@ -45,7 +45,7 @@ Every other source of type `inbox` in `sources.md` (LinkedIn messaging, any plat
 
 ## Step 3. Due follow-ups
 
-`list_applications` with status `applied`, `screening` or `interview`. For each follow-up that is due under `rules.md` "Replying and scheduling", send one short nudge in the thread's language, log the event, and set the next follow-up date. Skip ATS-only applications silently.
+`list_applications` with status `applied`, `screening` or `interview`. For each follow-up that is due under `docs/rules.md` "Replying and scheduling", send one short nudge in the thread's language, log the event, and set the next follow-up date. Skip ATS-only applications silently.
 
 ## Step 4. JobCubby index
 
@@ -57,20 +57,20 @@ For every source of type `board` or `search`, in order (duplicate checks go thro
 
 1. Open the URL with its filters. Read the list (scroll lazy lists; read titles from the item elements, not from the page summary).
 2. For each posting from the last three days: open it, read the full description, decide.
-3. **Apply if the stack matches**, per `rules.md` "Applying". Decide in twenty seconds, not with a scorecard. Location is whatever the profile allows for this market. When two postings compete for time, the fresher one with fewer applicants comes first.
+3. **Apply if the stack matches**, per `docs/rules.md` "Applying". Decide in twenty seconds, not with a scorecard. Location is whatever the profile allows for this market. When two postings compete for time, the fresher one with fewer applicants comes first.
 4. **Skip** on a hard skip filter from `profile.md`, on a duplicate company, on a logged-out state, or on a disguised agency repost with a generic title (open it, check the real stack). A captcha that appears on submit after the form is filled is not a skip: follow the captcha case in `docs/sweep-events.md`.
 5. Apply through the fastest path the source offers (easy apply, platform button, company form). Email-only postings are applied to as well, per `docs/sweep-events.md`. Use the location and phone for this market from `profile.md`. On platforms that pre-fill a stored CV, remove it and upload the current version for this market and language. When a form asks for certificates, diplomas, transcripts, language proof or reference letters, attach the matching files from `documents/` as listed under Files in `profile.md`; never skip an application for asking. The cover note is three or four sentences.
 6. Confirm the application actually went through (success page, "applied" badge) before logging it.
-7. Log it: `create_application` with company, role, posting URL, source, location, work mode, status `applied`, `applied_at` as a full ISO 8601 timestamp (`2026-10-10T09:41:00+02:00`), description (full posting text or its key sections), requirements (the technologies the posting names, as a list), salary min and max annual when shown, deadline when shown, `resume_id` of the CV version used (from `list_resumes`), and `follow_up_at` 7 days out as a full timestamp (`2026-10-17T09:00:00+02:00`). Never log an application with `applied_at`, `resume_id` or `follow_up_at` missing. Use the field names in `docs/platform-notes.md` under JobCubby from the first call. A duplicate per `rules.md` updates the existing entry instead.
+7. Log it: `create_application` with company, role, posting URL, source, location, work mode, status `applied`, `applied_at` as a full ISO 8601 timestamp (`2026-10-10T09:41:00+02:00`), description (full posting text or its key sections), requirements (the technologies the posting names, as a list), salary min and max annual when shown, deadline when shown, `resume_id` of the CV version used (from `list_resumes`), and `follow_up_at` 7 days out as a full timestamp (`2026-10-17T09:00:00+02:00`). Never log an application with `applied_at`, `resume_id` or `follow_up_at` missing. Use the field names in `docs/platform-notes.md` under JobCubby from the first call. A duplicate per `docs/rules.md` updates the existing entry instead.
 
 Then review existing `saved` applications, oldest first, at least ten per run: apply now if the posting still matches and is live, otherwise move it to `rejected` with reason `Position closed or other candidates` and a one-line note.
 
 ## How to reply
 
-Every channel follows `rules.md` "Writing on my behalf" and "Replying and scheduling" (content, salary, commitments, send or draft).
+Every channel follows `docs/rules.md` "Writing on my behalf" and "Replying and scheduling" (content, salary, commitments, send or draft).
 
 - **Sending a reply.** Through the path in `.mail.env` (`MAIL_READ`): with `connector`, the connector's reply in the thread; with `app`, `node "${CLAUDE_PLUGIN_ROOT}/scripts/mail.mjs" reply --id '<id>' --body-file <file>` with the id from `list`, plus `--all` when others are on the thread.
-- **Scheduling.** Booking pages (Calendly, cal.com, Zeeg, ATS schedulers) and times proposed by mail: take the earliest slot the scheduling rule in `rules.md` allows, checking `list_interviews` for clashes. Confirm with date, time and time zone. Then `schedule_interview` (round, type, link, interviewer), the calendar event per "Putting an event in the calendar" in `docs/sweep-events.md`, and the application to `interview`.
+- **Scheduling.** Booking pages (Calendly, cal.com, Zeeg, ATS schedulers) and times proposed by mail: take the earliest slot the scheduling rule in `docs/rules.md` allows, checking `list_interviews` for clashes. Confirm with date, time and time zone. Then `schedule_interview` (round, type, link, interviewer), the calendar event per "Putting an event in the calendar" in `docs/sweep-events.md`, and the application to `interview`.
 - **Assessments, rescheduling, offers, commitments.** Read the matching section of `docs/sweep-events.md`.
 
 ## Step 6. Report

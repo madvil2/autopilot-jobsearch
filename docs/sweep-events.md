@@ -18,11 +18,11 @@ Attach the CV version for this market and language. When the posting asks for ce
 
 ## A rejection after a call or an interview
 
-Per `rules.md` "Replying and scheduling": one short, warm reply in the thread's language, thanking them for the time and the process and asking for one or two points of feedback on what would have made the difference. No argument, no second ask. Log the event. Feedback that comes back later goes into the application's description and into the next `/debrief` or `/stack-radar` run.
+Per `docs/rules.md` "Replying and scheduling": one short, warm reply in the thread's language, thanking them for the time and the process and asking for one or two points of feedback on what would have made the difference. No argument, no second ask. Log the event. Feedback that comes back later goes into the application's description and into the next `/debrief` or `/stack-radar` run.
 
 ## A booked slot has to move
 
-As early as possible, in the thread's language: apologise once, give the reason in one line if there is one, and offer the alternative slots `rules.md` "Replying and scheduling" asks for, each with its time zone. Update the interview in the tracker once they confirm, and move the calendar event ("Putting an event in the calendar" below).
+As early as possible, in the thread's language: apologise once, give the reason in one line if there is one, and offer the alternative slots `docs/rules.md` "Replying and scheduling" asks for, each with its time zone. Update the interview in the tracker once they confirm, and move the calendar event ("Putting an event in the calendar" below).
 
 ## Nobody joined the call
 
@@ -34,7 +34,7 @@ A form or a recruiter asks for a fact that is not in `profile.md` (a messenger h
 
 ## A commitment is requested
 
-Anything on the commitment list in `rules.md` "Replying and scheduling", including paid platform features, paid tests and paid courses: reply that I will confirm shortly and put the question at the top of the report.
+Anything on the commitment list in `docs/rules.md` "Replying and scheduling", including paid platform features, paid tests and paid courses: reply that I will confirm shortly and put the question at the top of the report.
 
 ## A posting worth an outreach
 
@@ -42,7 +42,7 @@ Strong match, a company small enough that the department head is findable, a rol
 
 ## An assessment or take-home arrives
 
-Per `rules.md` "Replying and scheduling" (accept, ask for the deadline if none was given, never solve it): log the event, create a calendar event for the deadline (a 30-minute event ending at the deadline with a reminder a day before, `--alarm 1440` with the script), and move the application to `screening`.
+Per `docs/rules.md` "Replying and scheduling" (accept, ask for the deadline if none was given, never solve it): log the event, create a calendar event for the deadline (a 30-minute event ending at the deadline with a reminder a day before, `--alarm 1440` with the script), and move the application to `screening`.
 
 ## Putting an event in the calendar
 
@@ -63,6 +63,6 @@ Every time carries the offset of the time zone the slot was confirmed in; the sc
 
 ## A platform shows a logged-out state, a challenge page or a quota wall
 
-Skip that source or that application, say so at the top of the report with the URL, continue. Never try to get past a challenge page and never pay for anything; credentials per `rules.md` "Running".
+Skip that source or that application, say so at the top of the report with the URL, continue. Never try to get past a challenge page and never pay for anything; credentials per `docs/rules.md` "Running".
 
 A captcha on submit, after the form is filled, is the one case where the work is kept: leave that tab exactly as it is (form filled, CV attached, captcha unsolved), open a new tab with `browser_tabs` and carry on there for the rest of the run. Never close or reload that tab. Under "Needs your attention" write the company, the posting URL and "form filled, captcha in the open Playwright tab"; log the application as `saved` with the same note.

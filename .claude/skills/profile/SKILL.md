@@ -5,7 +5,7 @@ description: Interview the person and write profile.md, the single source of fac
 
 # /profile
 
-Files: `templates/`, `scripts/`, `docs/`, `examples/` and `routines/` are in the method root, `${CLAUDE_PLUGIN_ROOT}` (the clone holding this skill when that is not replaced by a path); every other relative path is in the workspace, the current folder. Before acting on the person's behalf, read `profile.md` and `rules.md`.
+Files: `templates/`, `scripts/`, `docs/`, `examples/` and `routines/` are in the method root, `${CLAUDE_PLUGIN_ROOT}` (the clone holding this skill when that is not replaced by a path); every other relative path is in the workspace, the current folder. Before acting on the person's behalf, read `profile.md`, `docs/rules.md` and the workspace `rules.md`; the workspace one wins on conflict.
 
 This skill fills `profile.md` by asking questions, in the person's language, a few at a time. If they do not know a fact, leave the field empty and say which skill will need it.
 
@@ -62,11 +62,11 @@ Ask in blocks, only the fields still empty after step 0. Confirm each block back
 
 ## After writing
 
-- Re-read `profile.md` and check it against `rules.md` "Writing on my behalf".
+- Re-read `profile.md` and check it against `docs/rules.md` "Writing on my behalf".
 - Push the profile to JobCubby: `update_profile` (headline, summary, skills in the chosen order, work history, education) and `update_preferences` (target role, seniority, work modes, locations, salary, job types, industries). Read the existing profile first and send only what changed.
 - If `.data.git/` exists, run `"${CLAUDE_PLUGIN_ROOT}/scripts/data" save "profile <name>"`.
 - Tell the person what is still empty and which skill will ask for it.
 
 ## Recording corrections
 
-When the person says the agent did something wrong ("never write X", "always put Y first"), append the rule with today's date, in one sentence, with the reason in a second sentence, to "Personal rules" in `profile.md` (personal) or "Added later" in `rules.md` (applies to anyone), say that you did, then fix the output.
+When the person says the agent did something wrong ("never write X", "always put Y first"), append the rule with today's date, in one sentence, with the reason in a second sentence, to "Personal rules" in `profile.md` (personal) or "Added later" in the workspace `rules.md` (applies to anyone), say that you did, then fix the output.

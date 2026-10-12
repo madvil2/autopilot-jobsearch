@@ -8,7 +8,7 @@ The words the skills, docs and templates use. One meaning each.
 
 **Profile**: `profile.md`. The facts about the person and their personal rules. The only source of facts for forms, messages, CVs and prep.
 
-**Rules**: `rules.md`. How the agent behaves on anyone's behalf: writing, applying, replying, scheduling, tracking. Impersonal; personal rules live in the Profile.
+**Rules**: `docs/rules.md`, how the agent behaves on anyone's behalf (writing, applying, replying, scheduling, tracking), shipped and updated with the method; plus the workspace `rules.md`, the person's switches and later additions, which win on conflict. Personal rules live in the Profile.
 
 **Source**: one place the Sweep looks, listed in `sources.md`: an inbox to answer, the tracker's own job index, or a board of postings.
 

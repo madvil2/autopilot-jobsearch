@@ -44,7 +44,7 @@
 // (connector or app; connector when absent). For SMTP also MAIL_APP_PASSWORD (an app password, never the account
 // password) and optional MAIL_HOST and MAIL_PORT (defaults smtp.gmail.com and 465, TLS). A file
 // holding a password must be readable by its owner only (chmod 600); the password is never printed.
-// The subject and body may not contain an em-dash or a double hyphen, because rules.md forbids them in
+// The subject and body may not contain an em-dash or a double hyphen, because docs/rules.md forbids them in
 // anything sent in the person's name. Every refusal about the message runs before any transport.
 
 import { readFileSync, existsSync, statSync, realpathSync } from "node:fs";
@@ -182,7 +182,7 @@ function readBody(args) {
 function refuseDashes(fields) {
   for (const [what, text] of fields) {
     const problem = forbiddenDash(text);
-    if (problem) fail(`the ${what} contains ${problem}; rules.md forbids them in anything sent in the person's name. Rewrite it with a comma, a colon or a full stop.`);
+    if (problem) fail(`the ${what} contains ${problem}; docs/rules.md forbids them in anything sent in the person's name. Rewrite it with a comma, a colon or a full stop.`);
   }
 }
 
