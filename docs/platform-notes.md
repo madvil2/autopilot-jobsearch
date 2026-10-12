@@ -80,5 +80,5 @@ Field names the tools reject silently or with an unhelpful error:
 - **getmatch**: the specialization filter is the repeated `sp` URL parameter; the UI checkboxes do not survive a reload. Navigate to the filtered URL directly.
 - **HireHi** (2026-10-10): the vacancy page's SSR JSON has `apply_url`; `null` means Telegram-only (PRO quota), a URL (often LinkedIn) means apply there. Check it with `fetch` instead of opening each page.
 - **HireHi**: the page shows a login button until the client hydrates, so check the session with `fetch('/api/auth/me')` from `browser_evaluate`, not a snapshot. Contacting an employer through Telegram is a paid feature with a quota; when the quota reads 0, skip those postings.
-- **Himalayas**: the HTML is behind a challenge page; the JSON search API works with a browser user agent. 2026-10: applying requires a Himalayas account; keep one logged in or drop the source.
+- **Himalayas**: the HTML is behind a challenge page; the JSON search API works with a browser user agent. 2026-10: applying requires a Himalayas account.
 - **CryptoJobsList**: "Remote" labels are unreliable; the ATS form tells the truth.

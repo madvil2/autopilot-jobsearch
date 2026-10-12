@@ -86,4 +86,4 @@ Finish the file from Step 0: replace the first line with "run complete, <start> 
 
 If `.data.git/` exists, run `"${CLAUDE_PLUGIN_ROOT}/scripts/data" save "sweep <date> <time>"`.
 
-If this run taught you something about a platform, add one dated line to `sources.md` under that source's notes, or to `docs/platform-notes.md` if it is general. A source that produced nothing relevant for two runs in a row gets a "candidate for removal" note; the person decides.
+If this run taught you something about a platform, add one dated line to `sources.md` under that source's notes, or to `docs/platform-notes.md` if it is general.
