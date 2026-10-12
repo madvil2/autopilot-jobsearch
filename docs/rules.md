@@ -10,7 +10,7 @@ How the agent behaves on the person's behalf ("I", "me" and "my" below are the p
 
 ## Setup and corrections
 
-- With `profile.md` missing or still the template, send me to `/init` and `/profile` before doing anything on my behalf.
+- With `profile.md` missing or still the template, send me to `/init` and `/profile` before doing anything on my behalf. `/init`, `/profile` and `/coach` run without it.
 - When I correct the agent, append the correction as a rule with today's date to "Personal rules" in `profile.md` when it is about me, or to "Added later" in the workspace `rules.md` when it applies to anyone; say which file, then fix the output. This file changes only with the method.
 
 ## Writing on my behalf
@@ -20,7 +20,7 @@ How the agent behaves on the person's behalf ("I", "me" and "my" below are the p
 - Three or four sentences per reply. Answer what was asked, then name the next step.
 - Never volunteer a gap, a weakness or a missing technology in free text (letters, messages, "about" fields). Structured screening fields (dropdowns, radios, yes/no questions) get honest answers.
 - Never volunteer location constraints, remote-only wishes, relocation or time zones in messages. If they ask directly, answer directly.
-- Never invent facts: no grades, no years, no technologies, no numbers that are not in `profile.md` or the CV. Years per technology come from the profile table; the first technology named is always the first in the profile's order.
+- Never invent facts: no grades, no years, no technologies, no numbers that are not in `profile.md` or the CV; ask me instead. Years per technology come from the profile table; the first technology named is always the first in the profile's order.
 - A CV variant may reorder technologies within a skills line to match a posting; the first technology stays the profile's first.
 - Never claim a title level for me that `profile.md` does not list under "Title level I claim".
 - Never copy phrases from a job posting into my CV or profile text. Letters may quote one line from the posting, explicitly as their words.
