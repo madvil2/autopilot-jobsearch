@@ -16,7 +16,7 @@
 //        replies in the thread from MAIL_USER (to everyone on it with --all); the body is the whole reply,
 //        no quote of the original is added. Same refusals as send, before the app is touched.
 //
-// Reading (list, show, reply) needs MAIL_READ=app and the mail app transport: SMTP cannot read mail.
+// Reading (list, show, reply) needs MAIL_READ=app.
 // With MAIL_READ=connector, the default, the skills read and reply through the mail connector and
 // these three commands refuse. Mail.app reads the inbox and the junk mailbox (named Junk, Spam, Junk
 // E-mail, Junk Email or Bulk Mail) of the account whose address is MAIL_USER. It knows only what it
@@ -30,35 +30,30 @@
 //
 // Transports, picked by pickTransport() below:
 //   applemail  macOS: Mail.app through osascript, from an account added in System Settings > Internet
-//              Accounts. Needs no password; the default on macOS when no app password is set.
+//              Accounts. Needs no password; the default on macOS.
 //   outlook    Windows: classic Outlook through its COM interface (PowerShell). Needs no password; the
-//              default on Windows when no app password is set. UNTESTED: written without a Windows
-//              machine to run it on.
-//   smtp       any OS: SMTP with an app password (Gmail by default). The default whenever
-//              MAIL_APP_PASSWORD is set.
+//              default on Windows. UNTESTED: written without a Windows machine to run it on.
+// Other platforms have no transport: the sweep escalates email-only postings for the person to send.
 //
 // Config: .mail.env in the workspace, the folder the command runs in (template: templates/mail.env),
 // KEY=VALUE lines: MAIL_USER (the sender address, always required: it picks the account, so a mail
-// never leaves from the wrong one), optional MAIL_FROM_NAME (display name), MAIL_TRANSPORT (smtp,
-// applemail or outlook; /init writes it, and when it is absent the default above applies) and MAIL_READ
-// (connector or app; connector when absent). For SMTP also MAIL_APP_PASSWORD (an app password, never the account
-// password) and optional MAIL_HOST and MAIL_PORT (defaults smtp.gmail.com and 465, TLS). A file
-// holding a password must be readable by its owner only (chmod 600); the password is never printed.
+// never leaves from the wrong one), optional MAIL_FROM_NAME (display name), MAIL_TRANSPORT (applemail
+// or outlook; /init writes it, and when it is absent the default above applies) and MAIL_READ
+// (connector or app; connector when absent). The file holds no password.
 // The subject and body may not contain an em-dash or a double hyphen, because docs/rules.md forbids them in
 // anything sent in the person's name. Every refusal about the message runs before any transport.
 
-import { readFileSync, existsSync, statSync, realpathSync } from "node:fs";
+import { readFileSync, existsSync, realpathSync } from "node:fs";
 import { basename, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import nodemailer from "nodemailer";
 import { parseInstant, localParts, formatLocal, forbiddenDash, APPLE_DATE } from "./calendar.mjs";
 
-export const TRANSPORTS = ["smtp", "applemail", "outlook"];
+export const TRANSPORTS = ["applemail", "outlook"];
 export const READ_PATHS = ["connector", "app"];
 const MAILBOXES = ["inbox", "junk", "both"];
 const DEFAULT_CHECK_WAIT = 8;
-const LABEL = { smtp: "SMTP", applemail: "Mail.app", outlook: "Outlook" };
+const LABEL = { applemail: "Mail.app", outlook: "Outlook" };
 const CONFIG = resolve(process.cwd(), ".mail.env");
 const USAGE = [
   "usage: node scripts/mail.mjs send --to <addr> [--cc <addr>] --subject <text> (--body <text> | --body-file <path>) [--attach <path>]...",
@@ -90,11 +85,6 @@ async function main() {
 function check() {
   const config = loadConfig();
   const reads = config.read === "app" ? `reads mail via ${LABEL[config.transport]} (MAIL_READ=app)` : "reads mail via the mail connector (MAIL_READ=connector)";
-  if (config.read === "app" && config.transport === "smtp") fail(smtpCannotRead());
-  if (config.transport === "smtp") {
-    console.log(`.mail.env found, sends as ${config.user} via SMTP (${config.host}:${config.port}), ${reads}`);
-    return;
-  }
   requireAccount(config);
   const note = config.transport === "outlook" ? " (the Outlook transport is untested)" : "";
   console.log(`sends as ${config.user} via ${LABEL[config.transport]}, account found, ${reads}${note}`);
@@ -200,14 +190,7 @@ function readAttachments(args) {
 }
 
 function readConfig() {
-  const config = loadConfig();
-  if (config.read !== "app") fail(`.mail.env: MAIL_READ is ${config.read}, so mail is read and answered through the mail connector; list, show and reply are for MAIL_READ=app (run /init to change the choice)`);
-  if (config.transport === "smtp") fail(smtpCannotRead());
-  return config;
-}
-
-function smtpCannotRead() {
-  return ".mail.env: SMTP cannot read mail. MAIL_READ=app needs the mail app: MAIL_TRANSPORT=applemail on macOS or outlook on Windows; or set MAIL_READ=connector (run /init to change the choice)";
+  return loadConfig({ readsMail: true });
 }
 
 function oneLine(text) {
@@ -272,27 +255,21 @@ export function parseSince(text, now = new Date()) {
 
 // ---------- config ----------
 
-// An app password counts only when it is filled in: the template's row of x is no password.
-export function hasPassword(env) {
-  const pass = (env.MAIL_APP_PASSWORD || "").replace(/\s+/g, "");
-  return pass !== "" && !/^x+$/i.test(pass);
-}
-
-// Which transport sends. An explicit MAIL_TRANSPORT wins; otherwise SMTP when an app password is
-// set, else the OS mail app (Mail.app on macOS, classic Outlook on Windows). Throws when nothing
-// can send on this platform. Pure: reads only its arguments.
+// Which transport sends. An explicit MAIL_TRANSPORT wins; otherwise the OS mail app (Mail.app on
+// macOS, classic Outlook on Windows). Throws when nothing can send on this platform. Pure: reads
+// only its arguments.
 export function pickTransport(env, platform) {
   const explicit = (env.MAIL_TRANSPORT || "").trim().toLowerCase();
   if (explicit) {
+    if (explicit === "smtp") throw new Error(`.mail.env: MAIL_TRANSPORT=smtp is no longer supported; use applemail on macOS or outlook on Windows (run /init to change the choice)`);
     if (!TRANSPORTS.includes(explicit)) throw new Error(`.mail.env: MAIL_TRANSPORT "${env.MAIL_TRANSPORT}" is not one of ${TRANSPORTS.join(", ")}`);
     if (explicit === "applemail" && platform !== "darwin") throw new Error(".mail.env: MAIL_TRANSPORT=applemail works only on macOS");
     if (explicit === "outlook" && platform !== "win32") throw new Error(".mail.env: MAIL_TRANSPORT=outlook works only on Windows");
     return explicit;
   }
-  if (hasPassword(env)) return "smtp";
   if (platform === "darwin") return "applemail";
   if (platform === "win32") return "outlook";
-  throw new Error(".mail.env: set MAIL_APP_PASSWORD for SMTP (no mail app transport on this platform)");
+  throw new Error(`no mail transport on ${platform}: sending needs Mail.app on macOS (applemail) or classic Outlook on Windows (outlook)`);
 }
 
 export function pickRead(env) {
@@ -302,9 +279,8 @@ export function pickRead(env) {
   return value;
 }
 
-// Reads .mail.env from the current folder. Refuses a file other users can read when it holds an
-// app password: that password gives full access to the mailbox.
-function loadConfig() {
+// Reads .mail.env from the current folder.
+function loadConfig({ readsMail = false } = {}) {
   if (!existsSync(CONFIG)) fail(`no .mail.env in ${process.cwd()}: copy templates/mail.env there and fill in MAIL_USER, the address to send from (see /init)`);
   const env = {};
   for (const raw of readFileSync(CONFIG, "utf8").split(/\r?\n/)) {
@@ -314,24 +290,18 @@ function loadConfig() {
     if (eq < 1) fail(`.mail.env: cannot read line "${line.length > 40 ? line.slice(0, 40) + "..." : line}" (expected KEY=VALUE)`);
     env[line.slice(0, eq).trim()] = unquote(line.slice(eq + 1).trim());
   }
-  if (hasPassword(env) && statSync(CONFIG).mode & 0o077) fail(".mail.env holds a password and is readable by other users; run: chmod 600 .mail.env");
   const user = env.MAIL_USER || "";
   if (!user || !user.includes("@") || user === "you@gmail.com") fail(".mail.env: MAIL_USER is missing or still the template value");
   let transport;
   let read;
   try {
-    transport = pickTransport(env, process.platform);
     read = pickRead(env);
+    if (readsMail && read !== "app") fail(`.mail.env: MAIL_READ is ${read}, so mail is read and answered through the mail connector; list, show and reply are for MAIL_READ=app (run /init to change the choice)`);
+    transport = pickTransport(env, process.platform);
   } catch (e) {
     fail(e.message);
   }
-  const config = { transport, read, user, fromName: env.MAIL_FROM_NAME || "", checkWait: checkWait(env) };
-  if (transport !== "smtp") return config;
-  // Google shows the app password in four groups; the spaces are not part of it.
-  if (!hasPassword(env)) fail(".mail.env: MAIL_APP_PASSWORD is missing or still the template value (MAIL_TRANSPORT=smtp needs one)");
-  const port = Number(env.MAIL_PORT || 465);
-  if (!Number.isInteger(port) || port <= 0) fail(`.mail.env: MAIL_PORT "${env.MAIL_PORT}" is not a port number`);
-  return { ...config, pass: env.MAIL_APP_PASSWORD.replace(/\s+/g, ""), host: env.MAIL_HOST || "smtp.gmail.com", port };
+  return { transport, read, user, fromName: env.MAIL_FROM_NAME || "", checkWait: checkWait(env) };
 }
 
 function checkWait(env) {
@@ -354,7 +324,6 @@ function senderField(config) {
 }
 
 async function deliver(config, message) {
-  if (config.transport === "smtp") return deliverSmtp(config, message);
   requireAccount(config);
   const recipients = [...splitAddresses(message.to), ...splitAddresses(message.cc)];
   if (config.transport === "applemail") deliverAppleMail(config, message);
@@ -371,37 +340,6 @@ function requireAccount(config) {
   const known = addresses.length ? ` (it has: ${addresses.join(", ")})` : "";
   if (config.transport === "applemail") fail(`Mail.app has no account for ${config.user}${known}: add it in System Settings > Internet Accounts`);
   fail(`Outlook has no account for ${config.user}${known}: add it in Outlook under File > Account Settings`);
-}
-
-// ---------- SMTP ----------
-
-async function deliverSmtp(config, { to, cc, subject, body, attachments }) {
-  const transport = nodemailer.createTransport({
-    host: config.host,
-    port: config.port,
-    secure: config.port === 465,
-    auth: { user: config.user, pass: config.pass },
-  });
-  let info;
-  try {
-    info = await transport.sendMail({
-      from: config.fromName ? { name: config.fromName, address: config.user } : config.user,
-      to,
-      cc: cc || undefined,
-      subject,
-      text: body,
-      attachments,
-    });
-  } catch (e) {
-    if (e.code === "EAUTH") fail(`authentication failed for ${config.user}: check MAIL_APP_PASSWORD in .mail.env (an app password from https://myaccount.google.com/apppasswords, not the account password)`);
-    if (e.code === "ESOCKET" || e.code === "ECONNECTION" || e.code === "ETIMEDOUT") fail(`could not reach ${config.host}:${config.port}: ${firstLine(e.message)}`);
-    fail(`send failed: ${firstLine(e.message)}`);
-  } finally {
-    transport.close();
-  }
-  const accepted = (info.accepted || []).map((a) => (typeof a === "string" ? a : a.address));
-  console.log(`sent ${info.messageId} to ${accepted.join(", ") || "nobody"}`);
-  if (info.rejected && info.rejected.length) fail(`rejected by the server: ${info.rejected.join(", ")}`);
 }
 
 // ---------- Mail.app (macOS) ----------
@@ -771,7 +709,7 @@ function powershell(payload) {
     encoding: "utf8",
   });
   if (r.error) fail(`could not run powershell: ${r.error.message}`);
-  if (r.status === 3) fail("classic Outlook is not installed (the new Outlook has no scripting interface); use SMTP with an app password");
+  if (r.status === 3) fail("classic Outlook is not installed (the new Outlook has no scripting interface); sending needs classic Outlook");
   if (r.status === 4) fail(`Outlook has no account for ${payload.user}: add it in Outlook under File > Account Settings`);
   if (r.status === 5) fail(`no message with id ${payload.id} in Outlook`);
   if (r.status !== 0) fail(`Outlook failed: ${firstLine((r.stderr || "").trim()) || `powershell exit ${r.status}`}`);

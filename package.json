@@ -13,7 +13,6 @@
     "postinstall": "playwright install chromium"
   },
   "dependencies": {
-    "nodemailer": "^10.1.0",
     "playwright": "^1.50.0"
   },
   "engines": {

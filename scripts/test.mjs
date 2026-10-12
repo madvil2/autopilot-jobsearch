@@ -5,7 +5,7 @@
 // and file sizes are checked.
 
 import { execFileSync, spawnSync } from "node:child_process";
-import { existsSync, statSync, readdirSync, readFileSync, writeFileSync, mkdtempSync, chmodSync, rmSync } from "node:fs";
+import { existsSync, statSync, readdirSync, readFileSync, writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { join, resolve, dirname } from "node:path";
 import { tmpdir } from "node:os";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -98,8 +98,8 @@ for (const dir of ["examples/cv", "examples/cover-letters"]) {
   }
 }
 
-// The mail script must refuse before it touches the network: no .mail.env, one other users can read, one still
-// holding the template values, and a body with an em-dash or a double hyphen. Each case runs in an empty temp
+// The mail script must refuse before it touches a mail app: no .mail.env, one still holding the template
+// values, and a body with an em-dash or a double hyphen. Each case runs in an empty temp
 // folder (the script reads .mail.env from the current folder) and must exit 1 with the expected reason.
 const mail = join(ROOT, "scripts", "mail.mjs");
 const mailDir = mkdtempSync(join(tmpdir(), "autopilot-mail-"));
@@ -108,11 +108,7 @@ try {
   mailRefuses("send refuses an em-dash", ["send", "--to", "a@b.c", "--subject", "x", "--body", `x ${String.fromCharCode(0x2014)} y`], /em-dash/);
   mailRefuses("send refuses a double hyphen", ["send", "--to", "a@b.c", "--subject", "x", "--body", "x -- y"], /double hyphen/);
   mailRefuses("send refuses a missing attachment", ["send", "--to", "a@b.c", "--subject", "x", "--body", "x", "--attach", "missing.pdf"], /attachment not found/);
-  writeFileSync(join(mailDir, ".mail.env"), "MAIL_USER=a@b.c\nMAIL_APP_PASSWORD=abcdabcdabcdabcd\n", { mode: 0o644 });
-  chmodSync(join(mailDir, ".mail.env"), 0o644);
-  mailRefuses("check refuses a .mail.env with a password others can read", ["check"], /chmod 600/);
   writeFileSync(join(mailDir, ".mail.env"), readFileSync(join(ROOT, "templates", "mail.env")));
-  chmodSync(join(mailDir, ".mail.env"), 0o600);
   mailRefuses("check refuses the unfilled template", ["check"], /template value/);
 } finally {
   rmSync(mailDir, { recursive: true, force: true });
@@ -121,14 +117,11 @@ try {
 // Transport selection and the Mail.app argument list are pure functions; importing mail.mjs does not
 // run its CLI, so nothing here talks to a mail app or the network.
 const { pickTransport, appleMailArgs } = await import(pathToFileURL(mail).href);
-const PASS = { MAIL_APP_PASSWORD: "abcd efgh ijkl mnop" };
-transportIs("an app password picks smtp", PASS, "darwin", "smtp");
-transportIs("no password on macOS picks applemail", {}, "darwin", "applemail");
-transportIs("no password on Windows picks outlook", {}, "win32", "outlook");
-transportIs("no password on Linux is an error", {}, "linux", /set MAIL_APP_PASSWORD for SMTP/);
-transportIs("the template's placeholder password counts as none", { MAIL_APP_PASSWORD: "xxxxxxxxxxxxxxxx" }, "darwin", "applemail");
-transportIs("explicit MAIL_TRANSPORT wins over a password", { ...PASS, MAIL_TRANSPORT: "applemail" }, "darwin", "applemail");
-transportIs("explicit MAIL_TRANSPORT=smtp wins over the platform", { MAIL_TRANSPORT: "SMTP" }, "win32", "smtp");
+transportIs("macOS picks applemail", {}, "darwin", "applemail");
+transportIs("Windows picks outlook", {}, "win32", "outlook");
+transportIs("Linux has no transport", {}, "linux", /no mail transport on linux/);
+transportIs("explicit MAIL_TRANSPORT=Outlook on Windows", { MAIL_TRANSPORT: " Outlook " }, "win32", "outlook");
+transportIs("MAIL_TRANSPORT=smtp is refused with the alternatives", { MAIL_TRANSPORT: "SMTP" }, "darwin", /no longer supported; use applemail on macOS or outlook on Windows/);
 transportIs("an unknown MAIL_TRANSPORT is an error", { MAIL_TRANSPORT: "carrier-pigeon" }, "darwin", /not one of/);
 transportIs("applemail off macOS is an error", { MAIL_TRANSPORT: "applemail" }, "linux", /only on macOS/);
 {
@@ -149,8 +142,8 @@ transportIs("applemail off macOS is an error", { MAIL_TRANSPORT: "applemail" }, 
   }
 }
 
-// Reading and replying refuse bad input before .mail.env is read or a mail app is touched, and a workspace that
-// sends through SMTP gets one clean line saying SMTP cannot read. Nothing here reads or sends a message.
+// Reading and replying refuse bad input before .mail.env is read or a mail app is touched. Nothing here reads or
+// sends a message.
 {
   const dir = mkdtempSync(join(tmpdir(), "autopilot-mail-read-"));
   try {
@@ -163,16 +156,11 @@ transportIs("applemail off macOS is an error", { MAIL_TRANSPORT: "applemail" }, 
     cliRefuses(mail, dir, "mail: list with a time without offset", ["list", "--since", "2026-10-12T08:00:00"], /--since/);
     cliRefuses(mail, dir, "mail: list with an unknown mailbox", ["list", "--since", "2d", "--mailbox", "drafts"], /not one of inbox, junk, both/);
     cliRefuses(mail, dir, "mail: --all does not apply to send", ["send", "--all"], /does not apply to send/);
-    writeFileSync(join(dir, ".mail.env"), "MAIL_USER=a@b.c\nMAIL_READ=app\nMAIL_TRANSPORT=smtp\nMAIL_APP_PASSWORD=abcdabcdabcdabcd\n");
-    chmodSync(join(dir, ".mail.env"), 0o600);
-    cliRefuses(mail, dir, "mail: list with the SMTP transport", ["list", "--since", "2d"], /SMTP cannot read mail/);
-    cliRefuses(mail, dir, "mail: show with the SMTP transport", ["show", "--id", "x@y"], /SMTP cannot read mail/);
-    cliRefuses(mail, dir, "mail: check with MAIL_READ=app and SMTP", ["check"], /SMTP cannot read mail/);
-    writeFileSync(join(dir, ".mail.env"), "MAIL_USER=a@b.c\nMAIL_TRANSPORT=smtp\nMAIL_APP_PASSWORD=abcdabcdabcdabcd\n");
-    chmodSync(join(dir, ".mail.env"), 0o600);
+    writeFileSync(join(dir, ".mail.env"), "MAIL_USER=a@b.c\nMAIL_READ=app\nMAIL_TRANSPORT=smtp\n");
+    cliRefuses(mail, dir, "mail: check with MAIL_TRANSPORT=smtp", ["check"], /MAIL_TRANSPORT=smtp is no longer supported/);
+    writeFileSync(join(dir, ".mail.env"), "MAIL_USER=a@b.c\n");
     cliRefuses(mail, dir, "mail: list when MAIL_READ is absent (connector)", ["list", "--since", "2d"], /MAIL_READ is connector/);
-    writeFileSync(join(dir, ".mail.env"), "MAIL_USER=a@b.c\nMAIL_READ=imap\nMAIL_TRANSPORT=smtp\nMAIL_APP_PASSWORD=abcdabcdabcdabcd\n");
-    chmodSync(join(dir, ".mail.env"), 0o600);
+    writeFileSync(join(dir, ".mail.env"), "MAIL_USER=a@b.c\nMAIL_READ=imap\n");
     cliRefuses(mail, dir, "mail: an unknown MAIL_READ", ["check"], /MAIL_READ "imap" is not one of connector, app/);
   } finally {
     rmSync(dir, { recursive: true, force: true });
