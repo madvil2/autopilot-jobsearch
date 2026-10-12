@@ -38,6 +38,6 @@ Then three lines: what went well, the one thing to fix first, how to practice it
 ## 5. Close the loop
 
 - `complete_interview` with a short outcome ("done, waiting for feedback" or what they said).
-- If a next round was named: `schedule_interview` if a time exists, otherwise a timeline event with the expected date, and a calendar event when the slot is known.
+- If a next round was named: `schedule_interview` if a time exists, otherwise a timeline event with the expected date, and a calendar event through the calendar path from `.calendar.env` when the slot is known (recipe in `docs/sweep-events.md` under "Putting an event in the calendar").
 - If `.data.git/` exists, run `"${CLAUDE_PLUGIN_ROOT}/scripts/data" save "debrief <name>"`.
 - If a rule emerged from the mistake ("never do X again"), append it to `profile.md` personal rules with the date, through the same mechanism `/profile` uses.

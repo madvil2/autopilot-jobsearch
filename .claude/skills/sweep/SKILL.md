@@ -31,6 +31,8 @@ Call `list_applications` once, with no filters. The result is large and lands in
 
 ## Step 1. Mail
 
+Read mail through the path in `.mail.env` (`MAIL_READ`). With `connector`, that is the mail connector (the claude.ai Gmail connector or any mail MCP). With `app`, it is the mail script: `node "${CLAUDE_PLUGIN_ROOT}/scripts/mail.mjs" list --since 1d` lists the inbox and the junk mailbox, one message per line with its id first, and `node "${CLAUDE_PLUGIN_ROOT}/scripts/mail.mjs" show --id '<id>'` opens one.
+
 Search the inbox for the last day, and the spam folder too (offers have landed there). Open anything that looks like a status change (rejection, invite, screening request, assessment link, offer) or a question. Ignore alerts, newsletters and marketing.
 
 - Status changes: find the application (in the duplicate list from Step 0, loose company matching per `rules.md`) and update it: `update_application_status` with the right status and, for rejections, one of the five reasons. Add a timeline event with the real time. Set a status only from the message or the application's own page, never from a list view: platform inbox lists put statuses next to the wrong card when read as one block of text.
@@ -67,7 +69,8 @@ Then review existing `saved` applications, oldest first, at least ten per run: a
 
 Applies to every channel. Content rules are in `rules.md` ("Writing on my behalf", "Replying and scheduling"). In short: same language as the thread, three or four sentences, answer what was asked, name the next step, nothing volunteered about gaps or location, no em-dashes.
 
-- **Scheduling.** Booking pages (Calendly, cal.com, Zeeg, ATS schedulers) and proposed times by mail: take the earliest slot that fits the rules (at least 3 hours ahead, 09:00 to 19:00 local, 1 hour clear of interviews in `list_interviews`). Confirm with date, time and time zone. Then `schedule_interview` (round, type, link, interviewer) and a calendar event with the link and a reminder, after checking none exists for that company and time. Move the application to `interview`.
+- **Sending a reply.** Through the path in `.mail.env` (`MAIL_READ`): with `connector`, the connector's reply in the thread; with `app`, `node "${CLAUDE_PLUGIN_ROOT}/scripts/mail.mjs" reply --id '<id>' --body-file <file>` with the id from `list`, plus `--all` when others are on the thread.
+- **Scheduling.** Booking pages (Calendly, cal.com, Zeeg, ATS schedulers) and proposed times by mail: take the earliest slot that fits the rules (at least 3 hours ahead, 09:00 to 19:00 local, 1 hour clear of interviews in `list_interviews`). Confirm with date, time and time zone. Then `schedule_interview` (round, type, link, interviewer) and the calendar event through the path in `.calendar.env` (`CALENDAR_VIA`), per "Putting an event in the calendar" in `docs/sweep-events.md`. Move the application to `interview`.
 - **Assessments, rescheduling, offers, commitments.** Recipes in `docs/sweep-events.md`; read the matching section when one shows up.
 - **Salary.** The figure from `profile.md` for this market, one number. If they name a range or an offer below it: interest plus a question about next steps, no counter, no decline, and put it at the top of the report. Phrase it as interest, not acceptance: "thanks, that is a useful starting point, what are the next steps?" never "that works for me". Never mention a missing skill in the same message.
 - **Commitments are not yours to make.** Employment form, taxes, visa, relocation, hours, equity, anything that costs money: reply that you will confirm shortly and put it at the top of the report (`docs/sweep-events.md`).

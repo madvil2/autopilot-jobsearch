@@ -4,17 +4,17 @@ The sweep skill keeps the twice-daily path short. The situations below happen a 
 
 ## An offer arrives
 
-Reply warm and short in the thread's language: thank you, I am glad about it, I look forward to the draft contract. Nothing about accepting, nothing about money, no decision date named by us; if they ask for one, ask how long I have. Then: status `offer` with the terms in `offer_details`, a calendar event for any deadline they named, a timeline event, and the offer at the top of the report with every number. Other processes keep running; nothing is withdrawn. `/offer` takes it from there.
+Reply warm and short in the thread's language: thank you, I am glad about it, I look forward to the draft contract. Nothing about accepting, nothing about money, no decision date named by us; if they ask for one, ask how long I have. Then: status `offer` with the terms in `offer_details`, a calendar event for any deadline they named (see "Putting an event in the calendar" below), a timeline event, and the offer at the top of the report with every number. Other processes keep running; nothing is withdrawn. `/offer` takes it from there.
 
 ## A posting accepts applications only by email
 
-Compose the mail per the email variant in `/cover-letter`: subject "Application as <exact title>", greeting to the named person or "<Company> Team", one line of who I am (title and years from the profile, stack in the profile's order) and that I am applying for <title> found on <source>, one or two sentences of proof matching their asks, that the CV is attached, thank you, looking forward to discussing how I can contribute. Save the body as `cover-letters/<company>-<role>.txt` (it is the cover letter for that posting, and the data history keeps a copy), then send it from the workspace with the mail script, which reads the sender from `.mail.env`, every attachment from disk, and picks the transport itself (Mail.app on macOS or classic Outlook on Windows when no app password is set, SMTP when one is):
+Compose the mail per the email variant in `/cover-letter`: subject "Application as <exact title>", greeting to the named person or "<Company> Team", one line of who I am (title and years from the profile, stack in the profile's order) and that I am applying for <title> found on <source>, one or two sentences of proof matching their asks, that the CV is attached, thank you, looking forward to discussing how I can contribute. Save the body as `cover-letters/<company>-<role>.txt` (it is the cover letter for that posting, and the data history keeps a copy), then send it from the workspace with the mail script, which reads the sender and the transport (`MAIL_TRANSPORT`) from `.mail.env` and every attachment from disk:
 
 ```bash
 node "${CLAUDE_PLUGIN_ROOT}/scripts/mail.mjs" send --to <address> --subject "Application as <exact title>" --body-file cover-letters/<company>-<role>.txt --attach cv/<file for the market>.pdf
 ```
 
-Attach the CV version for this market and language. When the posting asks for certificates, diplomas, transcripts or other proof, add one `--attach documents/<file>` per file as listed under Files in `profile.md`. The script prints the message id (SMTP) or "sent via Mail.app" and the recipients on success; it refuses a body with an em-dash or a double hyphen, so fix the text and send again rather than working around it. Quote the full text in the report under Applied and log the application like any other, with `applied_at` and `resume_id`. Never send an application through the mail connector tool: it takes an attachment only as base64 inside the tool call, which costs tens of thousands of tokens per CV and fails often. Only when `node "${CLAUDE_PLUGIN_ROOT}/scripts/mail.mjs" check` fails (no `.mail.env` in the workspace; `/init` sets it up) does the posting go to "Needs your attention" with the address and the posting URL instead.
+Attach the CV version for this market and language. When the posting asks for certificates, diplomas, transcripts or other proof, add one `--attach documents/<file>` per file as listed under Files in `profile.md`. The script prints the message id (SMTP) or "sent via Mail.app" and the recipients on success; it refuses a body with an em-dash or a double hyphen, so fix the text and send again rather than working around it. Quote the full text in the report under Applied and log the application like any other, with `applied_at` and `resume_id`.
 
 ## A rejection after a call or an interview
 
@@ -22,7 +22,7 @@ Form-stage auto-rejections get nothing. A no after a screening call, a technical
 
 ## A booked slot has to move
 
-As early as possible, in the thread's language: apologise once, give the reason in one line if there is one, offer three concrete alternative slots within the next five workdays, each with the time zone. Never a bare cancellation. Update the interview in the tracker and the calendar once they confirm.
+As early as possible, in the thread's language: apologise once, give the reason in one line if there is one, offer three concrete alternative slots within the next five workdays, each with the time zone. Never a bare cancellation. Update the interview in the tracker once they confirm, and move the calendar event through the same path: the old event out, the new slot in ("Putting an event in the calendar" below).
 
 ## Nobody joined the call
 
@@ -42,7 +42,24 @@ Strong match, a company small enough that the department head is findable, a rol
 
 ## An assessment or take-home arrives
 
-Accept, ask for the deadline if none was given, log the event, create a calendar event for the deadline, move the application to `screening`. The sweep never solves it.
+Accept, ask for the deadline if none was given, log the event, create a calendar event for the deadline ("Putting an event in the calendar" below: a 30-minute event ending at the deadline with a reminder a day before, `--alarm 1440` with the script), move the application to `screening`. The sweep never solves it.
+
+## Putting an event in the calendar
+
+Every calendar event the skills create, a booked interview, an assessment deadline, an offer deadline, a start date, goes through the path in `.calendar.env` (`CALENDAR_VIA`), chosen once in `/init`. Titles are "Interview <Company>, <round>" and "Deadline <Company>, <what>", with no em-dash or double hyphen; the meeting link goes in the event, and a reminder 30 minutes before (a day before for a deadline).
+
+**`CALENDAR_VIA=app`**: the calendar script, which writes to the calendar app on this machine (Calendar.app on macOS, classic Outlook on Windows) into the calendar named by `CALENDAR_NAME`. Look first, then add:
+
+```bash
+node "${CLAUDE_PLUGIN_ROOT}/scripts/calendar.mjs" find --from 2026-10-14T00:00:00+02:00 --to 2026-10-15T00:00:00+02:00 --match "<Company>"
+node "${CLAUDE_PLUGIN_ROOT}/scripts/calendar.mjs" add --title "Interview <Company>, <round>" --start 2026-10-14T10:00:00+02:00 --duration 60 --url <meeting link> --notes "<role> with <interviewer>, prep in prep/<company>.md"
+```
+
+Every time carries its offset: the one of the time zone the slot was confirmed in, never a bare local time, which the script refuses. The script prints times in this machine's time zone. The alarm defaults to 30 minutes before; `--alarm <minutes>` changes it. `--notes-file <path>` takes longer notes from a file.
+
+`add` prints `added: <title> <start> (<calendar>)` when it created the event and `exists: <title> <start>` when the calendar already has one overlapping that time whose title contains the new title or is contained in it, or that starts in the same minute; then nothing is created, which is the normal outcome when the person or an earlier run already put it there. To move a slot, `remove --title "<exact old title>" --start <old start>` deletes the old event (only an exact title at that exact start), then `add` the new one.
+
+**`CALENDAR_VIA=connector`**: the calendar connector in the session (the claude.ai Google Calendar connector or any calendar MCP). Search the calendar for that day and company first and create the event only when none is there, with the link in the description and the reminder set. To move a slot, update the existing event to the new time.
 
 ## A platform shows a logged-out state, a challenge page or a quota wall
 

@@ -15,6 +15,8 @@ The first release: the method as it stands after 93 real sweep runs (637 applica
 - Optional private history of the personal files (`scripts/data`), saved by the skills after they write.
 - Email-only postings are applied to by the sweep through `scripts/mail.mjs`: Gmail SMTP with an app password in `.mail.env`, the CV attached from disk; `/init` sets it up and sends a test mail.
 - The mail script sends through Mail.app on macOS or classic Outlook on Windows when no app password is set, since many Google accounts no longer offer one; SMTP stays the default with a password, `MAIL_TRANSPORT` forces a choice, and `MAIL_USER` must be an account the mail app has. The Outlook path is untested.
+- `scripts/calendar.mjs` writes calendar events (interviews, assessment and offer deadlines, a start date) into Calendar.app on macOS or classic Outlook on Windows. `.calendar.env` names the calendar (a Google account added to macOS Internet Accounts syncs it to Google); `add` refuses a time without an offset and prints `exists:` instead of creating a duplicate; `find`, `remove`, `check` and `calendars` complete it. The Outlook path is untested.
+- Mail reading, mail sending and the calendar are each one path chosen in `/init`: `MAIL_READ=connector|app` (a mail connector, or `scripts/mail.mjs list`, `show` and `reply` through Mail.app or classic Outlook), `MAIL_TRANSPORT=applemail|outlook|smtp`, and `CALENDAR_VIA=app|connector` (`scripts/calendar.mjs`, or a calendar connector); absent keys keep the earlier defaults.
 
 ### Renderer
 

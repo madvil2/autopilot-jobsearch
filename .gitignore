@@ -14,6 +14,8 @@
 /private/
 # Mail account for email applications, created by hand from templates/mail.env (see /init)
 /.mail.env
+# Calendar the skills write to, created by hand from templates/calendar.env (see /init)
+/.calendar.env
 
 # Tooling
 node_modules/
