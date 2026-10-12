@@ -370,8 +370,10 @@ on run argv
 end run
 `;
 
-// Values are fetched as lists in one call each; looping over Calendar's event references and
-// coercing them fails (-1700).
+// The matching events are fetched once and each one's three values are read from that same event,
+// so a title can never be paired with another event's times (separate per-property queries are not
+// guaranteed to come back in the same order). Reading a property of an event reference is fine; it is
+// coercing a loop reference itself that fails (-1700).
 const APPLE_FIND = `${APPLE_DATE}
 on run argv
   set calName to item 1 of argv
@@ -379,18 +381,17 @@ on run argv
   set toDate to mkDate(argv, 8)
   tell application "Calendar"
     if not (exists calendar calName) then error "no calendar named " & calName number 1001
+    set out to {}
     tell calendar calName
-      set titles to summary of every event whose start date < toDate and end date > fromDate
-      set starts to start date of every event whose start date < toDate and end date > fromDate
-      set ends to end date of every event whose start date < toDate and end date > fromDate
+      set evs to every event whose start date < toDate and end date > fromDate
+      repeat with i from 1 to count of evs
+        set ev to item i of evs
+        set {t, s, e} to {summary, start date, end date} of ev
+        if t is missing value then set t to ""
+        set end of out to my dateText(s) & tab & my dateText(e) & tab & t
+      end repeat
     end tell
   end tell
-  set out to {}
-  repeat with i from 1 to count of titles
-    set t to item i of titles
-    if t is missing value then set t to ""
-    set end of out to my dateText(item i of starts) & tab & my dateText(item i of ends) & tab & t
-  end repeat
   set AppleScript's text item delimiters to (character id 30)
   return out as text
 end run
