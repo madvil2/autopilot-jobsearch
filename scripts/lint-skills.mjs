@@ -64,44 +64,73 @@ for (const m of cvTemplate.matchAll(/^##\s+(.+)$/gm)) {
 // The sweep's pre-approved tool list (issue 8): .claude/settings.json is the clone's copy, templates/settings.json
 // the one /init writes into a workspace. They must be the same file, valid JSON, with an allow list that names
 // tools one by one (no server-wide or all-tools wildcard) and covers every Playwright tool the sweep's Budget names.
-{
-  const committed = join(ROOT, ".claude", "settings.json");
-  const template = join(ROOT, "templates", "settings.json");
-  for (const file of [committed, template]) if (!existsSync(file)) fail(`${file.slice(ROOT.length + 1)} missing`);
-  if (existsSync(committed) && existsSync(template) && readFileSync(committed, "utf8") !== readFileSync(template, "utf8")) {
-    fail(".claude/settings.json and templates/settings.json differ");
-  }
-  if (existsSync(committed)) {
-    let settings;
-    try {
-      settings = JSON.parse(readFileSync(committed, "utf8"));
-    } catch (e) {
-      fail(`.claude/settings.json is not valid JSON: ${e.message}`);
-    }
-    const allow = settings?.permissions?.allow;
-    if (!Array.isArray(allow) || allow.length === 0) fail(".claude/settings.json: permissions.allow is missing or empty");
-    for (const rule of allow || []) {
-      if (/^mcp__[^_]+(__)?$/.test(rule) || (rule.startsWith("mcp__") && rule.includes("*")) || /^(Bash|WebFetch|\*)(\(\*\))?$/.test(rule)) {
-        fail(`.claude/settings.json: "${rule}" is broader than one tool`);
-      }
-    }
-    const sweep = readFileSync(join(SKILLS, "sweep", "SKILL.md"), "utf8");
-    const budget = (sweep.match(/^- Tools: (.+)$/m) || [])[1] || "";
-    for (const m of budget.matchAll(/`(browser_\w+)`/g)) {
-      if (!(allow || []).includes(`mcp__playwright__${m[1]}`)) fail(`.claude/settings.json: sweep Budget names ${m[1]} but mcp__playwright__${m[1]} is not allowed`);
-    }
-  }
-}
+checkSettings();
 
+// Every image the README embeds must exist and be committed. git ls-files says whether it is tracked;
+// without a repository (a plugin install, an exported tarball) nothing is tracked, so the check falls
+// back to the file existing on disk.
 const readme = readFileSync(join(ROOT, "README.md"), "utf8");
+const inGit = (() => {
+  try { execFileSync("git", ["rev-parse", "--is-inside-work-tree"], { cwd: ROOT, stdio: "ignore" }); return true; }
+  catch { return false; }
+})();
 for (const m of readme.matchAll(/!\[[^\]]*\]\(([^)\s]+)\)/g)) {
   if (/^https?:/.test(m[1])) continue;
+  if (!inGit) {
+    if (!existsSync(join(ROOT, m[1]))) fail(`README.md: image ${m[1]} is missing (no git repository here, so only its existence is checked)`);
+    continue;
+  }
   try { execFileSync("git", ["ls-files", "--error-unmatch", m[1]], { cwd: ROOT, stdio: "ignore" }); }
   catch { fail(`README.md: image ${m[1]} is missing or not tracked by git`); }
 }
 
 console.log(failed ? `${failed} problem(s)` : "skills ok");
 process.exit(failed ? 1 : 0);
+
+function checkSettings() {
+  const committed = join(ROOT, ".claude", "settings.json");
+  const template = join(ROOT, "templates", "settings.json");
+  for (const file of [committed, template]) if (!existsSync(file)) fail(`${file.slice(ROOT.length + 1)} missing`);
+  if (existsSync(committed) && existsSync(template) && readFileSync(committed, "utf8") !== readFileSync(template, "utf8")) {
+    fail(".claude/settings.json and templates/settings.json differ");
+  }
+  if (!existsSync(committed)) return;
+  let settings;
+  try {
+    settings = JSON.parse(readFileSync(committed, "utf8"));
+  } catch (e) {
+    // Nothing below can be checked on a file that does not parse; one failure says it all.
+    fail(`.claude/settings.json is not valid JSON: ${e.message}`);
+    return;
+  }
+  const allow = settings?.permissions?.allow;
+  if (!Array.isArray(allow) || allow.length === 0) {
+    fail(".claude/settings.json: permissions.allow is missing or empty");
+    return;
+  }
+  for (const rule of allow) {
+    if (!isSingleTool(rule)) fail(`.claude/settings.json: "${rule}" is broader than one tool`);
+  }
+  const sweep = readFileSync(join(SKILLS, "sweep", "SKILL.md"), "utf8");
+  const budget = (sweep.match(/^- Tools: (.+)$/m) || [])[1] || "";
+  for (const m of budget.matchAll(/`(browser_\w+)`/g)) {
+    if (!allow.includes(`mcp__playwright__${m[1]}`)) fail(`.claude/settings.json: sweep Budget names ${m[1]} but mcp__playwright__${m[1]} is not allowed`);
+  }
+}
+
+// True when a permission rule approves exactly one tool, narrowed or not. False for a whole MCP server
+// (`mcp__jobcubby`, `mcp__claude_ai_gmail__`, whatever the server name contains), any `mcp__` rule with a
+// wildcard, a bare tool name with no specifier (`Bash`, `WebFetch`, `Edit`, `Read`, `Write`, `*`) and the
+// `X(*)` form, which is the bare name spelled out.
+function isSingleTool(rule) {
+  if (rule.startsWith("mcp__")) {
+    if (rule.includes("*")) return false;
+    const rest = rule.slice("mcp__".length);
+    const sep = rest.indexOf("__");
+    return sep > 0 && sep + 2 < rest.length;
+  }
+  return !/^(?:\*|\w+)(?:\(\*\))?$/.test(rule);
+}
 
 function fail(msg) {
   failed++;
