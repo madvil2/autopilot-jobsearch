@@ -44,7 +44,7 @@
 // (connector or app; connector when absent). For SMTP also MAIL_APP_PASSWORD (an app password, never the account
 // password) and optional MAIL_HOST and MAIL_PORT (defaults smtp.gmail.com and 465, TLS). A file
 // holding a password must be readable by its owner only (chmod 600); the password is never printed.
-// The subject and body may not contain an em-dash or a double hyphen, because rules.md forbids them in
+// The subject and body may not contain an em-dash or a double hyphen, because docs/rules.md forbids them in
 // anything sent in the person's name. Every refusal about the message runs before any transport.
 
 import { readFileSync, existsSync, statSync, realpathSync } from "node:fs";
@@ -160,9 +160,14 @@ function reply(args) {
   refuseDashes([["body", body]]);
   const attachments = readAttachments(args);
   const config = readConfig();
-  const to = config.transport === "applemail"
-    ? osascript(APPLEMAIL_REPLY, appleReplyArgs({ user: config.user, sender: senderField(config), id: args.id, all: !!args.all, body, attachments })).trim()
-    : powershell({ mode: "reply", user: config.user, id: args.id, all: !!args.all, body, attachments: attachments.map((a) => a.path) }).trim();
+  let to;
+  if (config.transport === "applemail") {
+    const result = splitSentState(osascript(APPLEMAIL_REPLY, appleReplyArgs({ user: config.user, sender: senderField(config), id: args.id, all: !!args.all, body, attachments })));
+    warnIfLeft(result.left);
+    to = result.rest.trim();
+  } else {
+    to = powershell({ mode: "reply", user: config.user, id: args.id, all: !!args.all, body, attachments: attachments.map((a) => a.path) }).trim();
+  }
   console.log(`replied via ${LABEL[config.transport]} to ${oneLine(to) || "the sender"}`);
 }
 
@@ -182,7 +187,7 @@ function readBody(args) {
 function refuseDashes(fields) {
   for (const [what, text] of fields) {
     const problem = forbiddenDash(text);
-    if (problem) fail(`the ${what} contains ${problem}; rules.md forbids them in anything sent in the person's name. Rewrite it with a comma, a colon or a full stop.`);
+    if (problem) fail(`the ${what} contains ${problem}; docs/rules.md forbids them in anything sent in the person's name. Rewrite it with a comma, a colon or a full stop.`);
   }
 }
 
@@ -405,7 +410,20 @@ async function deliverSmtp(config, { to, cc, subject, body, attachments }) {
 // so quotes or backslashes in a subject cannot break or change the script. Argument layout, built by
 // appleMailArgs(): sender, subject, body, number of To addresses, the To addresses, number of Cc
 // addresses, the Cc addresses, then one POSIX path per attachment.
-const APPLEMAIL_SEND = `
+const APPLEMAIL_SENT_STATE = `
+on sentState(theMsg)
+  tell application "Mail"
+    repeat 20 times
+      if not (exists theMsg) then return "gone"
+      delay 0.5
+    end repeat
+    if exists theMsg then return "left"
+  end tell
+  return "gone"
+end sentState
+`;
+
+const APPLEMAIL_SEND = `${APPLEMAIL_SENT_STATE}
 on run argv
   set theSender to item 1 of argv
   set theSubject to item 2 of argv
@@ -427,23 +445,31 @@ on run argv
     set end of fileList to ((POSIX file (item j of argv)) as alias)
   end repeat
   tell application "Mail"
-    set msg to make new outgoing message with properties {subject:theSubject, content:theBody, visible:false}
-    set sender of msg to theSender
-    tell msg
-      repeat with addr in toList
-        make new to recipient at end of to recipients with properties {address:(contents of addr)}
-      end repeat
-      repeat with addr in ccList
-        make new cc recipient at end of cc recipients with properties {address:(contents of addr)}
-      end repeat
-      repeat with f in fileList
-        make new attachment with properties {file name:(contents of f)} at after last paragraph of content
-        -- Mail drops an attachment that has not finished loading when send runs.
-        delay 1
-      end repeat
-    end tell
-    send msg
+    set msg to make new outgoing message with properties {subject:theSubject, content:theBody, visible:true}
+    try
+      set sender of msg to theSender
+      tell msg
+        repeat with addr in toList
+          make new to recipient at end of to recipients with properties {address:(contents of addr)}
+        end repeat
+        repeat with addr in ccList
+          make new cc recipient at end of cc recipients with properties {address:(contents of addr)}
+        end repeat
+        repeat with f in fileList
+          make new attachment with properties {file name:(contents of f)} at after last paragraph of content
+          -- Mail drops an attachment that has not finished loading when send runs.
+          delay 1
+        end repeat
+      end tell
+      send msg
+    on error errMsg number errNum
+      try
+        close msg saving no
+      end try
+      error errMsg number errNum
+    end try
   end tell
+  return sentState(msg)
 end run
 `;
 
@@ -573,7 +599,7 @@ on run argv
 end run
 `;
 
-const APPLEMAIL_REPLY = `${APPLEMAIL_LOOKUP}
+const APPLEMAIL_REPLY = `${APPLEMAIL_LOOKUP}${APPLEMAIL_SENT_STATE}
 on run argv
   set theUser to item 1 of argv
   set theSender to item 2 of argv
@@ -586,7 +612,7 @@ on run argv
   end repeat
   set m to findMessage(findAccount(theUser), theId)
   tell application "Mail"
-    set r to reply m opening window false reply to all allFlag
+    set r to reply m opening window true reply to all allFlag
     try
       set sender of r to theSender
       set content of r to theBody
@@ -605,7 +631,7 @@ on run argv
       error errMsg number errNum
     end try
   end tell
-  return joinList(toList, ", ")
+  return sentState(r) & linefeed & joinList(toList, ", ")
 end run
 `;
 
@@ -666,7 +692,16 @@ function appleMailAddresses() {
 }
 
 function deliverAppleMail(config, message) {
-  osascript(APPLEMAIL_SEND, appleMailArgs({ ...message, sender: senderField(config) }));
+  warnIfLeft(splitSentState(osascript(APPLEMAIL_SEND, appleMailArgs({ ...message, sender: senderField(config) }))).left);
+}
+
+export function splitSentState(text) {
+  const [state, ...rest] = String(text).replace(/\n$/, "").split("\n");
+  return { left: state.trim() === "left", rest: rest.join("\n") };
+}
+
+function warnIfLeft(left) {
+  if (left) console.error("warning: Mail.app took the mail, but its outgoing message was still open after 10 seconds; check Sent and Outbox in Mail, and if Mail asks on quit to save it, choose Don't Save");
 }
 
 // ---------- classic Outlook (Windows), UNTESTED ----------

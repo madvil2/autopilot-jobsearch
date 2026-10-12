@@ -35,7 +35,7 @@
 // starts at the same minute. If there is one it prints "exists: <title> <start>" and creates nothing,
 // unless --force. Recurring events are matched by their first occurrence only.
 //
-// The title and notes may not contain an em-dash or a double hyphen, because rules.md forbids them in
+// The title and notes may not contain an em-dash or a double hyphen, because docs/rules.md forbids them in
 // anything written in the person's name. Every refusal about the input runs before any transport.
 
 import { readFileSync, existsSync, realpathSync } from "node:fs";
@@ -121,7 +121,7 @@ function add(args) {
   if (!Number.isInteger(alarm) || alarm < 0) fail(`--alarm "${args.alarm}" is not a whole number of minutes`);
   for (const [what, text] of [["title", args.title], ["notes", notes]]) {
     const problem = forbiddenDash(text);
-    if (problem) fail(`the ${what} contains ${problem}; rules.md forbids them in anything written in the person's name. Rewrite it with a comma, a colon or a full stop.`);
+    if (problem) fail(`the ${what} contains ${problem}; docs/rules.md forbids them in anything written in the person's name. Rewrite it with a comma, a colon or a full stop.`);
   }
   const config = loadConfig(args, { needName: true });
   const event = { title: args.title.trim(), start, end, url: args.url || "", location: args.location || "", notes: eventNotes(args.url, notes), alarm };

@@ -179,7 +179,7 @@ transportIs("applemail off macOS is an error", { MAIL_TRANSPORT: "applemail" }, 
   }
 }
 {
-  const { parseSince, pickRead, parseAppleList, appleListArgs } = await import(pathToFileURL(mail).href);
+  const { parseSince, pickRead, parseAppleList, appleListArgs, splitSentState } = await import(pathToFileURL(mail).href);
   const now = new Date("2026-10-12T12:00:00Z");
   same("mail: --since 2d", parseSince("2d", now).toISOString(), "2026-10-10T12:00:00.000Z");
   same("mail: --since 12h", parseSince("12H", now).toISOString(), "2026-10-12T00:00:00.000Z");
@@ -196,6 +196,8 @@ transportIs("applemail off macOS is an error", { MAIL_TRANSPORT: "applemail" }, 
   const FS = String.fromCharCode(31);
   const parsed = parseAppleList(`junk:yes${RS}abc@x${FS}11${FS}2026,10,12,36000${FS}Ann <a@x>${FS}Hi${RS}${FS}12${FS}2026,10,11,0${FS}Bob <b@x>${FS}Re${FS}x\n`);
   same("mail: Mail.app list output", JSON.stringify([parsed.junk, ...parsed.messages.map((m) => [m.id, m.date.getHours(), m.from, m.subject])]), JSON.stringify([true, ["abc@x", 10, "Ann <a@x>", "Hi"], ["#12", 0, "Bob <b@x>", "Re x"]]));
+  same("mail: Mail.app send result, outgoing message gone", JSON.stringify(splitSentState("gone\n")), JSON.stringify({ left: false, rest: "" }));
+  same("mail: Mail.app reply result, outgoing message left", JSON.stringify(splitSentState("left\na@x, b@x\n")), JSON.stringify({ left: true, rest: "a@x, b@x" }));
 }
 
 // The calendar script refuses bad input before it reaches Calendar.app or Outlook, and a forced transport this

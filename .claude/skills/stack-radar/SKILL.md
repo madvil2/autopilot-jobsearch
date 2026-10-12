@@ -1,11 +1,12 @@
 ---
 name: stack-radar
-description: Count which technologies the postings I apply to actually ask for, compare with my CV, and propose the tags to add plus a short learning plan for each gap. Keeps the CV screening-proof in the age of AI resume filters.
+description: Count the technologies my postings ask for, compare with the CV, and save the tags to add and a learning plan per gap.
+disable-model-invocation: true
 ---
 
 # /stack-radar
 
-Files: `templates/`, `scripts/`, `docs/`, `examples/` and `routines/` are in the method root, `${CLAUDE_PLUGIN_ROOT}` (the clone holding this skill when that is not replaced by a path); every other relative path is in the workspace, the current folder. Before acting on the person's behalf, read `profile.md` and `rules.md`.
+Files: `templates/`, `scripts/`, `docs/`, `examples/` and `routines/` are in the method root, `${CLAUDE_PLUGIN_ROOT}` (the clone holding this skill when that is not replaced by a path); every other relative path is in the workspace, the current folder. Before acting on the person's behalf, read `profile.md`, `docs/rules.md` and the workspace `rules.md`; the workspace one wins on conflict.
 
 Arguments: `/stack-radar` (last 90 days, target role from `profile.md`), `/stack-radar 180d`, `/stack-radar backfill` (see below).
 
@@ -17,28 +18,15 @@ Arguments: `/stack-radar` (last 90 days, target role from `profile.md`), `/stack
 
 ## 2. Normalize
 
-Map spellings to one canonical name before counting. Shipped aliases (extend in this file when you meet new ones):
+Map every spelling to one canonical name before counting, the one the CV uses (TypeScript, Node.js, PostgreSQL, Kubernetes). Counting rules:
 
-| Canonical | Also seen as |
-|---|---|
-| TypeScript | TS, Typescript |
-| JavaScript | JS, ES6, ES2015+, ECMAScript |
-| React | React.js, ReactJS |
-| Next.js | NextJS, Next |
-| Node.js | Node, NodeJS |
-| NestJS | Nest, Nest.js |
-| Vue | Vue.js, VueJS, Nuxt (count Nuxt separately too) |
-| Angular | AngularJS (separately), Angular 2+ |
-| PostgreSQL | Postgres, PSQL |
-| CI/CD | CI, CD, continuous integration, continuous delivery |
-| GraphQL | Apollo (count separately too) |
-| Playwright | Playwright Test |
-| Cypress | Cypress.io |
-| Kubernetes | K8s |
-| AWS | Amazon Web Services |
-| Tailwind CSS | Tailwind, TailwindCSS |
-| REST APIs | REST, RESTful |
-| LLM tooling | LangChain, LangGraph, OpenAI API, Anthropic API, MCP (list each separately as well) |
+- `Next` counts as Next.js only inside a list of technologies.
+- Nuxt counts for Vue and on its own line.
+- AngularJS is its own line, apart from Angular.
+- Apollo counts for GraphQL and on its own line.
+- LangChain, LangGraph, OpenAI API, Anthropic API and MCP each count on their own line and together as LLM tooling.
+
+Spellings met that are not obvious go into the report's Aliases section; read the Aliases section of the latest `reports/stack-radar-<date>.md` before counting.
 
 Drop non-technologies (Agile, Scrum, "team player"). Keep tools that postings treat as skills (Figma, Jira) in a separate "tools" group.
 
@@ -51,12 +39,18 @@ Read the Technical Skills section of the chosen CV version (`cv/base.md` unless 
 
 Share = postings mentioning it divided by postings read. Sort by share. Action is one of: `keep`, `add tag`, `move up` (asked for more than its position in the CV suggests), `learn then add`.
 
-A technology goes into the CV only when the person confirms they can discuss it on a call. Split the proposals:
+Split the proposals:
 
 - **Add now.** Things they have used, even lightly, that are missing or spelled differently. Propose the exact tag and which skills line it goes on.
-- **Learn, then add.** For each, a plan: what it is in two lines, the smallest real thing to build with it (two or three hours), what an interviewer asks about it, and the suggested tag wording once done. Ask the person to confirm each one when finished; then `/cv` adds the tag.
+- **Learn, then add.** For each, a plan: what it is in two lines, the smallest real thing to build with it (two or three hours), what an interviewer asks about it, and the suggested tag wording once done.
 
-Show the table, the two lists, and the market stats (postings and median salary for the main stack). Then ask: 1. apply the "add now" tags to the CV through `/cv` immediately (recommended: screening software reads the CV today); 2. show the exact diff first; 3. do nothing yet.
+Show the table, the two lists, and the market stats (postings and median salary for the main stack). Ask the person, tag by tag, whether they can discuss each "Add now" tag on a call; only a yes makes it confirmed.
+
+## 4. Save
+
+Write `reports/stack-radar-<YYYY-MM-DD>.md`: the table, the market stats, "Add now" with each tag marked confirmed or not, the learning plans, and Aliases. Done when the file exists with every "Add now" tag marked.
+
+Then tell the person: `/cv` adds the confirmed tags to the CV, which needs approving again before `/profiles` takes them to any platform. A learned technology becomes confirmed when the person says they finished its plan; mark it in that report.
 
 ## Backfill
 

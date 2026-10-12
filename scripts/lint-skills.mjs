@@ -63,7 +63,7 @@ for (const m of cvTemplate.matchAll(/^##\s+(.+)$/gm)) {
 
 // The sweep's pre-approved tool list (issue 8): .claude/settings.json is the clone's copy, templates/settings.json
 // the one /init writes into a workspace. They must be the same file, valid JSON, with an allow list that names
-// tools one by one (no server-wide or all-tools wildcard) and covers every Playwright tool the sweep's Budget names.
+// tools one by one (no server-wide or all-tools wildcard) and covers every Playwright tool the sweep and its docs name.
 checkSettings();
 
 // Every image the README embeds must exist and be committed. git ls-files says whether it is tracked;
@@ -111,10 +111,11 @@ function checkSettings() {
   for (const rule of allow) {
     if (!isSingleTool(rule)) fail(`.claude/settings.json: "${rule}" is broader than one tool`);
   }
-  const sweep = readFileSync(join(SKILLS, "sweep", "SKILL.md"), "utf8");
-  const budget = (sweep.match(/^- Tools: (.+)$/m) || [])[1] || "";
-  for (const m of budget.matchAll(/`(browser_\w+)`/g)) {
-    if (!allow.includes(`mcp__playwright__${m[1]}`)) fail(`.claude/settings.json: sweep Budget names ${m[1]} but mcp__playwright__${m[1]} is not allowed`);
+  // Every Playwright tool the sweep or its docs name must be pre-approved.
+  const sweepText = ["SKILLS/sweep/SKILL.md", "docs/sweep-events.md", "docs/platform-notes.md"]
+    .map((p) => readFileSync(p.startsWith("SKILLS/") ? join(SKILLS, p.slice(7)) : join(ROOT, p), "utf8")).join("\n");
+  for (const tool of new Set([...sweepText.matchAll(/\b(browser_[a-z_]+)\b/g)].map((m) => m[1]))) {
+    if (!allow.includes(`mcp__playwright__${tool}`)) fail(`.claude/settings.json: the sweep uses ${tool} but mcp__playwright__${tool} is not allowed`);
   }
 }
 

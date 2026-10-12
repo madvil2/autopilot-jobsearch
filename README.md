@@ -68,7 +68,7 @@ Every day:
 
 When it matters:
 
-- **`/coach`**: my interview method: intro, why-company frames, the three-step method for technical questions, ten rules, salary, closing; `/coach mock` to practice.
+- **`/coach`**: my interview method: intro, why-company frames, the three-step method for technical questions, the rules, salary, closing (`docs/interview-method.md`); `/coach mock` to practice.
 - **`/outreach`**: for postings worth more than a form: finds the hiring manager and people who can refer you, writes the call script and the messages.
 - **`/stack-radar`**: counts which technologies the postings you applied to ask for, compares with your CV, proposes tags and a learning plan.
 - **`/offer`**: when an offer arrives: the reply that keeps it warm, the contract checklist, the package evaluation, the questions to ask. You decide; it prepares.

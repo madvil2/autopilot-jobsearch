@@ -14,20 +14,17 @@ Fields:
 
 ### Email
 - type: inbox
-- where: the read path in `.mail.env` (`MAIL_READ`), the last day, inbox and junk
-- notes: open anything that looks like a status change or a question; ignore alerts and newsletters
+- where: the read path in `.mail.env` (`MAIL_READ`)
 
 ### LinkedIn messages
 - type: inbox
 - where: https://www.linkedin.com/messaging/
 - login: yes
-- notes: reply to every recruiter who asks something; if they send a direct application link, apply through it
 
 ## Tracker (checked second)
 
 ### JobCubby index and matches
 - type: jobcubby
-- notes: run saved searches, read AI matches with their gaps, save and apply to the ones that fit; feed gaps to `/stack-radar`
 
 ## Boards
 
@@ -36,7 +33,6 @@ Fields:
 - url: https://www.linkedin.com/jobs/search/?keywords=%22React%22%20OR%20%22TypeScript%22&geoId=<id>&f_TPR=r259200&sortBy=DD
 - login: yes
 - apply: easy-apply, else company-form
-- notes: quoted keywords joined with OR are matched literally; unquoted ones go through semantic search and return noise. `r259200` = last 3 days.
 
 ### LinkedIn, remote in <region>
 - type: board
@@ -46,7 +42,7 @@ Fields:
 
 ### Indeed
 - type: board
-- url: https://<country>.indeed.com/jobs?q=<stack>&l=<city>&fromage=1&sort=date
+- url: https://<country>.indeed.com/jobs?q=<stack>&l=<city>&fromage=3&sort=date
 - login: yes
 - apply: platform-button, else company-form
 
