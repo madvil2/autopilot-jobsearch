@@ -53,7 +53,14 @@ for (const c of cases) {
     report(c.input, false, `PDF is suspiciously small (${statSync(output).size} bytes)`);
     continue;
   }
-  const text = pdfText(output);
+  let text, fonts;
+  try {
+    text = pdfText(output);
+    fonts = pdfFonts(output);
+  } catch (e) {
+    report(c.input, false, e.message);
+    continue;
+  }
   if (text !== null) {
     const missing = c.mustContain.filter((s) => !text.includes(s));
     if (missing.length) {
@@ -64,7 +71,6 @@ for (const c of cases) {
   // The template declares its font with @font-face (Roboto, shipped in fonts/). If the browser
   // could not load it, the PDF silently carries the system fallback instead, which differs per
   // OS and makes the layout non-deterministic across machines and CI.
-  const fonts = pdfFonts(output);
   if (fonts !== null) {
     const families = declaredFamilies(c.template);
     const missing = families.filter((family) => !fonts.some((f) => f.includes(family)));
@@ -93,26 +99,31 @@ for (const dir of ["examples/cv", "examples/cover-letters"]) {
 
 process.exit(failed ? 1 : 0);
 
-function pdfText(path) {
+// Runs one poppler tool and returns its output. Null means the tool is not installed (ENOENT), so
+// the caller skips its check. Any other failure, such as a PDF the tool cannot open, is thrown and
+// reported as a failed case: with poppler present, a corrupt PDF is a failure, not a skip.
+function poppler(bin, args) {
   try {
-    return execFileSync("pdftotext", ["-layout", path, "-"], { encoding: "utf8" });
-  } catch {
-    return null;
+    return execFileSync(bin, args, { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] });
+  } catch (e) {
+    if (e.code === "ENOENT") return null;
+    throw new Error(`${bin} failed: ${(e.stderr || e.message).trim()}`);
   }
+}
+
+function pdfText(path) {
+  return poppler("pdftotext", ["-layout", path, "-"]);
 }
 
 // Names of the fonts embedded in the PDF, as pdffonts lists them (`AAAAAA+Roboto-Regular`).
 function pdfFonts(path) {
-  try {
-    const out = execFileSync("pdffonts", [path], { encoding: "utf8" });
-    return out
-      .split("\n")
-      .slice(2)
-      .filter((line) => line.trim())
-      .map((line) => line.split(/\s+/)[0]);
-  } catch {
-    return null;
-  }
+  const out = poppler("pdffonts", [path]);
+  if (out === null) return null;
+  return out
+    .split("\n")
+    .slice(2)
+    .filter((line) => line.trim())
+    .map((line) => line.split(/\s+/)[0]);
 }
 
 // The font families the template's @font-face rules declare.
