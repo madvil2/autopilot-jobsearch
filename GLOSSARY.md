@@ -22,9 +22,9 @@ The words the skills, docs and templates use. One meaning each.
 
 **Interview**: a scheduled call or meeting attached to an Application, with a round (screening, technical, final), a time, a link and an interviewer. Exists in the tracker and in the calendar.
 
-**Follow-up**: one short nudge sent on an Application whose follow-up date passed with no answer, only where a human thread exists.
+**Follow-up**: one short nudge sent on an Application whose follow-up date passed with no answer; when one goes out is in the Rules.
 
-**Rejection reason**: one of five fixed strings recorded when an Application is rejected: Rejected at CV screening, Position closed or other candidates, Rejected after screening call, Rejected after interview, Withdrew (my decision).
+**Rejection reason**: one of the five fixed strings in the Rules, recorded when an Application is rejected.
 
 **CV version**: one markdown file in `cv/`, rendered to one PDF. `base.md` is the master; other files are variants per market, language or role.
 
@@ -42,9 +42,9 @@ The words the skills, docs and templates use. One meaning each.
 
 **Outreach**: contacting the Hiring manager or someone who can refer me, before or alongside an Application, to learn their problem and skip the screening queue.
 
-**Quickie**: an Application that takes a few clicks and the CV, with only mandatory fields filled. The unit of the numbers game.
+**Quickie**: an Application that takes a few clicks and the CV, with only mandatory fields filled.
 
-**Match**: a quick judgement whether a Posting is worth an Application: the stack fits the Profile and most of the must-haves are within reach. Nice-to-haves never block.
+**Match**: a quick judgement whether a Posting is worth an Application: decided by the Rules section Applying.
 
 **ABCD bullet**: the shape of a CV bullet: active verb, what was done, how or why, result with a number.
 
@@ -52,6 +52,6 @@ The words the skills, docs and templates use. One meaning each.
 
 **Culture-fit round**: the interview round, often the last, where the team decides whether they want to work with me; any member may veto.
 
-**Offer**: a written or spoken job proposal before a signed contract. Keeps every other process running until the contract is signed by both sides.
+**Offer**: a written or spoken job proposal before a signed contract.
 
 **Market**: a country or platform group with its own conventions for the CV, location, phone and salary figure (for example DE, remote EU, a regional board).

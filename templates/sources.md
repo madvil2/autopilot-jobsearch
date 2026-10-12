@@ -1,8 +1,7 @@
 # Sources
 
 Where `/sweep` looks, in order. One block per source. `/init` and `/profile` help fill this; edit by hand any time.
-Keep URLs with the filters already applied (keywords, location, "last 3 days", sorted by date), so the
-sweep opens them and reads, instead of clicking through filter UIs.
+Keep URLs with the filters already applied (keywords, location, "last 3 days", sorted by date).
 
 Fields:
 - type: `inbox` (messages to answer), `jobcubby` (the tracker's own index and matches), `board` (postings to apply to), `search` (a web search that finds postings on ATS boards directly)
@@ -15,7 +14,7 @@ Fields:
 
 ### Email
 - type: inbox
-- where: Gmail, query `newer_than:1d in:inbox`
+- where: the read path in `.mail.env` (`MAIL_READ`), the last day, inbox and junk
 - notes: open anything that looks like a status change or a question; ignore alerts and newsletters
 
 ### LinkedIn messages
@@ -74,7 +73,7 @@ Fields:
 - url: a search engine query of the form `<role> inurl:<ats domain> intext:<country>`, one line per ATS: personio, join.com, lever.co, workable.com, greenhouse.io, ashbyhq.com, teamtailor.com, recruitee.com
 - login: no
 - apply: company-form
-- notes: finds postings that never reach the big boards; results overlap with the boards above, the duplicate check handles it. Run the query on a search engine that tolerates automation (DuckDuckGo or Bing HTML results); Google answers scripted queries with a challenge page.
+- notes: run the query on DuckDuckGo or Bing HTML results; Google answers scripted queries with a challenge page.
 
 ### <Regional board>
 - type: board

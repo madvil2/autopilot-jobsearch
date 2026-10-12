@@ -1,6 +1,6 @@
 # Market notes: Germany
 
-What a job search in Germany looks like from the inside, and what the skills assume when `profile.md` lists Germany as a market. Written from my own search; numbers are the ranges I have seen, not statistics.
+What the skills assume when `profile.md` lists Germany as a market. Numbers are observed ranges, not statistics.
 
 ## Who hires
 
@@ -25,14 +25,11 @@ German hiring is risk-averse and long-term oriented. The hiring manager has a pr
 - Be five minutes early to every call. Lateness reads as "my time matters more than yours".
 - Take words literally and expect to be taken literally. A promise is a commitment.
 - Formal register in writing until they switch: "Dear First Last", full sentences, paragraphs, "thank you", a closing line. "Sie" in German unless they use "du". Short messages, no small talk in text, no "Hi" openers to strangers.
-- Act on invitations the same day. Book the earliest slot. If they said they would come back by a date, follow up the morning after that date; with no date, after five workdays.
-- If I cannot keep an appointment: say so early, apologise, give three alternative slots within the next five workdays.
-- If nobody joins a call after fifteen minutes: a polite mail asking whether I had the right link.
-- Ask for feedback after every rejection that came after a first round; a third of companies answer, and those answers are the fastest way to improve.
+- Act on invitations the same day. Follow-ups, rescheduling and feedback requests follow `rules.md` "Replying and scheduling".
 
 ## The CV
 
-The German standard the skills render: A4, photo top right, name and a one-line title, date of birth and contact details, no summary paragraph, experience newest first with dates in a left column, bullets in the ABCD shape (active verb, what, how or why, result with a number), education with dates and degrees, skills with real levels, languages with real levels, hobbies that say something about the person, and for traditional employers a closing line with place, date and signature. Consistency is a format rule in itself: whatever convention the CV starts with (legal suffixes, date formats, bullet style) holds to the end. Recruiters spend seconds on a CV and reject most of them for spelling, missing keywords or length.
+The German standard the skills render: A4, photo top right, name and a one-line title, date of birth and contact details, no summary paragraph, experience newest first with dates in a left column, bullets in the ABCD shape (active verb, what, how or why, result with a number), education with dates and degrees, skills with real levels, languages with real levels, hobbies that say something about the person, and for traditional employers a closing line with place, date and signature. Consistency is a format rule in itself: whatever convention the CV starts with (legal suffixes, date formats, bullet style) holds to the end.
 
 Photos are expected: outdoors in daylight, smart-casual, a real smile, taken by someone else, with space around the head for cropping. Not a selfie, not a passport photo.
 
@@ -40,8 +37,8 @@ Photos are expected: outdoors in daylight, smart-casual, a real smile, taken by 
 
 - Salaries are quoted as annual gross. Net is roughly 55 to 65 percent of gross for a single person without children; use a gross-to-net calculator before judging an offer. Deductions cover health, pension, unemployment and care insurance plus income tax; church tax applies only to registered members.
 - Typical package parts: base, sometimes a bonus or a thirteenth salary, 25 to 30 vacation days (20 is the legal minimum for a five-day week), employer pension contribution, transport or lunch subsidies, learning budget. Equity in startups is usually virtual shares, paid out only on an exit.
-- An offer mail is not a contract. Reply warmly, ask for the draft contract, keep other processes running until a contract is signed by both sides.
-- The contract should state: legal employer and address, start date, fixed term if any, probation (at most six months), place of work, duties and reporting line, gross salary and every variable component with dates, hours per week (a cap of 48 by law, 38 to 40 typical), vacation days, notice periods (at least four weeks after probation), any collective agreement that applies. Anything missing or unusual is a question to ask before signing; asking is read as professionalism.
+- An offer mail is not a contract; nothing binds until both sides sign the written contract.
+- The contract should state: legal employer and address, start date, fixed term if any, probation (at most six months), place of work, duties and reporting line, gross salary and every variable component with dates, hours per week (a cap of 48 by law, 38 to 40 typical), vacation days, notice periods (at least four weeks after probation), any collective agreement that applies. Anything missing or unusual is a question to ask before signing.
 - Do not negotiate over one or two thousand a year; it is tens of euros a month net and can cost the offer. Negotiate the things that matter: base when it is clearly under market, start date, vacation, a review after probation.
 - A work permit, when needed, is tied to the employer; switching after the permit process has started restarts it.
 

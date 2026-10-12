@@ -1,8 +1,7 @@
 # Rules
 
-How the agent behaves on my behalf. These are defaults that apply to anyone; personal facts and
-personal rules live in `profile.md`. Edit anything. When I correct the agent, it appends the new
-rule at the bottom with the date.
+How the agent behaves on my behalf; personal facts and personal rules live in `profile.md`. When I
+correct the agent, it appends the new rule under "Added later" with the date, then fixes the output.
 
 ## Asking me
 
@@ -25,7 +24,7 @@ rule at the bottom with the date.
 ## Applying
 
 - The stack is the only filter that matters, not the level in the title. Apply to every posting that matches `profile.md` targets unless a hard skip filter hits or most of its must-haves sit outside the profile. Postings are wish lists; nice-to-haves and one or two missing must-haves are never a reason to skip.
-- Never apply twice to the same company. Match company names loosely: lowercase, strip legal suffixes (GmbH, AG, SE, Ltd, LLC, Inc), strip anything in brackets, treat one name containing the other as the same company. Same posting URL or platform vacancy id is always a duplicate. Relax this rule here if you want several roles per company.
+- Never apply twice to the same company. Match company names loosely: lowercase, strip legal suffixes (GmbH, AG, SE, Ltd, LLC, Inc), strip anything in brackets, treat one name containing the other as the same company. Same posting URL or platform vacancy id is always a duplicate.
 - Attach the CV version `profile.md` names for that market and language. Never let a platform substitute a stored older file.
 - Fill forms only from `profile.md`. When a required field asks something the profile does not cover, stop that application, record it in the report under "Needs your attention", and move on.
 - Cover notes on platforms that offer a text box: always add one, in the language of the posting.
@@ -34,7 +33,7 @@ rule at the bottom with the date.
 
 - Reply in the same run to every message that asks me something: invites, scheduling, assessments, questions about stack or availability. Sending is the default. To review before sending, change this line to: "Create drafts instead of sending, list them in the report."
 - Quote every sent text in the report.
-- Scheduling: always the earliest free slot that is at least 3 hours from now, inside 09:00 to 19:00 local time, and at least 1 hour clear of any interview already in the tracker. Never pick a later date for comfort. Confirm with the exact date, time and time zone, then log it in the tracker and the calendar.
+- Scheduling: always the earliest free slot that is at least 3 hours from now, inside 09:00 to 19:00 local time, and at least 1 hour clear of any interview already in the tracker. Confirm with the exact date, time and time zone, then log it in the tracker and the calendar.
 - Assessments and take-homes: accept, ask for the deadline if none is given, put the deadline in the report and the calendar. Never solve them inside a sweep.
 - Salary, when asked: one number from `profile.md` for that market, never a range. If a figure was already named to this company, reuse it.
 - Money below my figure: never counter, never decline, never withdraw. Keep the process alive with interest and a question about next steps ("a useful starting point, what are the next steps?"), never with acceptance ("works for me"), then put it at the top of the report for me.
@@ -47,11 +46,11 @@ rule at the bottom with the date.
 ## Tracker and calendar
 
 - Every state change is logged the moment it happens: status, timeline event with the real time, and the description kept as a running fact sheet (names, roles, numbers said by either side, stages, prep file path). A status comes from the message or the application's own page, never from a list view.
-- Every new application carries description, requirements, salary when shown, the resume version used and a follow-up date. An application without requirements is invisible to the stack analysis.
+- Every new application carries description, requirements, salary when shown, the resume version used and a follow-up date.
 - A booked call is `interview` plus a scheduled interview. A request for a video, test, questionnaire or AI interview is `screening`. A process I ended myself is `rejected` with reason `Withdrew (my decision)`.
 - Rejection reasons are exactly one of five strings, nothing else: `Rejected at CV screening`, `Position closed or other candidates`, `Rejected after screening call`, `Rejected after interview`, `Withdrew (my decision)`. Details go in the description.
 - Salary in the tracker is annual. Convert monthly figures.
-- Calendar events exist for interviews and assessment deadlines only. Whoever books the slot creates the event, after checking it is not already there.
+- Calendar events exist for interviews, assessment deadlines, offer deadlines and start dates only. Whoever books the slot creates the event, after checking it is not already there.
 
 ## Running
 
@@ -61,7 +60,7 @@ rule at the bottom with the date.
 - A blocked source (logged out, challenge page, site down) is skipped with a note; it never stops the rest of the run.
 - Never type a password, a one-time code or a payment detail anywhere. When a login is needed, stop that source and say so.
 - Never kill or restart a browser that is not the Playwright one.
-- Report in the fixed sections: Needs your attention, Replied, Rejections, Applied, Skipped.
+- Report in the fixed sections: Needs your attention, Replied, Rejections, Applied, Skipped, Worth an outreach.
 
 ## Added later
 
