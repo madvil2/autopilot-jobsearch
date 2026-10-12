@@ -7,15 +7,13 @@ description: When an offer arrives: the reply that keeps it warm without committ
 
 Files: `templates/`, `scripts/`, `docs/`, `examples/` and `routines/` are in the method root, `${CLAUDE_PLUGIN_ROOT}` (the clone holding this skill when that is not replaced by a path); every other relative path is in the workspace, the current folder. Before acting on the person's behalf, read `profile.md` and `rules.md`.
 
-An offer by phone, mail or letter is not a contract. Nothing binds either side until a written contract is signed by both. That gives me time, and this skill uses it.
-
-The sweep handles the first minute: when an offer arrives it replies with the acceptance-of-the-news text below, moves the application to `offer` with the terms in `offer_details`, creates a calendar event for any deadline they named, and puts it at the top of the report. Everything after that is this skill.
+When an offer arrives the sweep replies with the text in step 1, moves the application to `offer` with the terms in `offer_details`, calendars any deadline they named and puts it at the top of the report. This skill does everything after that.
 
 ## 1. The reply (sent by the sweep or by me)
 
 Warm, short, no commitment: thank you for the offer, I am glad about it and looking forward to the draft contract. Nothing about accepting, nothing about money. If they ask for a decision date, ask how long I have and name no date myself.
 
-Keep interviewing elsewhere until the contract is signed. Other companies are informed only after the signature, with a short polite note.
+Other companies are informed only after the signature, with a short polite note.
 
 ## 2. Package
 
@@ -25,10 +23,10 @@ Read `profile.md` for my figure and market, the JobCubby application for every n
 - Variable pay: bonus, equity (percentage, type, vesting, cliff, what happens if I leave, valuation), one-off payments.
 - Time: vacation days, hours per week, remote arrangement, probation length and notice periods.
 - Benefits worth money: pension contribution, insurance, transport, learning budget, relocation.
-- Net estimate for the market, from a gross-to-net calculator, so the monthly number is real.
+- Net monthly estimate for the market, from a gross-to-net calculator.
 - What is missing compared with my figure, and what could be traded instead of base (start date, vacation, learning budget, title, review after probation).
 
-Say plainly whether the package is at, above or below my figure. No recommendation to accept or decline; that is mine.
+Say plainly whether the package is at, above or below my figure. Give no recommendation to accept or decline.
 
 ## 3. Contract checklist
 
@@ -47,7 +45,7 @@ Say this once, at the top of the checklist output, to the person: this is a read
 - Non-compete, IP assignment, side-activity clauses: read them, note anything broad.
 - How they want it signed and returned.
 
-Market specifics (limits, norms, what is unusual) come from `docs/markets/<market>.md`. Anything missing or odd becomes a question for them, written politely; asking is read as professionalism, not as doubt.
+Market specifics (limits, norms, what is unusual) come from `docs/markets/<market>.md`. Anything missing or odd becomes a question for them, written politely.
 
 ## 4. Questions before signing
 
