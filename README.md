@@ -64,7 +64,7 @@ Every day:
 - **`/sweep`**: the twice-daily pass: mail, messages, follow-ups, tracker matches, every board, applications, bookings, report.
 - **`/cover-letter`**: a three-paragraph letter for one posting, rendered next to the CV.
 - **`/interview-prep`**: researches the company and writes a prep file with your intro, the why-company answer, likely questions and your questions.
-- **`/debrief`**: transcribes the recording, grades the call against the method, pulls out every fact they revealed, closes the loop in the tracker.
+- **`/debrief`**: transcribes the OBS recording with stable-ts, grades the call against the method's Rubric, pulls out every fact they revealed, closes the loop in the tracker.
 
 When it matters:
 
@@ -99,7 +99,6 @@ Example output in `examples/`: a fictional engineer's profile, CV ([markdown](ex
 
 ## What it will not do
 
-- Run for free. A full sweep over fifteen to twenty boards reads a lot of pages; on a Sonnet-class model mine cost between 15 and 100 dollars, around 40 on average. `docs/platform-notes.md` has the habits that keep it down.
 - Type a password, solve a bot check or commit you to a contract form, a visa or a relocation. Those few steps wait in the report for you; everything else runs on its own.
 - Apply to anything. It applies when the stack matches your profile and skips on your hard filters; it does not pad your numbers with postings you would not take.
 - Replace a lawyer. The contract checklist in `/offer` is a reading aid; for a contract in a new jurisdiction, get a human.

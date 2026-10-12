@@ -56,5 +56,5 @@ The three choices from `/init` live in `.mail.env` (`MAIL_READ`, `MAIL_TRANSPORT
 - JobCubby authorized in this clone.
 - What the three choices need, above.
 - About 20 to 60 minutes per run with ten to fifteen sources; the coverage rule in `docs/rules.md` says a run finishes every source, so give it time rather than a short timeout.
-- Cost: measured over my own runs on a Sonnet-class model at high effort, a run reads 170 to 480 million cached tokens and costs between 15 and 100 dollars, typically around 40. Two runs a day is a real budget line. The levers are in `docs/platform-notes.md` under context hygiene; the biggest ones are not snapshotting list pages and not re-reading the tracker dump.
-- Subscription limits: a run that starts after the weekly or daily usage limit is hit produces a one-line reply and nothing else, and the task scheduler still marks it as succeeded. The sweep writes a "run skipped" report for this case; check `reports/` when a day looks quiet.
+- Usage: a run counts against your Claude subscription, with no separate bill.
+- Subscription limits: a run that starts after the weekly or daily usage limit is hit produces a one-line reply and nothing else, and the task scheduler still marks it as succeeded. No report is written then, so a missing report in `reports/` means that run did not happen.
