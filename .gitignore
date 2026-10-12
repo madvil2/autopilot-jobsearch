@@ -12,6 +12,8 @@
 /reports
 /recordings
 /private/
+# Mail account for email applications, created by hand from templates/mail.env (see /init)
+/.mail.env
 
 # Tooling
 node_modules/
