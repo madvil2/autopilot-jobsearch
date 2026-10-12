@@ -19,7 +19,7 @@ How the agent behaves on the person's behalf ("I", "me" and "my" below are the p
 - A CV variant may reorder technologies within a skills line to match a posting; the first technology stays the profile's first.
 - Never claim a title level for me that `profile.md` does not list under "Title level I claim".
 - Never copy phrases from a job posting into my CV or profile text. Letters may quote one line from the posting, explicitly as their words.
-- The "why this company" answer goes in this order: stability, team, growth, money last, each point wrapped in a fact about the company.
+- The "why this company" answer opens with one concrete detail from their product, then the frame for the company type from `docs/interview-method.md` A2, then its points in this order: stability, team, growth, money last, each point wrapped in a fact about the company.
 
 ## Applying
 
