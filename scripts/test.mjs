@@ -8,7 +8,7 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { existsSync, statSync, readdirSync, readFileSync, writeFileSync, mkdtempSync, chmodSync, rmSync } from "node:fs";
 import { join, resolve, dirname } from "node:path";
 import { tmpdir } from "node:os";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const render = join(ROOT, "scripts", "render.mjs");
@@ -108,15 +108,48 @@ try {
   mailRefuses("send refuses an em-dash", ["send", "--to", "a@b.c", "--subject", "x", "--body", `x ${String.fromCharCode(0x2014)} y`], /em-dash/);
   mailRefuses("send refuses a double hyphen", ["send", "--to", "a@b.c", "--subject", "x", "--body", "x -- y"], /double hyphen/);
   mailRefuses("send refuses a missing attachment", ["send", "--to", "a@b.c", "--subject", "x", "--body", "x", "--attach", "missing.pdf"], /attachment not found/);
-  writeFileSync(join(mailDir, ".mail.env"), readFileSync(join(ROOT, "templates", "mail.env")), { mode: 0o644 });
-  mailRefuses("check refuses a .mail.env others can read", ["check"], /chmod 600/);
+  writeFileSync(join(mailDir, ".mail.env"), "MAIL_USER=a@b.c\nMAIL_APP_PASSWORD=abcdabcdabcdabcd\n", { mode: 0o644 });
+  chmodSync(join(mailDir, ".mail.env"), 0o644);
+  mailRefuses("check refuses a .mail.env with a password others can read", ["check"], /chmod 600/);
+  writeFileSync(join(mailDir, ".mail.env"), readFileSync(join(ROOT, "templates", "mail.env")));
   chmodSync(join(mailDir, ".mail.env"), 0o600);
   mailRefuses("check refuses the unfilled template", ["check"], /template value/);
 } finally {
   rmSync(mailDir, { recursive: true, force: true });
 }
 
+// Transport selection and the Mail.app argument list are pure functions; importing mail.mjs does not
+// run its CLI, so nothing here talks to a mail app or the network.
+const { pickTransport, appleMailArgs } = await import(pathToFileURL(mail).href);
+const PASS = { MAIL_APP_PASSWORD: "abcd efgh ijkl mnop" };
+transportIs("an app password picks smtp", PASS, "darwin", "smtp");
+transportIs("no password on macOS picks applemail", {}, "darwin", "applemail");
+transportIs("no password on Windows picks outlook", {}, "win32", "outlook");
+transportIs("no password on Linux is an error", {}, "linux", /set MAIL_APP_PASSWORD for SMTP/);
+transportIs("the template's placeholder password counts as none", { MAIL_APP_PASSWORD: "xxxxxxxxxxxxxxxx" }, "darwin", "applemail");
+transportIs("explicit MAIL_TRANSPORT wins over a password", { ...PASS, MAIL_TRANSPORT: "applemail" }, "darwin", "applemail");
+transportIs("explicit MAIL_TRANSPORT=smtp wins over the platform", { MAIL_TRANSPORT: "SMTP" }, "win32", "smtp");
+transportIs("an unknown MAIL_TRANSPORT is an error", { MAIL_TRANSPORT: "carrier-pigeon" }, "darwin", /not one of/);
+transportIs("applemail off macOS is an error", { MAIL_TRANSPORT: "applemail" }, "linux", /only on macOS/);
+{
+  const got = appleMailArgs({ sender: 'A "B" <a@b.c>', to: "x@y.z, w@y.z", cc: undefined, subject: "S", body: "-x\nline", attachments: [{ path: "/p/cv.pdf" }] });
+  const want = ['A "B" <a@b.c>', "S", "-x\nline", "2", "x@y.z", "w@y.z", "0", "/p/cv.pdf"];
+  const ok = JSON.stringify(got) === JSON.stringify(want);
+  report("mail: Mail.app argument list", ok, ok ? "sender, subject, body, counted To and Cc, paths" : `got ${JSON.stringify(got)}`);
+}
+
 process.exit(failed ? 1 : 0);
+
+function transportIs(name, env, platform, expected) {
+  let got;
+  try {
+    got = pickTransport(env, platform);
+  } catch (e) {
+    got = e;
+  }
+  const ok = expected instanceof RegExp ? got instanceof Error && expected.test(got.message) : got === expected;
+  report(`mail transport: ${name}`, ok, ok ? String(got.message || got).slice(0, 60) : `expected ${expected}, got ${got}`);
+}
 
 function mailRefuses(name, args, reason) {
   const r = spawnSync("node", [mail, ...args], { cwd: mailDir, encoding: "utf8" });
