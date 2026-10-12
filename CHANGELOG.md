@@ -13,6 +13,8 @@ The first release: the method as it stands after 93 real sweep runs (637 applica
 - Profile and CV start from the CV the person already has and ask only for what is missing. Every choice is asked with a recommended option first and "say default".
 - Interview prep carries the camera and room checklist and OBS recording of every call; the debrief grades the recording against the coach rules.
 - Optional private history of the personal files (`scripts/data`), saved by the skills after they write.
+- Email-only postings are applied to by the sweep through `scripts/mail.mjs`: Gmail SMTP with an app password in `.mail.env`, the CV attached from disk; `/init` sets it up and sends a test mail.
+- The mail script sends through Mail.app on macOS or classic Outlook on Windows when no app password is set, since many Google accounts no longer offer one; SMTP stays the default with a password, `MAIL_TRANSPORT` forces a choice, and `MAIL_USER` must be an account the mail app has. The Outlook path is untested.
 
 ### Renderer
 

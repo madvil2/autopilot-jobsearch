@@ -4,10 +4,11 @@
 // poppler (pdftotext, pdffonts) for the text and font checks; without it only page counts
 // and file sizes are checked.
 
-import { execFileSync } from "node:child_process";
-import { existsSync, statSync, readdirSync, readFileSync } from "node:fs";
+import { execFileSync, spawnSync } from "node:child_process";
+import { existsSync, statSync, readdirSync, readFileSync, writeFileSync, mkdtempSync, chmodSync, rmSync } from "node:fs";
 import { join, resolve, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+import { tmpdir } from "node:os";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const render = join(ROOT, "scripts", "render.mjs");
@@ -97,7 +98,65 @@ for (const dir of ["examples/cv", "examples/cover-letters"]) {
   }
 }
 
+// The mail script must refuse before it touches the network: no .mail.env, one other users can read, one still
+// holding the template values, and a body with an em-dash or a double hyphen. Each case runs in an empty temp
+// folder (the script reads .mail.env from the current folder) and must exit 1 with the expected reason.
+const mail = join(ROOT, "scripts", "mail.mjs");
+const mailDir = mkdtempSync(join(tmpdir(), "autopilot-mail-"));
+try {
+  mailRefuses("check without .mail.env", ["check"], /no \.mail\.env/);
+  mailRefuses("send refuses an em-dash", ["send", "--to", "a@b.c", "--subject", "x", "--body", `x ${String.fromCharCode(0x2014)} y`], /em-dash/);
+  mailRefuses("send refuses a double hyphen", ["send", "--to", "a@b.c", "--subject", "x", "--body", "x -- y"], /double hyphen/);
+  mailRefuses("send refuses a missing attachment", ["send", "--to", "a@b.c", "--subject", "x", "--body", "x", "--attach", "missing.pdf"], /attachment not found/);
+  writeFileSync(join(mailDir, ".mail.env"), "MAIL_USER=a@b.c\nMAIL_APP_PASSWORD=abcdabcdabcdabcd\n", { mode: 0o644 });
+  chmodSync(join(mailDir, ".mail.env"), 0o644);
+  mailRefuses("check refuses a .mail.env with a password others can read", ["check"], /chmod 600/);
+  writeFileSync(join(mailDir, ".mail.env"), readFileSync(join(ROOT, "templates", "mail.env")));
+  chmodSync(join(mailDir, ".mail.env"), 0o600);
+  mailRefuses("check refuses the unfilled template", ["check"], /template value/);
+} finally {
+  rmSync(mailDir, { recursive: true, force: true });
+}
+
+// Transport selection and the Mail.app argument list are pure functions; importing mail.mjs does not
+// run its CLI, so nothing here talks to a mail app or the network.
+const { pickTransport, appleMailArgs } = await import(pathToFileURL(mail).href);
+const PASS = { MAIL_APP_PASSWORD: "abcd efgh ijkl mnop" };
+transportIs("an app password picks smtp", PASS, "darwin", "smtp");
+transportIs("no password on macOS picks applemail", {}, "darwin", "applemail");
+transportIs("no password on Windows picks outlook", {}, "win32", "outlook");
+transportIs("no password on Linux is an error", {}, "linux", /set MAIL_APP_PASSWORD for SMTP/);
+transportIs("the template's placeholder password counts as none", { MAIL_APP_PASSWORD: "xxxxxxxxxxxxxxxx" }, "darwin", "applemail");
+transportIs("explicit MAIL_TRANSPORT wins over a password", { ...PASS, MAIL_TRANSPORT: "applemail" }, "darwin", "applemail");
+transportIs("explicit MAIL_TRANSPORT=smtp wins over the platform", { MAIL_TRANSPORT: "SMTP" }, "win32", "smtp");
+transportIs("an unknown MAIL_TRANSPORT is an error", { MAIL_TRANSPORT: "carrier-pigeon" }, "darwin", /not one of/);
+transportIs("applemail off macOS is an error", { MAIL_TRANSPORT: "applemail" }, "linux", /only on macOS/);
+{
+  const got = appleMailArgs({ sender: 'A "B" <a@b.c>', to: "x@y.z, w@y.z", cc: undefined, subject: "S", body: "-x\nline", attachments: [{ path: "/p/cv.pdf" }] });
+  const want = ['A "B" <a@b.c>', "S", "-x\nline", "2", "x@y.z", "w@y.z", "0", "/p/cv.pdf"];
+  const ok = JSON.stringify(got) === JSON.stringify(want);
+  report("mail: Mail.app argument list", ok, ok ? "sender, subject, body, counted To and Cc, paths" : `got ${JSON.stringify(got)}`);
+}
+
 process.exit(failed ? 1 : 0);
+
+function transportIs(name, env, platform, expected) {
+  let got;
+  try {
+    got = pickTransport(env, platform);
+  } catch (e) {
+    got = e;
+  }
+  const ok = expected instanceof RegExp ? got instanceof Error && expected.test(got.message) : got === expected;
+  report(`mail transport: ${name}`, ok, ok ? String(got.message || got).slice(0, 60) : `expected ${expected}, got ${got}`);
+}
+
+function mailRefuses(name, args, reason) {
+  const r = spawnSync("node", [mail, ...args], { cwd: mailDir, encoding: "utf8" });
+  const out = `${r.stderr}${r.stdout}`.trim();
+  if (r.status === 1 && reason.test(out)) report(`mail: ${name}`, true, out.split("\n")[0].slice(0, 60));
+  else report(`mail: ${name}`, false, `expected exit 1 matching ${reason}, got exit ${r.status}: ${out}`);
+}
 
 // Runs one poppler tool and returns its output. Null means the tool is not installed (ENOENT), so
 // the caller skips its check. Any other failure, such as a PDF the tool cannot open, is thrown and
