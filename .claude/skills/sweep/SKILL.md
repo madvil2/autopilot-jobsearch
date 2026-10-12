@@ -33,7 +33,7 @@ Call `list_applications` once, with no filters. The result usually lands in a sa
 
 Read mail through the path in `.mail.env` (`MAIL_READ`). With `connector`, that is the mail connector (the claude.ai Gmail connector or any mail MCP). With `app`, it is the mail script: `node "${CLAUDE_PLUGIN_ROOT}/scripts/mail.mjs" list --since 1d` lists the inbox and the junk mailbox, one message per line with its id first, and `node "${CLAUDE_PLUGIN_ROOT}/scripts/mail.mjs" show --id '<id>'` opens one.
 
-Search the inbox for the last day, and the spam folder too. Open anything that looks like a status change (rejection, invite, screening request, assessment link, offer) or a question. Ignore alerts, newsletters and marketing.
+This is the Email source in `sources.md`: the last day, inbox and junk. Open anything that looks like a status change (rejection, invite, screening request, assessment link, offer) or a question. Ignore alerts, newsletters and marketing.
 
 - Status changes: find the application in the duplicate list from Step 0 (company matching per `rules.md` "Applying"), then `update_application_status` with the right status (for rejections, one of the five reasons in `rules.md` "Tracker and calendar") and a timeline event with the real time.
 - Questions and invites: answer per "How to reply" below, in the same run.
@@ -41,7 +41,7 @@ Search the inbox for the last day, and the spam folder too. Open anything that l
 
 ## Step 2. Messages on platforms
 
-Every source of type `inbox` in `sources.md` (LinkedIn messaging, any platform inbox): reply to everyone who asks something. If a recruiter sends a direct application link, apply through it too.
+Every other source of type `inbox` in `sources.md` (LinkedIn messaging, any platform inbox): reply to everyone who asks something. If a recruiter sends a direct application link, apply through it too.
 
 ## Step 3. Due follow-ups
 
