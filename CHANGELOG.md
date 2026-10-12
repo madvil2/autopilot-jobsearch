@@ -2,6 +2,16 @@
 
 Notable changes to this project, in the spirit of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follow [Semantic Versioning](https://semver.org/).
 
+## 0.1.2 - 2026-10-13
+
+### Scripts
+
+- On Windows, `scripts/mail.mjs` and `scripts/calendar.mjs` fail with a clear message when PowerShell receives no data on stdin.
+
+### Docs
+
+- `PRIVACY.md` names the documents sent with applications and kept in `documents/`, the base64 CV copy `/cv` leaves at `/tmp/cv.b64`, and states the credentials rule as a rule the agent follows.
+
 ## 0.1.1 - 2026-10-13
 
 ### Skills

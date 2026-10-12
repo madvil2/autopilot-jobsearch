@@ -6,7 +6,7 @@
     {
       "name": "autopilot-jobsearch",
       "source": ".",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "description": "Twice-daily job-search sweeps, CV and cover-letter rendering, interview prep, debriefs and offers, tracked in JobCubby.",
       "category": "productivity",
       "tags": ["job-search", "cv", "interview"]

@@ -1,7 +1,7 @@
 {
   "name": "autopilot-jobsearch",
   "displayName": "Autopilot Job Search",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Job search on autopilot: twice-daily sweeps that apply and reply, a CV that renders to PDF, cover letters, interview prep, debriefs and offers, tracked in JobCubby.",
   "author": {
     "name": "Kostiantyn Kaimov",
