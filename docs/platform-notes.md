@@ -20,6 +20,7 @@ Things I learned running the sweep on real boards. None of this is personal; all
 - Radios on Ashby and Greenhouse often do not register through generic `.first()` or `.nth()` selectors: find the labelled element (`label[for=...]`), click it, then verify `[checked]` in a fresh snapshot before moving on.
 - Ashby yes/no questions are button groups: click the button inside the question's container (`ancestor::div[.//label][1]`), not a radio.
 - Ashby refuses a second application to the same company within about 90 days; log it as a duplicate.
+- 2026-10-11: Ashby's labeled radio-group options (not the yes/no button groups) can show `[checked]` in the accessibility snapshot after a normal click while the underlying `<input>`'s `.checked` stays `false` — the click lands on the styled wrapper, not the input, so React's state never updates and submit keeps failing with "Missing entry for required field" on that question. Verify with `document.getElementById(radio.id).checked` before trusting the snapshot; if false, click the `<label for="...">` element directly via `browser_evaluate`, which reliably fires the native input.
 
 ## JobCubby (the tracker)
 
@@ -30,6 +31,7 @@ Field names that the tools reject silently or with a one-line error; each wrong 
 - `create_application` and `update_application`: `applied_at` and `follow_up_at` are full ISO 8601 timestamps with an offset (`2026-10-17T09:00:00+02:00`); a bare date is "invalid". `resume_id` comes from `list_resumes`, once per run.
 - Account limits (free plan included): 10,000 applications including the archive, 200 new applications a day, 30 a minute. A sweep never gets near them; a bulk import might, so pace imports to under 30 creates a minute.
 - `list_applications` with no filters exceeds the tool-output limit and lands in a file; `grep` it, never `Read` it (the file is over the Read size limit too).
+- 2026-10-11: `list_applications` with no filters silently caps at 100 and returns inline (no file, no warning) once the account's total active count is near that range. Missed entries cost a real duplicate: a LinkedIn repost of an already-rejected Atolls posting (same `gh_jid`) wasn't in the 100 and got reapplied to. Before applying to anything that looks like a repost of an old-sounding role, `create_application` (or `save_posting`) itself already checks for an exact match and refuses with the existing id — trust that refusal over the initial dedup list, which can be stale/incomplete.
 
 ## Context and tool hygiene (the cost driver)
 
@@ -72,6 +74,8 @@ Measured over 93 runs: a run reads 170 to 480 million cached tokens and costs 15
 - 2026-10-10: SAP SuccessFactors portals (`/talentcommunity/apply/<id>`, e.g. FUNKE, Bundesdruckerei) redirect to the portal home on direct navigation; clicking "Jetzt bewerben" leads to a sign-in, so they need a candidate account. Schwarz Digits' SAP "rocketapply" dialog works without account: set UI5 controls through `sap.ui.getCore().byId(id)`; it shows no confirmation, check the `api/application/$batch` response (204 + ApplicationSet id).
 - 2026-10-10: Dayforce (MoneyGram) offers "Apply without an Account"; its resume import mangles employers and countries, fix the work-history fields before Next.
 - 2026-10-10: Lever forms can end in an hCaptcha on submit; leave the filled tab open, continue in a new tab, report the link (`docs/sweep-events.md`).
+- 2026-10-12: Lever's own "Jobgether" tenant hosts postings for several unrelated end clients under one brand — each is a genuinely different company/role despite sharing the ATS, so don't treat a second Jobgether-branded posting as a company duplicate on sight; check the actual client description.
+- 2026-10-12: Ashby country/location pickers are sometimes a fixed whitelist with no matching option and no "Other": if your market isn't listed and a required field (pronouns, structured race/gender beyond the optional EEO block) has no honest answer in profile.md, stop the application rather than guess (seen on a Maze/Ashby posting).
 
 - Always confirm location and work-authorization questions in the actual form before filling; listings mislabel "remote" often.
 - Honest answers in structured fields only; free-text fields get nothing volunteered.
@@ -92,7 +96,7 @@ Measured over 93 runs: a run reads 170 to 480 million cached tokens and costs 15
 - **HireHi** (2026-10-10): the vacancy page's SSR JSON has `apply_url`; `null` means Telegram-only (PRO quota), a URL (often LinkedIn) means apply there. Check it with `fetch` instead of opening each page.
 - **HireHi**: the server-rendered page shows a login button until the client hydrates, so a snapshot on load always looks logged out. Check the session with `fetch('/api/auth/me')` from `browser_evaluate` instead. Contacting an employer through Telegram there is a paid feature with a quota; when the quota reads 0, skip those postings instead of filling forms that cannot be sent. Measured cost: about 18 minutes per run for a handful of applications.
 - **Himalayas**: the HTML is behind a challenge page; the JSON search API works with a browser user agent. Since October 2026 applying requires a Himalayas account, so the direct ATS links are gone; either keep an account logged in or drop the source.
-- **Djinni**: the profile's country field decides whether Ukraine-only postings accept the application; set it per the profile's location-by-market table, otherwise those applications are refused silently.
+- **Djinni**: the profile's country field decides whether Ukraine-only postings accept the application; set it per the profile's location-by-market table, otherwise those applications are refused silently. 2026-10-11: the "Україна" option in the "Країна, де ви знаходитесь зараз" (current country) dropdown is now disabled/unselectable in the profile editor, so this fix is no longer possible through the UI. Ukraine-only postings on Djinni are unreachable until the platform changes this; skip them with a note.
 - **CryptoJobsList**: "Remote" labels are unreliable; the ATS form tells the truth.
 
 ## Dead or hostile sources
