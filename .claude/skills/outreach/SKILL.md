@@ -5,7 +5,7 @@ description: Skip the line on a posting that matters: find the hiring manager an
 
 # /outreach <company> [posting URL]
 
-Files: the method's own files (`templates/`, `scripts/`, `docs/`, `examples/`) live in the plugin root, written here as `${CLAUDE_PLUGIN_ROOT}`; when that text is not replaced by an absolute path, the method root is the clone this skill file sits in. Everything personal (`profile.md`, `rules.md`, `sources.md`, `cv/`, `cover-letters/`, `prep/`, `photos/`, `documents/`, `transcripts/`, `reports/`) lives in the workspace, the current folder; every relative path below is relative to it. Before doing anything on the person's behalf, read `profile.md` and `rules.md`: facts come only from them, choices are asked the way `rules.md` says, and a correction from the person becomes a dated rule there.
+Files: `templates/`, `scripts/`, `docs/`, `examples/` and `routines/` are in the method root, `${CLAUDE_PLUGIN_ROOT}` (the clone holding this skill when that is not replaced by a path); every other relative path is in the workspace, the current folder. Before acting on the person's behalf, read `profile.md` and `rules.md`.
 
 An application through a form lands on an HR screener's desk among hundreds. The person who decides is the head of the department with the vacancy, and they have a problem to solve: a deadline, a product that does not ship, a customer who complains. Talking to that person, or to someone who can introduce me, turns an application into a conversation. This skill prepares that; the person makes the call and sends the messages.
 
