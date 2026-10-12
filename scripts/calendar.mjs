@@ -1,9 +1,8 @@
 #!/usr/bin/env node
-// Creates and finds events in the calendar app on this machine, so a scheduled sweep can put a
-// booked interview or an assessment deadline in the calendar without the claude.ai calendar
-// connector, which is often not connected in a scheduled session. A calendar account added to the
-// app (Google in System Settings > Internet Accounts with Calendars on, for example) syncs the event
-// to the account.
+// Creates and finds events in the calendar app on this machine, the CALENDAR_VIA=app path for
+// putting a booked interview or an assessment deadline in the calendar. A calendar account added to
+// the app (Google in System Settings > Internet Accounts with Calendars on, for example) syncs the
+// event to the account.
 //
 //   node scripts/calendar.mjs add --title <text> --start <ISO 8601 with offset> (--end <ISO> | --duration <minutes>)
 //        [--url <link>] [--location <text>] [--notes <text> | --notes-file <path>] [--alarm <minutes before, default 30>]
@@ -19,8 +18,10 @@
 //             without a Windows machine to run it on.
 //
 // Config: optional .calendar.env in the workspace, the folder the command runs in (template:
-// templates/calendar.env), KEY=VALUE lines: CALENDAR_NAME (the calendar to write to and search) and
-// optional CALENDAR_TRANSPORT (applecal or outlook). --calendar overrides CALENDAR_NAME. On macOS a
+// templates/calendar.env), KEY=VALUE lines: CALENDAR_VIA (app or connector, app when absent),
+// CALENDAR_NAME (the calendar to write to and search) and optional CALENDAR_TRANSPORT (applecal or
+// outlook). With CALENDAR_VIA=connector the skills use the calendar connector and this script is not
+// used; check says so and exits 0. --calendar overrides CALENDAR_NAME. On macOS a
 // calendar name is required, because Calendar.app's default calendar cannot be read reliably by a
 // script; Outlook falls back to its default calendar.
 //
@@ -43,6 +44,7 @@ import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 export const TRANSPORTS = ["applecal", "outlook"];
+export const VIA = ["app", "connector"];
 const LABEL = { applecal: "Calendar.app", outlook: "Outlook" };
 const CONFIG = resolve(process.cwd(), ".calendar.env");
 const DEFAULT_ALARM = 30;
@@ -161,6 +163,16 @@ function remove(args) {
 }
 
 function check(args) {
+  let via;
+  try {
+    via = pickVia(readEnv());
+  } catch (e) {
+    fail(e.message);
+  }
+  if (via === "connector") {
+    console.log("CALENDAR_VIA=connector: events go through the calendar connector, scripts/calendar.mjs is not used");
+    return;
+  }
   const config = loadConfig(args, { needName: true });
   const list = listCalendars(config);
   const target = config.calendar;
@@ -169,7 +181,7 @@ function check(args) {
   if (!hits.length) fail(`${LABEL[config.transport]} has no calendar named "${target}"; run: node scripts/calendar.mjs calendars, then set CALENDAR_NAME in .calendar.env to one of them`);
   if (!hits.some((c) => c.writable)) fail(`the calendar "${target}" in ${LABEL[config.transport]} is read-only; pick a writable one from: node scripts/calendar.mjs calendars`);
   const twins = hits.length > 1 ? `, ${hits.length} calendars share this name and the first is used` : "";
-  console.log(`writes to "${target || hits[0].name}" via ${LABEL[config.transport]}, calendar found and writable${twins}${note}`);
+  console.log(`CALENDAR_VIA=app: writes to "${target || hits[0].name}" via ${LABEL[config.transport]}, calendar found and writable${twins}${note}`);
 }
 
 function calendars() {
@@ -249,6 +261,13 @@ export function pickTransport(env, platform) {
   throw new Error(`no calendar app transport on this platform (${platform}): the script supports Calendar.app on macOS and classic Outlook on Windows`);
 }
 
+export function pickVia(env) {
+  const value = (env.CALENDAR_VIA || "").trim().toLowerCase();
+  if (!value) return "app";
+  if (!VIA.includes(value)) throw new Error(`.calendar.env: CALENDAR_VIA "${env.CALENDAR_VIA}" is not one of ${VIA.join(", ")}`);
+  return value;
+}
+
 export function forbiddenDash(text) {
   if (String(text).includes(String.fromCharCode(0x2014))) return "an em-dash";
   if (String(text).includes("--")) return "a double hyphen";
@@ -281,7 +300,7 @@ function instant(flag, text) {
 
 // ---------- config ----------
 
-function loadConfig(args, { needName }) {
+function readEnv() {
   const env = {};
   if (existsSync(CONFIG)) {
     for (const raw of readFileSync(CONFIG, "utf8").split(/\r?\n/)) {
@@ -292,6 +311,11 @@ function loadConfig(args, { needName }) {
       env[line.slice(0, eq).trim()] = unquote(line.slice(eq + 1).trim());
     }
   }
+  return env;
+}
+
+function loadConfig(args, { needName }) {
+  const env = readEnv();
   let transport;
   try {
     transport = pickTransport(env, process.platform);
@@ -335,7 +359,7 @@ function listCalendars(config) {
 
 // Dates are built from numbers on this machine's calendar: day 1 first, so moving to a shorter month
 // never overflows, then year, month, day and the time of day in seconds.
-const APPLE_DATE = `
+export const APPLE_DATE = `
 on mkDate(parts, i)
   set d to current date
   set day of d to 1
