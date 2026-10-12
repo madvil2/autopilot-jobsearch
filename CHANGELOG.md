@@ -11,7 +11,7 @@ The first release: the method as it stands after 93 real sweep runs (637 applica
 - Twelve skills: `init`, `profile`, `cv`, `profiles`, `sweep`, `cover-letter`, `interview-prep`, `debrief`, `coach`, `outreach`, `stack-radar`, `offer`.
 - The sweep answers mail and recruiter messages, sends due follow-ups, pulls JobCubby matches, visits every source, applies with Playwright and logs to JobCubby and the calendar. The report file is created at the start and appended to after every action; a captcha on submit keeps the tab open for the person and the run continues.
 - Profile and CV start from the CV the person already has and ask only for what is missing. Every choice is asked with a recommended option first and "say default".
-- Interview prep carries the camera and room checklist and OBS recording of every call; the debrief grades the recording against the coach rules.
+- Interview prep carries the camera and room checklist and OBS recording of every call; the debrief grades the recording against the Rubric in `docs/interview-method.md`.
 - The behaviour rules ship with the method in `docs/rules.md` and update with the plugin; the workspace `rules.md` keeps only the person's switches (send or draft) and the corrections under "Added later", and wins on conflict. A workspace made from the earlier full template should keep only the lines it changed.
 - Optional private history of the personal files (`scripts/data`), saved by the skills after they write.
 - Email-only postings are applied to by the sweep through `scripts/mail.mjs`: Gmail SMTP with an app password in `.mail.env`, the CV attached from disk; `/init` sets it up and sends a test mail.

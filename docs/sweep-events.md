@@ -14,7 +14,7 @@ Write the mail per "Email application" in `${CLAUDE_PLUGIN_ROOT}/.claude/skills/
 node "${CLAUDE_PLUGIN_ROOT}/scripts/mail.mjs" send --to <address> --subject "Application as <exact title>" --body-file cover-letters/<company>-<role>.txt --attach cv/<file for the market>.pdf
 ```
 
-Attach the CV version for this market and language. When the posting asks for certificates, diplomas, transcripts or other proof, add one `--attach documents/<file>` per file as listed under Files in `profile.md`. On success the script prints the message id (SMTP) or "sent via Mail.app" and the recipients. It refuses a body with an em-dash or a double hyphen: fix the text and send again. Quote the full text in the report under `[applied]` and log the application per step 5.7 of the sweep, with `follow_up_at`: this is a human thread.
+Attach the CV version for this market and language, chosen and checked as in sweep step 5. When the posting asks for certificates, diplomas, transcripts or other proof, add one `--attach documents/<file>` per file as listed under Files in `profile.md`. On success the script prints the message id (SMTP) or "sent via Mail.app" and the recipients. It refuses a body with an em-dash or a double hyphen: fix the text and send again. Quote the full text in the report under `[applied]` and log the application per step 5.7 of the sweep, with `follow_up_at`: this is a human thread.
 
 ## A rejection after a call or an interview
 
