@@ -119,7 +119,7 @@ GLOSSARY.md          the vocabulary
 
 `npm test` renders the examples and checks the PDFs. `npm run lint` checks the skills and that every image the README embeds is committed. The CV preview above is `pdftoppm -png -r 90 -f 1 -l 1 -singlefile examples/cv/Alex_Mustermann_CV.pdf examples/cv/Alex_Mustermann_CV-preview`; rerun it when the example CV changes.
 
-On every release, bump `version` in package.json, .claude-plugin/plugin.json and the marketplace entry; `npm run lint` checks they match.
+On every release, bump `version` in `package.json`, `.claude-plugin/plugin.json` and the marketplace entry; `npm run lint` checks they match.
 
 ## License
 
