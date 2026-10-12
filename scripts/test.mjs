@@ -4,9 +4,10 @@
 // poppler (pdftotext, pdffonts) for the text and font checks; without it only page counts
 // and file sizes are checked.
 
-import { execFileSync } from "node:child_process";
-import { existsSync, statSync, readdirSync, readFileSync } from "node:fs";
+import { execFileSync, spawnSync } from "node:child_process";
+import { existsSync, statSync, readdirSync, readFileSync, writeFileSync, mkdtempSync, chmodSync, rmSync } from "node:fs";
 import { join, resolve, dirname } from "node:path";
+import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -97,7 +98,32 @@ for (const dir of ["examples/cv", "examples/cover-letters"]) {
   }
 }
 
+// The mail script must refuse before it touches the network: no .mail.env, one other users can read, one still
+// holding the template values, and a body with an em-dash or a double hyphen. Each case runs in an empty temp
+// folder (the script reads .mail.env from the current folder) and must exit 1 with the expected reason.
+const mail = join(ROOT, "scripts", "mail.mjs");
+const mailDir = mkdtempSync(join(tmpdir(), "autopilot-mail-"));
+try {
+  mailRefuses("check without .mail.env", ["check"], /no \.mail\.env/);
+  mailRefuses("send refuses an em-dash", ["send", "--to", "a@b.c", "--subject", "x", "--body", `x ${String.fromCharCode(0x2014)} y`], /em-dash/);
+  mailRefuses("send refuses a double hyphen", ["send", "--to", "a@b.c", "--subject", "x", "--body", "x -- y"], /double hyphen/);
+  mailRefuses("send refuses a missing attachment", ["send", "--to", "a@b.c", "--subject", "x", "--body", "x", "--attach", "missing.pdf"], /attachment not found/);
+  writeFileSync(join(mailDir, ".mail.env"), readFileSync(join(ROOT, "templates", "mail.env")), { mode: 0o644 });
+  mailRefuses("check refuses a .mail.env others can read", ["check"], /chmod 600/);
+  chmodSync(join(mailDir, ".mail.env"), 0o600);
+  mailRefuses("check refuses the unfilled template", ["check"], /template value/);
+} finally {
+  rmSync(mailDir, { recursive: true, force: true });
+}
+
 process.exit(failed ? 1 : 0);
+
+function mailRefuses(name, args, reason) {
+  const r = spawnSync("node", [mail, ...args], { cwd: mailDir, encoding: "utf8" });
+  const out = `${r.stderr}${r.stdout}`.trim();
+  if (r.status === 1 && reason.test(out)) report(`mail: ${name}`, true, out.split("\n")[0].slice(0, 60));
+  else report(`mail: ${name}`, false, `expected exit 1 matching ${reason}, got exit ${r.status}: ${out}`);
+}
 
 // Runs one poppler tool and returns its output. Null means the tool is not installed (ENOENT), so
 // the caller skips its check. Any other failure, such as a PDF the tool cannot open, is thrown and

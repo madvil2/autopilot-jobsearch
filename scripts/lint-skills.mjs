@@ -15,9 +15,9 @@ import { execFileSync } from "node:child_process";
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const SKILLS = join(ROOT, ".claude", "skills");
 
-// Workspace files and folders that /init creates. Keep in sync with .claude/skills/init/SKILL.md.
-const WORKSPACE = ["profile.md", "rules.md", "sources.md", "cv/", "cover-letters/", "prep/", "photos/", "documents/", "transcripts/", "recordings/", "reports/"];
-const TEMPLATE_FOR = { "profile.md": "profile.md", "rules.md": "rules.md", "sources.md": "sources.md", "cv/": "cv.md", "cover-letters/": "cover-letter.md", "prep/": "prep.md" };
+// Workspace files and folders that /init creates, plus .mail.env, which the person creates from its template. Keep in sync with .claude/skills/init/SKILL.md.
+const WORKSPACE = ["profile.md", "rules.md", "sources.md", ".mail.env", "cv/", "cover-letters/", "prep/", "photos/", "documents/", "transcripts/", "recordings/", "reports/"];
+const TEMPLATE_FOR = { "profile.md": "profile.md", "rules.md": "rules.md", "sources.md": "sources.md", ".mail.env": "mail.env", "cv/": "cv.md", "cover-letters/": "cover-letter.md", "prep/": "prep.md" };
 
 let failed = 0;
 
@@ -39,11 +39,11 @@ for (const name of readdirSync(SKILLS)) {
   if (fmName && fmName !== name) fail(`${name}: frontmatter name "${fmName}" differs from folder name`);
 
   // Paths like `templates/foo.md`, `docs/foo.md`, `scripts/foo.mjs`, `routines/foo.md` must exist.
-  for (const m of text.matchAll(/`(?:node )?(?:"?\$\{CLAUDE_PLUGIN_ROOT\}\/)?((?:templates|docs|scripts|routines|examples)\/[\w./-]+)(?:"|\s[^`]*)?`/g)) {
+  for (const m of text.matchAll(/`(?:node )?(?:"?\$\{CLAUDE_PLUGIN_ROOT\}\/)?((?:templates|docs|scripts|routines|examples)\/[\w./-]+)"?(?:\s[^`]*)?`/g)) {
     if (!existsSync(join(ROOT, m[1]))) fail(`${name}: references missing file ${m[1]}`);
   }
   // Workspace paths must be ones /init creates.
-  for (const m of text.matchAll(/`((?:profile|rules|sources)\.md|(?:cv|cover-letters|prep|photos|documents|transcripts|recordings|reports)\/)[\w./<>-]*`/g)) {
+  for (const m of text.matchAll(/`((?:profile|rules|sources)\.md|\.mail\.env|(?:cv|cover-letters|prep|photos|documents|transcripts|recordings|reports)\/)[\w./<>-]*`/g)) {
     if (!WORKSPACE.includes(m[1])) fail(`${name}: workspace path ${m[0]} is not created by /init`);
   }
 }
