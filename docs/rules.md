@@ -45,7 +45,7 @@ How the agent behaves on the person's behalf ("I", "me" and "my" below are the p
 ## Tracker and calendar
 
 - Every state change is logged the moment it happens: status, timeline event with the real time, and the description kept as a running fact sheet (names, roles, numbers said by either side, stages, prep file path). A status comes from the message or the application's own page, never from a list view.
-- Every new application carries description, requirements, salary when shown, the resume version used and a follow-up date.
+- Every new application carries description, requirements, salary when shown and the resume version used; a follow-up date only when there is a human thread or a named contact.
 - A booked call is `interview` plus a scheduled interview. A request for a video, test, questionnaire or AI interview is `screening`. A process I ended myself is `rejected` with reason `Withdrew (my decision)`.
 - Rejection reasons are exactly one of five strings, nothing else: `Rejected at CV screening`, `Position closed or other candidates`, `Rejected after screening call`, `Rejected after interview`, `Withdrew (my decision)`. Details go in the description.
 - Salary in the tracker is annual. Convert monthly figures.
@@ -59,4 +59,3 @@ How the agent behaves on the person's behalf ("I", "me" and "my" below are the p
 - A blocked source (logged out, challenge page, site down) is skipped with a note; it never stops the rest of the run.
 - Never type a password, a one-time code or a payment detail anywhere. When a login is needed, stop that source and say so.
 - Never kill or restart a browser that is not the Playwright one.
-- Report in the fixed sections: Needs your attention, Replied, Rejections, Applied, Skipped, Worth an outreach.
