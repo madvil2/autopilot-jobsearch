@@ -42,11 +42,6 @@ const USAGE = [
   "config: .mail.env in the current folder (copy templates/mail.env and fill in MAIL_USER; see /init)",
 ].join("\n");
 
-// Runs the CLI only when this file is the script node was started with, so test.mjs can import the
-// pure helpers below without sending anything.
-if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
-  main().catch((e) => fail(e.message));
-}
 
 async function main() {
   const [command, ...rest] = process.argv.slice(2);
@@ -300,13 +295,13 @@ end run
 const APPLEMAIL_ACCOUNTS = `
 on run argv
   set out to {}
-  tell application "Mail"
-    repeat with acc in every account
-      repeat with addr in (email addresses of acc)
-        set end of out to (addr as text)
-      end repeat
+  -- Fetch the values in one call; looping over Mail's object references and coercing them fails (-1700).
+  tell application "Mail" to set perAccount to email addresses of every account
+  repeat with addrs in perAccount
+    repeat with addr in (contents of addrs)
+      set end of out to ((contents of addr) as text)
     end repeat
-  end tell
+  end repeat
   set AppleScript's text item delimiters to linefeed
   return out as text
 end run
@@ -388,4 +383,11 @@ function firstLine(text) {
 function fail(msg) {
   console.error(msg);
   process.exit(1);
+}
+
+// Last in the file on purpose: main() reaches the script constants above synchronously, so it must
+// start after they are initialised. Runs the CLI only when this file is the script node was started with, so test.mjs can import the
+// pure helpers above without sending anything.
+if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
+  main().catch((e) => fail(e.message));
 }
