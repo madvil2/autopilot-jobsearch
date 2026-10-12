@@ -8,7 +8,7 @@ Reply warm and short in the thread's language: thank you, I am glad about it, I 
 
 ## A posting accepts applications only by email
 
-Write the mail per "Email application" in `${CLAUDE_PLUGIN_ROOT}/.claude/skills/cover-letter/SKILL.md` and save the body as `cover-letters/<company>-<role>.txt`. Send it from the workspace with the mail script, never the mail connector; the script reads the sender and the transport (`MAIL_TRANSPORT`) from `.mail.env` and every attachment from disk. Without `.mail.env`, or when the script says this machine has no mail transport (Linux), escalate the posting, its address and the saved body instead, for the person to send.
+Write the mail per "Email application" in `${CLAUDE_PLUGIN_ROOT}/.claude/skills/cover-letter/SKILL.md` and save the body as `cover-letters/<company>-<role>.txt`. Send it from the workspace with the mail script, never the mail connector; the script reads the sender and the transport (`MAIL_TRANSPORT`) from `.mail.env` and every attachment from disk. Without `.mail.env`, or when `send` fails for any reason (no transport on this OS, no classic Outlook, no account in the mail app, no Automation permission), escalate the posting, its address, the path of the saved body and the script's error line, for the person to send.
 
 ```bash
 node "${CLAUDE_PLUGIN_ROOT}/scripts/mail.mjs" send --to <address> --subject "Application as <exact title>" --body-file cover-letters/<company>-<role>.txt --attach cv/<file for the market>.pdf

@@ -59,7 +59,7 @@ Check each one by calling it, and report what works:
 
 ## 2a. Mail and calendar (two questions)
 
-Ask these one at a time. Email applications with the CV attached always go out through the mail app on this machine, `applemail` on macOS or `outlook` on Windows; say so instead of asking. On Linux reading and the calendar are `connector` and nothing sends email applications: the sweep escalates email-only postings for the person to send; say so instead of asking, and skip `.mail.env`'s `check` and `test`.
+Ask these one at a time. Email applications with the CV attached go out through the mail app on this machine, `applemail` on macOS or `outlook` (classic Outlook) on Windows; say so instead of asking. With no such app, on Linux or on Windows without classic Outlook (the new Outlook has no scripting interface), reading and the calendar are `connector` and nothing sends email applications: the sweep escalates email-only postings for the person to send. Say so instead of asking either question.
 
 Reading and answering mail:
 
@@ -81,6 +81,8 @@ node "${CLAUDE_PLUGIN_ROOT}/scripts/mail.mjs" test
 ```
 
 `check` prints the sending transport, the address and the read path. `test` mails the account itself with the subject "autopilot-jobsearch mail test"; ask whether it arrived. With reading `connector`, also call the connector's inbox search once; with `app`, run `node "${CLAUDE_PLUGIN_ROOT}/scripts/mail.mjs" list --since 1d`. On macOS the first run makes macOS ask whether the terminal (or Claude) may control Mail; the person allows it. When a command prints an error, repeat it to the person; it names the fix.
+
+With no mail app (Linux, or Windows where `check` reports that classic Outlook is not installed), `.mail.env` holds `MAIL_USER`, `MAIL_FROM_NAME` and `MAIL_READ=connector`, with `MAIL_TRANSPORT` left empty; skip `check` and `test`, set the calendar to `connector`, and tell the person that email-only postings are escalated in the sweep report for them to send.
 
 **`.calendar.env`.** Copy `templates/calendar.env` to `.calendar.env` in the workspace and set `CALENDAR_VIA` to the answer (it holds no secret, so you may write it yourself when the person says so). For `app`, run `node "${CLAUDE_PLUGIN_ROOT}/scripts/calendar.mjs" calendars` (on macOS the first run asks whether the terminal or Claude may control Calendar; the person allows it) and ask which of the writable calendars to write to, for example:
 
