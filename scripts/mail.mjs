@@ -43,7 +43,7 @@
 // anything sent in the person's name. Every refusal about the message runs before any transport.
 
 import { readFileSync, existsSync, realpathSync } from "node:fs";
-import { basename, resolve } from "node:path";
+import { resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { parseInstant, localParts, formatLocal, forbiddenDash, APPLE_DATE } from "./calendar.mjs";
@@ -65,7 +65,7 @@ const USAGE = [
 ].join("\n");
 
 
-async function main() {
+function main() {
   const [command, ...rest] = process.argv.slice(2);
   if (!command || command === "--help" || command === "-h") {
     console.log(USAGE);
@@ -88,9 +88,9 @@ function check() {
   console.log(`sends as ${config.user} via ${LABEL[config.transport]}, account found, ${reads}`);
 }
 
-async function test() {
+function test() {
   const config = loadConfig();
-  await deliver(config, {
+  deliver(config, {
     to: config.user,
     subject: "autopilot-jobsearch mail test",
     body: "This is a test mail from autopilot-jobsearch. If it arrived, the sweep can send email applications from this account.\n",
@@ -98,14 +98,14 @@ async function test() {
   });
 }
 
-async function send(args) {
+function send(args) {
   if (!args.to) fail("--to is required");
   if (!args.subject) fail("--subject is required");
   const body = readBody(args);
   refuseDashes([["subject", args.subject], ["body", body]]);
   const attachments = readAttachments(args);
   const config = loadConfig();
-  await deliver(config, { to: args.to, cc: args.cc, subject: args.subject, body, attachments });
+  deliver(config, { to: args.to, cc: args.cc, subject: args.subject, body, attachments });
 }
 
 function list(args) {
@@ -183,7 +183,7 @@ function readAttachments(args) {
   return args.attach.map((p) => {
     const file = resolve(p);
     if (!existsSync(file)) fail(`attachment not found: ${file}`);
-    return { filename: basename(file), path: file };
+    return { path: file };
   });
 }
 
@@ -322,7 +322,7 @@ function senderField(config) {
   return config.fromName ? `${config.fromName} <${config.user}>` : config.user;
 }
 
-async function deliver(config, message) {
+function deliver(config, message) {
   requireAccount(config);
   const recipients = [...splitAddresses(message.to), ...splitAddresses(message.cc)];
   if (config.transport === "applemail") deliverAppleMail(config, message);
@@ -750,5 +750,9 @@ function fail(msg) {
 // start after they are initialised. Runs the CLI only when this file is the script node was started with, so test.mjs can import the
 // pure helpers above without sending anything.
 if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
-  main().catch((e) => fail(e.message));
+  try {
+    main();
+  } catch (e) {
+    fail(e.message);
+  }
 }
